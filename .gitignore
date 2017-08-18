@@ -1,0 +1,11 @@
+.idea
+.DS_Store
+node_modules
+logs/*
+dist/*
+!dist/assets
+!dist/scripts
+config/env/development.js
+npm-debug.log
+templates/*
+config/**/
