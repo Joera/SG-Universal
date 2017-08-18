@@ -1,11 +1,12 @@
 'use strict';
 
 //
-let mongoose = require('mongoose'),
-    Q = require('q'),
-    logger = require('./config/winston'),
-    app = require('./config/express'),
-    appConfig = require('./config/env');
+const Promise = require('bluebird');
+const logger = require('./services/logger.service');
+const templateDefinitionsValidator = require('./validators/template.definition.validator');
+const app = require('./config/express');
+const config = require('./config');
+const templateDefinitions = require('./templates/definition');
 
 
 /**
@@ -20,23 +21,22 @@ String.prototype.replaceAll = function (search, replacement) {
 };
 
 
-// plugin Q promise in mongoose
-mongoose.Promise = Q.Promise;
 
 
-// connect to mongo db
-mongoose.connect(appConfig.db, {server: {socketOptions: {keepAlive: 1}}});
-mongoose.connection.on('error', () => {
-    throw new Error(`unable to connect to database: ${appConfig.db}`);
-});
+
+// vallidate template definition
+templateDefinitionsValidator.validate(templateDefinitions);
+
+
+
 
 
 // module.parent check is required to support mocha watch
 // src: https://github.com/mochajs/mocha/issues/1912
 if (!module.parent) {
     // listen on port appConfig.port
-    app.listen(appConfig.port, () => {
+    app.listen(config.port, () => {
         // debug(`server started on port ${appConfig.port} (${appConfig.env})`);
-        logger.info('server started on port ' + appConfig.port + ' (' + appConfig.env + ')');
+        logger.info('server started on port ' + config.port + ' (' + config.env + ')');
 });
 }
