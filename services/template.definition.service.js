@@ -13,8 +13,11 @@ const templateDefinitions = require('../templates/definition');
 class TemplateDefinitionService {
 
 
-
-
+    /**
+     * Find the template definition by matching type property in data to temlpate name
+     * @param data
+     * @param correlationId
+     */
     getDefinition(data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {

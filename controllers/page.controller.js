@@ -5,6 +5,7 @@ const uuidv4 = require('uuid/v4');
 const logger = require('../services/logger.service');
 const AuthService = require('../services/auth.service');
 const TemplateService = require('../services/template.service');
+const EnqueueService = require('../services/enqueue.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistense/page.persistence');
 const AlgoliaConnector = require('../connectors/algolia.connector');
@@ -22,6 +23,7 @@ class PageController {
         this.authService = new AuthService();
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
+        this.enqueueService = new EnqueueService();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.algoliaConnector = new AlgoliaConnector();
     }
@@ -41,17 +43,6 @@ class PageController {
             --- send response
             --- save
             - render >>> render queue service???
-                - check if template is already in queue
-                - get template data
-                - get temlpate path
-                - put template in queue
-              - dependencies
-
-                - start queue
-                    - pre render
-                    - render template
-                    - write temlpate file
-                    - post render
          */
 
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
@@ -59,6 +50,7 @@ class PageController {
             // .then(() => { return self.templateDefinitionService.getDefinition(req.body, correlationId) }) // get template definition
             // .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
             .then(() => { return self.create(req.body, correlationId) }) // save page
+            .then((data) => { return self.enqueueService.enqueue(data, correlationId) }) // add page to render queue
 // .then((data) => { console.log(data); }) //
             .then((data) => { // send response
                 return new Promise((resolve, reject) => {
@@ -123,7 +115,8 @@ class PageController {
                 .then((path) => { return new Promise((res, rej) => { saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // set search snippet
-                .then(() => { return self.templateService.render(templateDefinition.searchSnippetTemplate, saveData, correlationId) }) // render search snippet
+                .then(() => { return templateDefinition.getSearchSnippetData(saveData, correlationId) }) // get search snippet data
+                .then((templateData) => { return self.templateService.render(templateDefinition.searchSnippetTemplate, templateData, correlationId) }) // render search snippet
                 .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
