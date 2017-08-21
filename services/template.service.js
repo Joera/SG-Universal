@@ -152,7 +152,7 @@ class TemplateService {
 
     /**
      * Render controller function
-     * @param template                  name of the handlebars temlpate file, assume it is in the temlpates root folder
+     * @param template                  name of the handlebars template file, assume it is in the templates root folder
      * @param data                      template data
      * @param correlationId             id for correlation through the process chain
      */

@@ -5,22 +5,38 @@ const _ = require('lodash');
 const logger = require('../services/logger.service');
 const config = require('../config');
 
+// declare singleton instance
+let instance = null;
+
 
 /**
- *
+ * Render queue service
  */
 class RenderQueueService {
 
-
+    /**
+     * Constructor
+     * Set the singleton instance if it is not set
+     * @returns {*}
+     */
     constructor() {
+        // check if singleton instance is set
+        if(!instance) {
+            instance = this;
+        }
+
+        // define render queue
         this.queue = []; // the render queue
+
+        return instance; // return singleton instance
     }
 
 
-
-
-
-
+    /**
+     * Add template to the render queue
+     * @param queueItem
+     * @param correlationId
+     */
     add(queueItem, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {

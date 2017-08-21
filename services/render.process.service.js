@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const RenderQueue = require('./render.queue.service');
 const TemplateDefinitionService = require('./template.definition.service');
+const TemplateService = require('../services/template.service');
 const logger = require('./logger.service');
 const dependencyValidator = require('../validators/template.dependencies.validator');
 const templateDefinitions = require('../templates/definition');
@@ -20,6 +21,7 @@ class RenderProcessService {
     constructor() {
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
+        this.templateService = new TemplateService();
     }
 
 
@@ -28,6 +30,7 @@ class RenderProcessService {
      * Get the name, dataset and path of the template that will be added to the render queue
      * @param data
      * @param correlationId
+     * @private
      */
     _createQueueItem(data, correlationId) {
         const self = this;
@@ -54,7 +57,7 @@ class RenderProcessService {
                 .then((path) => { return new Promise((res, rej) => { queueItem.path = path; res({}); }) }) // set url on data object that will be saved
 
                 // set queueItem data
-                .then(() => { return templateDefinition.getTemplateData(data, correlationId) }) // get path of the template that will be rendered
+                .then(() => { return templateDefinition.getTemplateData(data, correlationId) }) // get data for the template that will be rendered
                 .then((templateData) => { return new Promise((res, rej) => { queueItem.data = templateData; res({}); }) }) // set url on data object that will be saved
 
                 // resolve promise
@@ -104,17 +107,41 @@ class RenderProcessService {
 
 
 
+    _renderQueueItem(template, path, data, correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
 
 
+            /*
+                    - render queue items
+                        - pre render
+                        - render template
+                        - create directory >>> FileSystemService?
+                        - write temlpate file >>> FileSystemService?
+                        - post render
+         */
 
-    /*
-                - render queue items
-                    - pre render
-                    - render template
-                    - create directory >>> FileSystemService?
-                    - write temlpate file >>> FileSystemService?
-                    - post render
-     */
+            //
+            let templateDefinition = null; // create empty template definition object for later re-use
+
+            // get template definitions
+            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definition
+                .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+
+                // render template
+                .then(() => { return templateDefinition.prerender(path, data, correlationId) }) // execute the pre render hook
+                .then((templateData) => { return self.templateService.render(template, templateData, correlationId) }) // render search snippet
+                .then((html) => { return templateDefinition.postrender(html, path, data, correlationId, correlationId) }) // execute the post render hook
+
+                //
+                .then((html) => { resolve(html); }) // resolve promise
+                .catch(error => {
+                    logger.error(error);
+                    reject(error);
+                });
+        })
+    }
+
 
 
     /**
@@ -192,6 +219,32 @@ class RenderProcessService {
                 .catch(error => {
                     reject(error);
                 });
+        })
+    }
+
+
+    /**
+     * Render all the template in the queue
+     * @param correlationId
+     */
+    renderQueue(correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+        // create promise group to render all templates in render queue
+        const promiseGroup = self.renderQueue.queue.map((d) => {
+            return self._renderQueueItem(d.template, d.path, d.data, correlationId);
+        });
+
+        // resolve promise group
+        Promise.all(promiseGroup)
+            .then((dataArray) => {
+                logger.info('Render all templates in render queue', correlationId);
+                resolve({});
+            })
+            .catch(error => {
+                reject(error);
+            })
         })
     }
 

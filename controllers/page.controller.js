@@ -7,7 +7,7 @@ const AuthService = require('../services/auth.service');
 const TemplateService = require('../services/template.service');
 const RenderProcessService = require('../services/render.process.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
-const PagePersistence = require('../persistense/page.persistence');
+const PagePersistence = require('../persistence/page.persistence');
 const AlgoliaConnector = require('../connectors/algolia.connector');
 const templateDefinitions = require('../templates/definition');
 const config = require('../config');
@@ -45,6 +45,7 @@ class PageController {
             .then(() => { return self.create(req.body, correlationId) }) // save page
             .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
             .then((data) => { return self.renderProcessService.enqueueDependancies(data, correlationId) }) // add page dependancies to queue
+            .then((data) => { console.log(self);return self.renderProcessService.renderQueue(correlationId) }) // add page dependancies to queue
             .then((data) => { // send response
                 return new Promise((resolve, reject) => {
                     logger.info('Finished successfully, send response', correlationId);
