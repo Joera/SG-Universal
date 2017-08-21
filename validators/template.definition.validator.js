@@ -11,8 +11,8 @@ const logger = require('../services/logger.service');
 const templateSchema = joi.object().keys({
     name: joi.string().required(),
     template: joi.string().required(),
-    searchSnippetTemplate: joi.string().required(),
-    dependencies: joi.array().items(joi.string()),
+    searchSnippetTemplate: joi.string().allow('').optional(),
+    getDependencies: joi.func().required(),
     getSearchSnippetData: joi.func().required(),
     getTemplateData: joi.func().required(),
     getPath: joi.func().required(),
@@ -29,6 +29,7 @@ const helperSchema = joi.object().keys({
 
 //
 const schema = joi.object({
+    templateNameKey: joi.string().required(),
     templates: joi.array().items(templateSchema).required(),
     handlebarsHelpers: joi.array().items(helperSchema)
 }).required();

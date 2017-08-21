@@ -5,10 +5,11 @@ const uuidv4 = require('uuid/v4');
 const logger = require('../services/logger.service');
 const AuthService = require('../services/auth.service');
 const TemplateService = require('../services/template.service');
-const EnqueueService = require('../services/enqueue.service');
+const RenderProcessService = require('../services/render.process.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistense/page.persistence');
 const AlgoliaConnector = require('../connectors/algolia.connector');
+const templateDefinitions = require('../templates/definition');
 const config = require('../config');
 
 
@@ -23,7 +24,7 @@ class PageController {
         this.authService = new AuthService();
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
-        this.enqueueService = new EnqueueService();
+        this.renderProcessService = new RenderProcessService();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.algoliaConnector = new AlgoliaConnector();
     }
@@ -37,23 +38,16 @@ class PageController {
     handleCreateCall(req, res, next) {
         const self = this;
 
-        /*
-            --- authenticate
-            --- set path
-            --- send response
-            --- save
-            - render >>> render queue service???
-         */
-
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
-            // .then(() => { return self.templateDefinitionService.getDefinition(req.body, correlationId) }) // get template definition
+            // .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
             // .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
             .then(() => { return self.create(req.body, correlationId) }) // save page
-            .then((data) => { return self.enqueueService.enqueue(data, correlationId) }) // add page to render queue
-// .then((data) => { console.log(data); }) //
+            .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
+            .then((data) => { return self.renderProcessService.enqueueDependancies(data, correlationId) }) // add page dependancies to queue
             .then((data) => { // send response
                 return new Promise((resolve, reject) => {
+                    logger.info('Finished successfully, send response', correlationId);
                     res.status(201); // set http status code for response
                     res.json({message: 'Ok', url: data.url}); // send response body
                     resolve({}); // resolve promise
@@ -103,7 +97,7 @@ class PageController {
 
             // get template definitions
             // find the template that belongs to the data
-            self.templateDefinitionService.getDefinition(data, correlationId) // get template definition
+            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // map data
@@ -121,10 +115,12 @@ class PageController {
 
                 // save page
                 .then(() => { return self.pagePersistence.save(saveData, correlationId) }) // save page to database
-                .then(() => { resolve(saveData) }) // save page to database
 
                 // update algolia search
                 .then(() => { return self.algoliaConnector.addPage(saveData, correlationId) }) // save page to database
+
+                // resolve promise
+                .then(() => { resolve(saveData) }) // resolve promise
 
                 // catch errors
                 .catch(error => {

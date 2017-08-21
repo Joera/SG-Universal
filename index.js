@@ -24,7 +24,7 @@ String.prototype.replaceAll = function (search, replacement) {
 
 
 
-// vallidate template definition
+// validate template definition
 templateDefinitionsValidator.validate(templateDefinitions);
 
 

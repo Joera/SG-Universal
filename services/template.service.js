@@ -29,11 +29,11 @@ class TemplateService {
                     handlebars.registerHelper(helper.name, helper.helper); // register helper
                 }
                 catch (error) {
-                    error.correlationId = correlationId;
                     reject(error);
                 }
             });
 
+            logger.info('Registered helpers', correlationId);
             resolve({});
         })
     }
@@ -53,7 +53,6 @@ class TemplateService {
             // read partial directory
             fs.readdir(dirname, (error, filenames) => {
                 if (error) {
-                    error.correlationId = correlationId;
                     reject(error);
                 }
 
@@ -62,7 +61,6 @@ class TemplateService {
                     filenames.forEach((filename) => {
                         fs.readFile(dirname + '/' + filename, 'utf-8', (error, source) => {
                             if (error) {
-                                error.correlationId = correlationId;
                                 reject(error);
                             }
 
@@ -72,11 +70,10 @@ class TemplateService {
                             // register partials
                             try {
                                 handlebars.registerPartial(partialName, source); //
-                                logger.info('Register partials', correlationId);
+                                logger.info('Registered partials', correlationId);
                                 resolve({}); // resolve promise
                             }
                             catch (error) {
-                                error.correlationId = correlationId;
                                 reject(error);
                             }
                         });
@@ -92,21 +89,20 @@ class TemplateService {
 
     /**
      * Render template
-     * @param template                  name of the handlebars temlpate file, assume it is in the temlpates root folder
+     * @param templateName              name of the handlebars temlpate file, assume it is in the temlpates root folder
      * @param data                      template data
      * @param correlationId             id for correlation through the process chain
      * @private
      */
-    _renderTemplate(template, data, correlationId) {
+    _renderTemplate(templateName, data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
             // set directory
             const dirname = config.root + '/templates';
 
             // read template
-            fs.readFile(dirname + '/' + template, 'utf-8', (error, source) => {
+            fs.readFile(dirname + '/' + templateName, 'utf-8', (error, source) => {
                 if (error) {
-                    error.correlationId = correlationId;
                     reject(error);
                 }
 
@@ -121,11 +117,10 @@ class TemplateService {
                 try {
                     const template = handlebars.compile(source);
                     const html = template(templateData);
-                    logger.info('Render template', correlationId);
+                    logger.info('Render template: ' + templateName, correlationId);
                     resolve(html); // resolve promise
                 }
                 catch (error) { // error rendering template
-                    error.correlationId = correlationId;
                     reject(error);
                 }
             });
@@ -149,7 +144,7 @@ class TemplateService {
                 removeComments: true,
                 collapseWhitespace: true
             });
-            logger.info('Minify template html');
+            // logger.info('Minify template html');
             resolve(html); // resolve promise
         })
     }
@@ -176,7 +171,6 @@ class TemplateService {
                     resolve(html)
                 })
                 .catch(error => {
-                    error.correlationId = correlationId;
                     reject(error);
                 });
         })

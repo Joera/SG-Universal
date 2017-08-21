@@ -17,18 +17,6 @@ class RenderQueueService {
     }
 
 
-    /*
-                - start queue
-                    - pre render
-                    - render template
-                    - create directory >>> FileSystemService?
-                    - write temlpate file >>> FileSystemService?
-                    - post render
-     */
-
-
-
-
 
 
 
