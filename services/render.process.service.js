@@ -108,21 +108,17 @@ class RenderProcessService {
     }
 
 
-
+    /**
+     * Controller function for rendering a single template from the render queue
+     * @param template                  name of the handlebars template file, assume it is in the templates root folder
+     * @param path                      path of the template file
+     * @param data                      template data
+     * @param correlationId
+     * @private
+     */
     _renderQueueItem(template, path, data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-
-
-            /*
-                    - render queue items
-                        - pre render
-                        - render template
-                        - create directory >>> FileSystemService?
-                        - write temlpate file >>> FileSystemService?
-                        - post render
-         */
-
             //
             let templateDefinition = null; // create empty template definition object for later re-use
             let templateHtml = null;
@@ -138,8 +134,8 @@ class RenderProcessService {
                 .then(() => { return templateDefinition.postrender(templateHtml, path, data, correlationId, correlationId) }) // execute the post render hook
 
                 // write template file
-                .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) })
-                .then(() => { return self.fileSystemConnector.writeTemplateFile(path, templateHtml, correlationId) })
+                .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) }) // create template directory
+                .then(() => { return self.fileSystemConnector.writeTemplateFile(path, templateHtml, correlationId) }) // write template file
 
                 //
                 .then(() => { resolve(templateHtml); }) // resolve promise
@@ -232,7 +228,7 @@ class RenderProcessService {
 
 
     /**
-     * Render all the template in the queue
+     * Render all the templates in the queue
      * @param correlationId
      */
     render(correlationId) {
@@ -245,7 +241,7 @@ class RenderProcessService {
 
             // resolve promise group
             Promise.all(promiseGroup)
-                .then((dataArray) => {
+                .then(() => {
                     logger.info('Render all templates in render queue', correlationId);
                     resolve({});
                 })
