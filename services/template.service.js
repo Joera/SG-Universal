@@ -33,7 +33,7 @@ class TemplateService {
                 }
             });
 
-            logger.info('Registered helpers', correlationId);
+            // logger.info('Registered helpers', correlationId);
             resolve({});
         })
     }
@@ -70,7 +70,7 @@ class TemplateService {
                             // register partials
                             try {
                                 handlebars.registerPartial(partialName, source); //
-                                logger.info('Registered partials', correlationId);
+                                // logger.info('Registered partials', correlationId);
                                 resolve({}); // resolve promise
                             }
                             catch (error) {
@@ -161,7 +161,7 @@ class TemplateService {
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions
                 .then(() => {
-                    return self._registerPartials(data, correlationId)
+                    return self._registerPartials(correlationId)
                 }) // register partials
                 .then(() => {
                     return self._renderTemplate(template, data, correlationId)
@@ -171,6 +171,7 @@ class TemplateService {
                     resolve(html)
                 })
                 .catch(error => {
+                    error.correlationId = correlationId;
                     reject(error);
                 });
         })

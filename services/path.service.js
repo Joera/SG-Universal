@@ -2,9 +2,6 @@
 
 const Promise = require('bluebird');
 const logger = require('./logger.service');
-const mkdirp = require('mkdirp');
-const rimraf = require('rimraf');
-
 
 
 /**
@@ -138,46 +135,6 @@ class PathService {
             proxiedError.message = 'No string supplied to clean';
             throw proxiedError;
         }
-    }
-
-
-    /**
-     * Create directory
-     * @param path                      path of directory that needs to be created
-     * @param correlationId             id for correlation through the process chain
-     * @returns {string}
-     */
-    createDirectory(path, correlationId) {
-        const self = this;
-        return new Promise((resolve, reject) => {
-            mkdirp(path, (error) => {
-                if(error) {
-                    reject(error);
-                }
-                logger.info('Created directory: ' + path, correlationId);
-                resolve(path); // resolve promise
-            });
-        });
-    }
-
-
-    /**
-     * Delete driectory
-     * @param path                      path of directory that needs to be removed
-     * @param correlationId             id for correlation through the process chain
-     * @returns {string}
-     */
-    deleteDirectory(path, correlationId) {
-        const self = this;
-        return new Promise((resolve, reject) => {
-            rimraf(path, (error) => {
-                if (error) {
-                    reject(error);
-                }
-                logger.info('Deleted directory: ' + path, correlationId);
-                resolve(path); // resolve promise
-            })
-        });
     }
 
 

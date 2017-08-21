@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const FileSystemConnector = require('../connectors/filesystem.connector');
 const RenderQueue = require('./render.queue.service');
 const TemplateDefinitionService = require('./template.definition.service');
 const TemplateService = require('../services/template.service');
@@ -19,6 +20,7 @@ class RenderProcessService {
      * constructor
      */
     constructor() {
+        this.fileSystemConnector = new FileSystemConnector();
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.templateService = new TemplateService();
@@ -123,6 +125,7 @@ class RenderProcessService {
 
             //
             let templateDefinition = null; // create empty template definition object for later re-use
+            let templateHtml = null;
 
             // get template definitions
             self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definition
@@ -131,10 +134,15 @@ class RenderProcessService {
                 // render template
                 .then(() => { return templateDefinition.prerender(path, data, correlationId) }) // execute the pre render hook
                 .then((templateData) => { return self.templateService.render(template, templateData, correlationId) }) // render search snippet
-                .then((html) => { return templateDefinition.postrender(html, path, data, correlationId, correlationId) }) // execute the post render hook
+                .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
+                .then(() => { return templateDefinition.postrender(templateHtml, path, data, correlationId, correlationId) }) // execute the post render hook
+
+                // write template file
+                .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) })
+                .then(() => { return self.fileSystemConnector.writeTemplateFile(path, templateHtml, correlationId) })
 
                 //
-                .then((html) => { resolve(html); }) // resolve promise
+                .then(() => { resolve(templateHtml); }) // resolve promise
                 .catch(error => {
                     logger.error(error);
                     reject(error);
@@ -168,7 +176,7 @@ class RenderProcessService {
      * @param data
      * @param correlationId
      */
-    enqueueDependancies(data, correlationId) {
+    enqueueDependencies(data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -227,24 +235,24 @@ class RenderProcessService {
      * Render all the template in the queue
      * @param correlationId
      */
-    renderQueue(correlationId) {
+    render(correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
+            // create promise group to render all templates in render queue
+            const promiseGroup = self.renderQueue.queue.map((d) => {
+                return self._renderQueueItem(d.template, d.path, d.data, correlationId);
+            });
 
-        // create promise group to render all templates in render queue
-        const promiseGroup = self.renderQueue.queue.map((d) => {
-            return self._renderQueueItem(d.template, d.path, d.data, correlationId);
-        });
-
-        // resolve promise group
-        Promise.all(promiseGroup)
-            .then((dataArray) => {
-                logger.info('Render all templates in render queue', correlationId);
-                resolve({});
-            })
-            .catch(error => {
-                reject(error);
-            })
+            // resolve promise group
+            Promise.all(promiseGroup)
+                .then((dataArray) => {
+                    logger.info('Render all templates in render queue', correlationId);
+                    resolve({});
+                })
+                .catch(error => {
+                    error.correlationId = correlationId;
+                    reject(error);
+                })
         })
     }
 

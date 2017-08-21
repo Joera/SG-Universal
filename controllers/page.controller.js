@@ -44,8 +44,8 @@ class PageController {
             // .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
             .then(() => { return self.create(req.body, correlationId) }) // save page
             .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
-            .then((data) => { return self.renderProcessService.enqueueDependancies(data, correlationId) }) // add page dependancies to queue
-            .then((data) => { console.log(self);return self.renderProcessService.renderQueue(correlationId) }) // add page dependancies to queue
+            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to queue
+            .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
             .then((data) => { // send response
                 return new Promise((resolve, reject) => {
                     logger.info('Finished successfully, send response', correlationId);
