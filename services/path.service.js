@@ -124,6 +124,7 @@ class PathService {
         const self = this;
         if(str && str !== null) {
             let clean = self._removeDiacritics(str) // replace accented characters
+                .replaceAll('-', ' ') // replace dashes with spaces to persist dashes. Dashes will be removed by next regex replace
                 .replaceAll(/[^\w\s]/gi, '') // remove special characters
                 .replaceAll(' ', '-') // replace spaces with dashes
                 .trim() // remove leading and trailing whitespaces

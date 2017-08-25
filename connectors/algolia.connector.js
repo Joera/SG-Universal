@@ -26,7 +26,7 @@ class AlgoliaConnector {
         const index = this.client.initIndex(config.algoliaIndexNamePrefix + 'all');
         return new Promise((resolve, reject) => {
 
-            // create record to Algolio Search
+            // save record to Algolio Search
             index.addObject(data, data._id, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
@@ -50,7 +50,7 @@ class AlgoliaConnector {
         const index = this.client.initIndex(config.algoliaIndexNamePrefix + 'all');
         return new Promise((resolve, reject) => {
 
-            // create record to Algolio Search
+            // save record to Algolio Search
             index.saveObject(data, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
@@ -74,14 +74,14 @@ class AlgoliaConnector {
         const index = this.client.initIndex(config.algoliaIndexNamePrefix + 'all');
         return new Promise((resolve, reject) => {
 
-            // create record to Algolio Search
+            // save record to Algolio Search
             index.deleteObject(id, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     reject(error);
                 }
                 logger.info('Deleted page from Algolia search', correlationId);
-                resolve(data); // resolve promise
+                resolve(id); // resolve promise
             });
 
         })

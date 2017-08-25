@@ -19,7 +19,7 @@ class AuthService {
                 logger.info('Authentication successful', correlationId);
                 resolve({}); // resolve promise
             } else {
-                const proxiedError = new Error(); // create new error object
+                const proxiedError = new Error(); // save new error object
                 proxiedError.statusCode = 401; // add custom property statusCode to error object
                 proxiedError.correlationId = correlationId; // add custom property correlationId to error object
                 proxiedError.message = 'Unauthorized to make this call';

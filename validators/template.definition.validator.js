@@ -16,9 +16,11 @@ const templateSchema = joi.object().keys({
     getSearchSnippetData: joi.func().required(),
     getTemplateData: joi.func().required(),
     getPath: joi.func().required(),
-    prerender: joi.func(),
-    postrender: joi.func(),
-    getMapping: joi.func().required()
+    getMapping: joi.func().required(),
+    preRender: joi.func().required(),
+    postRender: joi.func().required(),
+    preDelete: joi.func().required(),
+    postDelete: joi.func().required(),
 });
 
 //

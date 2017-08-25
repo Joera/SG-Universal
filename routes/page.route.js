@@ -9,8 +9,8 @@ const router = express.Router();
 
 
 // init blog post controller
-const pageCtrl = new PageCtrl(); // create instance of blog controller
-let create = pageCtrl.handleCreateCall.bind(pageCtrl), // bind blog controller context to this in create function
+const pageCtrl = new PageCtrl(); // save instance of blog controller
+let create = pageCtrl.handleCreateCall.bind(pageCtrl), // bind blog controller context to this in save function
     update = pageCtrl.handleUpdateCall.bind(pageCtrl), // bind blog controller context to this in update function
     del = pageCtrl.handleDeleteCall.bind(pageCtrl), // bind blog controller context to this in update function
     preview = pageCtrl.handlePreviewCall.bind(pageCtrl); // bind blog controller context to this in preview function
@@ -21,7 +21,7 @@ router.route('/')
     // GET /api/blog - get list of blog posts
     // .get(blogCtrl.list)
 
-    // POST /api/blog - create new blog post
+    // POST /api/blog - save new blog post
     .post(create)
 
     // PUT /api/blog - update blog post

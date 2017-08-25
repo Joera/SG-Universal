@@ -9,6 +9,7 @@ const RenderProcessService = require('../services/render.process.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const AlgoliaConnector = require('../connectors/algolia.connector');
+const FileSystemConnector = require('../connectors/filesystem.connector');
 const templateDefinitions = require('../templates/definition');
 const config = require('../config');
 
@@ -27,6 +28,7 @@ class PageController {
         this.renderProcessService = new RenderProcessService();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.algoliaConnector = new AlgoliaConnector();
+        this.fileSystemConnector = new FileSystemConnector();
     }
 
 
@@ -35,26 +37,35 @@ class PageController {
      * CRUD handlers
      ***********************************************************************************************/
 
+    /**
+     * Handles the create page api call
+     * @param req
+     * @param res
+     * @param next
+     */
     handleCreateCall(req, res, next) {
         const self = this;
 
+        let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
-            // .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
-            // .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
-            .then(() => { return self.create(req.body, correlationId) }) // save page
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
+            .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
+            .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
+            .then(() => { return self.save(req.body, correlationId, false) }) // save page
             .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
-            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to queue
+            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
             .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
             .then((data) => { // send response
                 return new Promise((resolve, reject) => {
                     logger.info('Finished successfully, send response', correlationId);
                     res.status(201); // set http status code for response
-                    res.json({message: 'Ok', url: data.url}); // send response body
+                    res.json({message: 'Ok', url: url}); // send response body
                     resolve({}); // resolve promise
                 })
             })
             .catch(error => {
+                error.correlationId = correlationId;
                 logger.error(error);
                 res.status(error.statusCode || 500); // set http status code for response
                 res.json({message: error.message}); // send response body
@@ -62,21 +73,89 @@ class PageController {
     }
 
 
-
+    /**
+     * Handles the update page api call
+     * @param req
+     * @param res
+     * @param next
+     */
     handleUpdateCall(req, res, next) {
+        const self = this;
 
+        let url = null;
+        const correlationId = uuidv4(); // set correlation id for debugging the process chain
+        self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
+            .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
+            .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
+            .then(() => { return self.save(req.body, correlationId, true) }) // save page
+            .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
+            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
+            .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
+            .then((data) => { // send response
+                return new Promise((resolve, reject) => {
+                    logger.info('Finished successfully, send response', correlationId);
+                    res.status(200); // set http status code for response
+                    res.json({message: 'Ok', url: url}); // send response body
+                    resolve({}); // resolve promise
+                })
+            })
+            .catch(error => {
+                error.correlationId = correlationId;
+                logger.error(error);
+                res.status(error.statusCode || 500); // set http status code for response
+                res.json({message: error.message}); // send response body
+            });
     }
 
 
-
-
+    /**
+     * Handles the delete age api call
+     * @param req
+     * @param res
+     * @param next
+     */
     handleDeleteCall(req, res, next) {
+        const self = this;
 
+
+        const correlationId = uuidv4(); // set correlation id for debugging the process chain
+        self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
+            // delete page
+            .then(() => { return self.delete(req.body, correlationId) }) // delete page from database and search
+
+            // render dependencies
+            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
+            .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
+
+            // delete rendered template from cache/disk
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
+            .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
+            .then((path) => { return self.fileSystemConnector.deleteDirectory(path, correlationId) }) // delete template file and directory
+
+            .then(() => { // send response
+                return new Promise((resolve, reject) => {
+                    logger.info('Finished successfully, send response', correlationId);
+                    res.status(200); // set http status code for response
+                    res.json({message: 'Ok'}); // send response body
+                    resolve({}); // resolve promise
+                })
+            })
+            .catch(error => {
+                error.correlationId = correlationId;
+                logger.error(error);
+                res.status(error.statusCode || 500); // set http status code for response
+                res.json({message: error.message}); // send response body
+            });
     }
 
 
-
-
+    /**
+     * Handles the preview page api call
+     * @param req
+     * @param res
+     * @param next
+     */
     handlePreviewCall(req, res, next) {
 
     }
@@ -88,12 +167,17 @@ class PageController {
      *
      ***********************************************************************************************/
 
-
-    create(data, correlationId) {
+    /**
+     * Save page to database and algolia search
+     * @param data                          page data
+     * @param correlationId
+     * @param isUpdate                      true if is update, false if new record
+     */
+    save(data, correlationId, isUpdate) {
         const self = this;
         return new Promise((resolve, reject) => {
             //
-            let templateDefinition = null; // create empty template definition object for later re-use
+            let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
 
             // get template definitions
@@ -118,7 +202,7 @@ class PageController {
                 .then(() => { return self.pagePersistence.save(saveData, correlationId) }) // save page to database
 
                 // update algolia search
-                .then(() => { return self.algoliaConnector.addPage(saveData, correlationId) }) // save page to database
+                .then(() => { return (isUpdate) ? self.algoliaConnector.updatePage(saveData, correlationId) : self.algoliaConnector.addPage(saveData, correlationId) }) // save page to search
 
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
@@ -133,14 +217,37 @@ class PageController {
     }
 
 
-
-    delete() {
-        /*
-            -
-         */
+    /**
+     * Delete page from database and algolia search
+     * @param data                      page data
+     * @param correlationId
+     */
+    delete(data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            resolve({});
+
+            let templateDefinition = null; // save empty template definition object for later re-use
+            // get template definitions
+            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definition
+                .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+
+                // pre-delete
+                .then(() => { return templateDefinition.preDelete(data, correlationId) }) // pre delete function
+
+                // delete
+                .then(() => { return self.pagePersistence.delete(data.id, correlationId) }) // delete page from database
+                .then(() => { return self.algoliaConnector.deletePage(data.id, correlationId) }) // delete page from algolia search
+
+                // post-delete
+                .then(() => { return templateDefinition.postDelete(data, correlationId) }) // post delete function
+
+                .then(() => { resolve(data) }) // resolve promise
+                .catch(error => {
+                    error.correlationId = correlationId; // add correlationId to error object
+                    logger.error(error);
+                    reject(error);
+                });
+
         })
     }
 
