@@ -21,18 +21,18 @@ class WordpressConnector {
 
 
     /**
-     * Get posts from wordpress api
+     * Get pages from wordpress api
      * @param correlationId
      */
-    getPosts(correlationId) {
+    getPages(correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
 
             // send http request
-            requestify.get(appConfig.wordpresUrl + '/api/get_posts/?count=-1')
+            requestify.get(config.wordpresUrl + '/api/get_posts/?count=-1')
                 .then(function(response) {
                     logger.info('Received posts from wordpress', correlationId);
-                    resolve(response.getBody());
+                    resolve(response.getBody().posts); // only return the posts of api response
                 })
                 .catch((error) => {
                     reject(error);
