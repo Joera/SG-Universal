@@ -11,8 +11,7 @@
     "bulkrender": "node tasks/bulkrender.js",
     "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
     "style": "gulp scss-compile",
-    "scripts": "gulp js-compile",
-    "geo": "node tasks/autocadToMap.js"
+    "scripts": "gulp js-compile"
   },
   "repository": {
     "type": "git",

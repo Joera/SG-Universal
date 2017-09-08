@@ -16,22 +16,17 @@ class PagePersistence {
     }
 
 
+
     /**
      * Query page collections in MongoDB
-     * @param query                         MongoDB query object
+     * @param query                         MongoDB query object, {} query object means find all
      * @param correlationId
      */
     find(query, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            db.page().find(query)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((error) => {
-                    // error.correlationId = correlationId;
-                    reject(error);
-                })
+            let data = db.page().find(query).toArray(); // find records and convert mongo cursor to array
+            resolve(data);
         })
     }
 
