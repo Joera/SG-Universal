@@ -2,14 +2,14 @@
 
 
 /**
- * Sync task
- * Get all pages from CMS and update the local mongodb and Algolia search stores
+ * Render task
+ * Re-render all the pages in the local mongodb
  */
 
 
 const logger = require('../services/logger.service');
-const SyncController = require('../controllers/sync.controller');
-const syncController = new SyncController();
+const BulkrenderController = require('../controllers/bulkrender.controller');
+const bulkrenderController = new BulkrenderController();
 
 
 
@@ -30,7 +30,7 @@ String.prototype.replaceAll = function (search, replacement) {
 
 
 
-syncController.sync()
+bulkrenderController.render()
     .then((pages) => {
         process.exit(0);
     })

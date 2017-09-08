@@ -9,7 +9,7 @@ const config = require('../config');
 
 /**
  * Sync service
- *
+ * Helper service to determine deleted pages in the sync process
  */
 class SyncService {
 

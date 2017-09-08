@@ -40,9 +40,9 @@ class SyncController {
                 // delete pages
                 .then(() => { return self.syncService.findDeletedPages(cmsPages, correlationId) }) // find the deleted pages
                 .then((pages) => { // delete pages from database and algolia
-                    deletedPages = pages;
-                    return Promise.all(deletedPages.map((page) => {
-                        return self.pageController.delete(page, correlationId); //
+                    deletedPages = pages; // save deleted pages for later use
+                    return Promise.all(deletedPages.map((page) => { // create promise group for deleting pages
+                        return self.pageController.delete(page, correlationId); // delete single page
                     }));
                 })
 
@@ -65,7 +65,6 @@ class SyncController {
                     logger.error(error, correlationId);
                     reject(error);
                 });
-
         });
     }
 

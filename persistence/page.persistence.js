@@ -16,7 +16,6 @@ class PagePersistence {
     }
 
 
-
     /**
      * Query page collections in MongoDB
      * @param query                         MongoDB query object, {} query object means find all
