@@ -51,7 +51,7 @@ class SyncService {
      * @private
      */
     _idComparitor(a, b) {
-        return a.id === b.id;
+        return String(a.id) === String(b.id);
     }
 
 

@@ -129,9 +129,9 @@ class RenderProcessService {
 
                 // render template
                 .then(() => { return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
-                .then((templateData) => { return self.templateService.render(template, templateData, correlationId) }) // render search snippet
+                .then((templateData) => { return self.templateService.render(template, templateData, correlationId) }) // render template
                 .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
-                .then(() => { return templateDefinition.postRender(templateHtml, path, data, correlationId, correlationId) }) // execute the post render hook
+                .then(() => { return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
 
                 // write template file
                 .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) }) // save template directory
@@ -234,21 +234,26 @@ class RenderProcessService {
     render(correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            // save promise group to render all templates in render queue
-            const promiseGroup = self.renderQueue.queue.map((d) => {
-                return self._renderQueueItem(d.template, d.path, d.data, correlationId);
-            });
 
-            // resolve promise group
-            Promise.all(promiseGroup)
-                .then(() => {
-                    logger.info('Render all templates in render queue', correlationId);
-                    resolve({});
+            self.renderQueue.get() // get all items in render queue
+                .then((queue) => {
+                    // save promise group to render all templates in render queue
+                    const promiseGroup = queue.map((d) => {
+                        return self._renderQueueItem(d.template, d.path, d.data, correlationId);
+                    });
+
+                    // resolve promise group
+                    Promise.all(promiseGroup)
+                        .then(() => {
+                            logger.info('Rendered all templates in render queue', correlationId);
+                            resolve({});
+                        })
+                        .catch(error => {
+                            error.correlationId = correlationId;
+                            reject(error);
+                        })
                 })
-                .catch(error => {
-                    error.correlationId = correlationId;
-                    reject(error);
-                })
+
         })
     }
 

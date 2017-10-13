@@ -13,7 +13,7 @@ const config = require('../config');
  * Sync controller
  *
  */
-class SyncController {
+class BulkRenderController {
 
 
     constructor () {
@@ -72,4 +72,4 @@ class SyncController {
 
 }
 
-module.exports = SyncController;
+module.exports = BulkRenderController;

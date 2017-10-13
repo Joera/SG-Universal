@@ -24,8 +24,15 @@ class PagePersistence {
     find(query, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            let data = db.page().find(query).toArray(); // find records and convert mongo cursor to array
-            resolve(data);
+            // let data = db.page().find(query).toArray(); // find records and convert mongo cursor to array
+            // resolve(data);
+// let a = db.page();
+// resolve([]);
+
+
+            db.getPageCollection() // get page collection
+                .then((collection) => { return collection.find(query).toArray(); }) // execute find query
+                .then((result) => { resolve(result); }) // return results
         })
     }
 
@@ -38,7 +45,20 @@ class PagePersistence {
     save(data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            db.page().save(data)
+            data._id = String(data._id); // make sure id is a string
+            data.objectID = String(data.objectID); // make sure objectID is a string
+            // db.page().save(data)
+            //     .then((d) => {
+            //         logger.info('Saved page to database', correlationId);
+            //         resolve(data);
+            //     })
+            //     .catch((error) => {
+            //         // error.correlationId = correlationId;
+            //         reject(error);
+            //     })
+
+            db.getPageCollection() // get page collection
+                .then((collection) => { return collection.save(data); }) // execute save
                 .then((d) => {
                     logger.info('Saved page to database', correlationId);
                     resolve(data);
@@ -59,7 +79,18 @@ class PagePersistence {
     delete(id, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            db.page().remove({"_id": id})
+            // db.page().remove({"_id": id})
+            //     .then((d) => {
+            //         logger.info('Deleted page from database', correlationId);
+            //         resolve(id);
+            //     })
+            //     .catch((error) => {
+            //         // error.correlationId = correlationId;
+            //         reject(error);
+            //     })
+
+            db.getPageCollection() // get page collection
+                .then((collection) => { return collection.remove({"_id": id}); }) // execute delete
                 .then((d) => {
                     logger.info('Deleted page from database', correlationId);
                     resolve(id);

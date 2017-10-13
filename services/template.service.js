@@ -131,21 +131,30 @@ class TemplateService {
     /**
      * Minify rendered html
      * @param html                      Rendered temlpate
+     * @param correlationId
      * @private
      */
-    _minifyRenderedTemplate(html) {
+    _minifyRenderedTemplate(html, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            // minify html
-            // see option paramaters for minification at: https://www.npmjs.com/package/html-minifier
-            html = minify(html, {
-                removeAttributeQuotes: true,
-                removeTagWhitespace: true,
-                removeComments: true,
-                collapseWhitespace: true
-            });
-            // logger.info('Minify template html');
-            resolve(html); // resolve promise
+
+            // render the template
+            try {
+                // minify html
+                // see option paramaters for minification at: https://www.npmjs.com/package/html-minifier
+                html = minify(html, {
+                    removeAttributeQuotes: true,
+                    removeTagWhitespace: true,
+                    removeComments: true,
+                    collapseWhitespace: true
+                });
+
+                // logger.info('Minify template html');
+                resolve(html); // resolve promise
+            }
+            catch (error) { // error rendering template
+                reject(error);
+            }
         })
     }
 
@@ -160,13 +169,9 @@ class TemplateService {
         const self = this;
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions
-                .then(() => {
-                    return self._registerPartials(correlationId)
-                }) // register partials
-                .then(() => {
-                    return self._renderTemplate(template, data, correlationId)
-                }) // render the template
-                .then(self._minifyRenderedTemplate) // minify the rendered template html
+                .then(() => { return self._registerPartials(correlationId) }) // register partials
+                .then(() => { return self._renderTemplate(template, data, correlationId) }) // render the template
+                .then((html) => { return self._minifyRenderedTemplate(html, correlationId) }) // minify the rendered template html
                 .then((html) => {
                     resolve(html)
                 })

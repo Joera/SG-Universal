@@ -8,7 +8,8 @@ const router = express.Router();
 
 
 // mount routes
-router.use('/page', pageRoutes);
+router.use('/blog', pageRoutes);
+// router.use('/page', pageRoutes);
 
 //
 module.exports = router;

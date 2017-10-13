@@ -53,6 +53,18 @@ class RenderQueueService {
     }
 
 
+    /**
+     * Get all items from the render queue and clear the queue
+     * @param correlationId
+     */
+    get(correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            const queue = _.map(self.queue, _.clone); // make copy of render queue to return
+            self.queue = []; // empty queue
+            resolve(queue);
+        })
+    }
 
 
 

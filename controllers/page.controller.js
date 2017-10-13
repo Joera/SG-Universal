@@ -8,7 +8,7 @@ const TemplateService = require('../services/template.service');
 const RenderProcessService = require('../services/render.process.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
-const AlgoliaConnector = require('../connectors/algolia.connector');
+const SearchConnector = require('../connectors/algolia.connector');
 const FileSystemConnector = require('../connectors/filesystem.connector');
 const templateDefinitions = require('../templates/definition');
 const config = require('../config');
@@ -27,7 +27,7 @@ class PageController {
         this.templateService = new TemplateService();
         this.renderProcessService = new RenderProcessService();
         this.templateDefinitionService = new TemplateDefinitionService();
-        this.algoliaConnector = new AlgoliaConnector();
+        this.searchConnector = new SearchConnector();
         this.fileSystemConnector = new FileSystemConnector();
     }
 
@@ -48,6 +48,7 @@ class PageController {
 
         let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
+        logger.info('Received create call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
@@ -84,6 +85,7 @@ class PageController {
 
         let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
+        logger.info('Received update call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
@@ -118,8 +120,8 @@ class PageController {
     handleDeleteCall(req, res, next) {
         const self = this;
 
-
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
+        logger.info('Received delete call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             // delete page
             .then(() => { return self.delete(req.body, correlationId) }) // delete page from database and search
@@ -128,10 +130,10 @@ class PageController {
             .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
             .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
 
-            // delete rendered template from cache/disk
-            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
-            .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
-            .then((path) => { return self.fileSystemConnector.deleteDirectory(path, correlationId) }) // delete template file and directory
+            // // delete rendered template from cache/disk
+            // .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
+            // .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
+            // .then((path) => { return self.fileSystemConnector.deleteDirectory(path, correlationId) }) // delete template file and directory
 
             .then(() => { // send response
                 return new Promise((resolve, reject) => {
@@ -186,7 +188,7 @@ class PageController {
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // map data
-                .then(() => { return templateDefinition.getMapping(data, correlationId); }) // map incomming data to data format that will be saved in database
+                .then(() => { return templateDefinition.getMapping(data, correlationId); }) // map incoming data to data format that will be saved in database
                 .then((mappedData) => { return new Promise((res, rej) => { saveData = mappedData; res({}); }) }) // set saveData object for later use
 
                 // set url
@@ -201,8 +203,8 @@ class PageController {
                 // save page
                 .then(() => { return self.pagePersistence.save(saveData, correlationId) }) // save page to database
 
-                // update algolia search
-                .then(() => { return (isUpdate) ? self.algoliaConnector.updatePage(saveData, correlationId) : self.algoliaConnector.addPage(saveData, correlationId) }) // save page to search
+                // update search
+                .then(() => { return (isUpdate) ? self.searchConnector.updatePage(saveData, correlationId) : self.searchConnector.addPage(saveData, correlationId) }) // save page to search
 
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
@@ -234,9 +236,13 @@ class PageController {
                 // pre-delete
                 .then(() => { return templateDefinition.preDelete(data, correlationId) }) // pre delete function
 
-                // delete
+                // delete from mongo and search
                 .then(() => { return self.pagePersistence.delete(data.id, correlationId) }) // delete page from database
-                .then(() => { return self.algoliaConnector.deletePage(data.id, correlationId) }) // delete page from algolia search
+                .then(() => { return self.searchConnector.deletePage(data.id, correlationId) }) // delete page from algolia search
+
+                // delete rendered template from cache/disk
+                .then(() => { return templateDefinition.getPath(data, correlationId) }) // get path of the template that will be rendered
+                .then((path) => { return self.fileSystemConnector.deleteDirectory(path, correlationId) }) // delete template file and directory
 
                 // post-delete
                 .then(() => { return templateDefinition.postDelete(data, correlationId) }) // post delete function
