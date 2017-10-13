@@ -119,7 +119,6 @@ class PageController {
      */
     handleDeleteCall(req, res, next) {
         const self = this;
-
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received delete call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
@@ -154,7 +153,35 @@ class PageController {
      * @param next
      */
     handlePreviewCall(req, res, next) {
+        const self = this;
+        const correlationId = uuidv4(); // set correlation id for debugging the process chain
+        let templateDefinition = null; // save empty template definition object for later re-use
+        logger.info('Received preview call', correlationId);
+        self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
+            // get template definition
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId); }) // get template definition
+            .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
+            // render template
+            .then(() => { return templateDefinition.preRender(null, req.body, correlationId) }) // execute the pre render hook
+            .then((templateData) => { return self.templateService.render(templateDefinition.template, templateData, correlationId) }) // render template
+            .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
+
+            // send response
+            .then((html) => { // send response
+                return new Promise((resolve, reject) => {
+                    logger.info('Finished successfully, send response', correlationId);
+                    res.status(200); // set http status code for response
+                    res.json({html: html}); // send response body
+                    resolve({}); // resolve promise
+                })
+            })
+            .catch(error => {
+                error.correlationId = correlationId;
+                logger.error(error);
+                res.status(error.statusCode || 500); // set http status code for response
+                res.json({message: error.message}); // send response body
+            });
     }
 
 
