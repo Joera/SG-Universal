@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const _ = require('lodash');
 const FileSystemConnector = require('../connectors/filesystem.connector');
 const RenderQueue = require('./render.queue.service');
 const TemplateDefinitionService = require('./template.definition.service');
@@ -228,6 +229,38 @@ class RenderProcessService {
 
 
     /**
+     * Render a chunk of the render queue
+     * @param chunk                     array of render queue items
+     * @param chunkNumber               index of the current chunk
+     * @param totalChunks               total number of chunks
+     * @param correlationId
+     * @private
+     */
+    _renderQueueChunk(chunk, chunkNumber, totalChunks, correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            logger.info('Start rendering all templates in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
+
+            // save promise group to render all templates in render queue
+            const promiseGroup = chunk.map((d) => {
+                return self._renderQueueItem(d.template, d.path, d.data, correlationId);
+            });
+
+            // resolve promise group
+            Promise.all(promiseGroup)
+                .then(() => {
+                    resolve({});
+                })
+                .catch(error => {
+                    error.correlationId = correlationId;
+                    reject(error);
+                })
+
+        })
+    }
+
+
+    /**
      * Render all the templates in the queue
      * @param correlationId
      */
@@ -237,13 +270,13 @@ class RenderProcessService {
 
             self.renderQueue.get() // get all items in render queue
                 .then((queue) => {
-                    // save promise group to render all templates in render queue
-                    const promiseGroup = queue.map((d) => {
-                        return self._renderQueueItem(d.template, d.path, d.data, correlationId);
-                    });
+                    const chunkSize = 2; // set chunk size, number of templates that are rendered async at the same time
+                    const chunkedQueue = _.chunk(queue, chunkSize); // chunk render queue
 
-                    // resolve promise group
-                    Promise.all(promiseGroup)
+                    // iterate chunks serially
+                    Promise.each(chunkedQueue, (chunk, i) => {
+                        return self._renderQueueChunk(chunk, (i + 1), chunkedQueue.length, correlationId);
+                    })
                         .then(() => {
                             logger.info('Rendered all templates in render queue', correlationId);
                             resolve({});

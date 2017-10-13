@@ -21,7 +21,8 @@ class TemplateDefinitionService {
     getDefinition(templateName, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            logger.info('Get template definition: ' + templateName, correlationId);
+            // logger.info('Get template definition: ' + templateName, correlationId);
+
             // search template definition for type
             // data.type should match the name property of a template definition
             let definition = _.find(templateDefinitions.templates, (td) => { return td.name === templateName; });
