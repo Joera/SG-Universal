@@ -99,7 +99,7 @@ class RenderProcessService {
             }
 
             // set template name in data object
-            // template name is set in the templateNameKey property of the data boject as defined in the template definition file
+            // template name is set in the templateNameKey property of the data object as defined in the template definition file
             if(typeof data === 'object') {
                 data[templateDefinitions.templateNameKey] = templateName
             }

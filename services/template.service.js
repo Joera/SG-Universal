@@ -5,7 +5,8 @@ const fs = require('fs');
 const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');
 const logger = require('../services/logger.service');
-const templateDefinitions = require('../templates/definition');
+// const templateDefinitions = require('../templates/definition');
+const handlebarsHelpers = require('../templates/handlebars-helpers');
 const config = require('../config');
 
 
@@ -23,15 +24,17 @@ class TemplateService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            // get all helpers from template definitions
-            templateDefinitions.handlebarsHelpers.forEach((helper) => {
-                try {
-                    handlebars.registerHelper(helper.name, helper.helper); // register helper
-                }
-                catch (error) {
-                    reject(error);
-                }
-            });
+            // register all helpers
+            if(handlebarsHelpers) {
+                handlebarsHelpers.forEach((helper) => {
+                    try {
+                        handlebars.registerHelper(helper.name, helper.helper); // register helper
+                    }
+                    catch (error) {
+                        reject(error);
+                    }
+                });
+            }
 
             // logger.info('Registered helpers', correlationId);
             resolve({});
