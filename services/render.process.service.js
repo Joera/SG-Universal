@@ -269,7 +269,7 @@ class RenderProcessService {
 
             self.renderQueue.get() // get all items in render queue
                 .then((queue) => {
-                    const chunkSize = 3; // set chunk size, number of templates that are rendered async at the same time
+                    const chunkSize = 10; // set chunk size, number of templates that are rendered async at the same time
                     const chunkedQueue = _.chunk(queue, chunkSize); // chunk render queue
 
                     // iterate chunks serially

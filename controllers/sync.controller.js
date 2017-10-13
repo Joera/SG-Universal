@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const uuidv4 = require('uuid/v4');
+const _ = require('lodash');
 const PageController = require('./page.controller');
 const logger = require('../services/logger.service');
 const SyncService = require('../services/sync.service');
@@ -41,16 +42,16 @@ class SyncController {
                 .then(() => { return self.syncService.findDeletedPages(cmsPages, correlationId) }) // find the deleted pages
                 .then((pages) => { // delete pages from database and algolia
                     deletedPages = pages; // save deleted pages for later use
-                    return Promise.all(deletedPages.map((page) => { // create promise group for deleting pages
-                        return self.pageController.delete(page, correlationId); // delete single page
-                    }));
+                    const chunkSize = 5; // set chunk size, number of pages that are deleted async at the same time
+                    const chunkedPages = _.chunk(deletedPages, chunkSize); // chunk render queue
+                    return Promise.each(chunkedPages, (chunk, i) => { return self.deletePages(chunk, (i + 1), chunkedPages.length, correlationId); }) // delete pages, iterate chunks serially
                 })
 
                 // save pages
-                .then(() => { // save pages to database and algolia
-                    return Promise.all(cmsPages.map((page) => {
-                        return self.pageController.save(page, correlationId, true); //
-                    }));
+                .then(() => { // save pages to database and search
+                    const chunkSize = 5; // set chunk size, number of pages that are saved async at the same time
+                    const chunkedPages = _.chunk(cmsPages, chunkSize); // chunk render queue
+                    return Promise.each(chunkedPages, (chunk, i) => { return self.savePages(chunk, (i + 1), chunkedPages.length, correlationId); }) // save pages, iterate chunks serially
                 })
 
                 // resolve promise
@@ -68,6 +69,39 @@ class SyncController {
         });
     }
 
+
+    /**
+     * Delete pages in pages array
+     * @param pages                     array of pages that need to be deleted
+     * @param chunkNumber               chunk index
+     * @param totalChunks               total number of chunks
+     * @param correlationId
+     * @returns {Promise.<*[]>}
+     */
+    deletePages(pages, chunkNumber, totalChunks, correlationId) {
+        const self = this;
+        logger.info('Start deleting pages in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
+        return Promise.all(pages.map((page) => { // create promise group for deleting pages
+            return self.pageController.delete(page, correlationId); // delete single page
+        }));
+    }
+
+
+    /**
+     * Save pages in pages array
+     * @param pages                     array of pages that need to be saved
+     * @param chunkNumber               chunk index
+     * @param totalChunks               total number of chunks
+     * @param correlationId
+     * @returns {Promise.<*[]>}
+     */
+    savePages(pages, chunkNumber, totalChunks, correlationId) {
+        const self = this;
+        logger.info('Start saving pages in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
+        return Promise.all(pages.map((page) => { // create promise group for saving pages
+            return self.pageController.save(page, correlationId, true); //
+        }));
+    }
 
 
 

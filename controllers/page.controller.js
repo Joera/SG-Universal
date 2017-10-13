@@ -130,11 +130,6 @@ class PageController {
             .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
             .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
 
-            // // delete rendered template from cache/disk
-            // .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
-            // .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
-            // .then((path) => { return self.fileSystemConnector.deleteDirectory(path, correlationId) }) // delete template file and directory
-
             .then(() => { // send response
                 return new Promise((resolve, reject) => {
                     logger.info('Finished successfully, send response', correlationId);
@@ -220,7 +215,7 @@ class PageController {
 
 
     /**
-     * Delete page from database and algolia search
+     * Delete page from database, algolia search and from the filesystem
      * @param data                      page data
      * @param correlationId
      */
