@@ -148,6 +148,37 @@ class RenderProcessService {
     }
 
 
+    /**
+     * Render a chunk of the render queue
+     * @param chunk                     array of render queue items
+     * @param chunkNumber               index of the current chunk
+     * @param totalChunks               total number of chunks
+     * @param correlationId
+     * @private
+     */
+    _renderQueueChunk(chunk, chunkNumber, totalChunks, correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            logger.info('Start rendering all templates in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
+
+            // promise group to render all templates in chunk
+            const promiseGroup = chunk.map((d) => {
+                return self._renderQueueItem(d.template, d.path, d.data, correlationId);
+            });
+
+            // resolve promise group
+            Promise.all(promiseGroup)
+                .then(() => {
+                    resolve({});
+                })
+                .catch(error => {
+                    error.correlationId = correlationId;
+                    reject(error);
+                })
+
+        })
+    }
+
 
     /**
      * Add template to render queue
@@ -224,38 +255,6 @@ class RenderProcessService {
                 .catch(error => {
                     reject(error);
                 });
-        })
-    }
-
-
-    /**
-     * Render a chunk of the render queue
-     * @param chunk                     array of render queue items
-     * @param chunkNumber               index of the current chunk
-     * @param totalChunks               total number of chunks
-     * @param correlationId
-     * @private
-     */
-    _renderQueueChunk(chunk, chunkNumber, totalChunks, correlationId) {
-        const self = this;
-        return new Promise((resolve, reject) => {
-            logger.info('Start rendering all templates in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
-
-            // save promise group to render all templates in render queue
-            const promiseGroup = chunk.map((d) => {
-                return self._renderQueueItem(d.template, d.path, d.data, correlationId);
-            });
-
-            // resolve promise group
-            Promise.all(promiseGroup)
-                .then(() => {
-                    resolve({});
-                })
-                .catch(error => {
-                    error.correlationId = correlationId;
-                    reject(error);
-                })
-
         })
     }
 
