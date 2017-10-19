@@ -8,7 +8,6 @@ const TemplateDefinitionService = require('./template.definition.service');
 const TemplateService = require('../services/template.service');
 const logger = require('./logger.service');
 const dependencyValidator = require('../validators/template.dependencies.validator');
-// const templateDefinitions = require('../templates/definition');
 const config = require('../config');
 
 

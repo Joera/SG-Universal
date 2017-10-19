@@ -5,7 +5,6 @@ const fs = require('fs');
 const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');
 const logger = require('../services/logger.service');
-// const templateDefinitions = require('../templates/definition');
 const handlebarsHelpers = require('../pages/templates/handlebars-helpers');
 const config = require('../config');
 

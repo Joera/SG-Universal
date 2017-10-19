@@ -10,7 +10,6 @@ const TemplateDefinitionService = require('../services/template.definition.servi
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
 const FileSystemConnector = require('../connectors/filesystem.connector');
-// const templateDefinitions = require('../templates/definition');
 const config = require('../config');
 
 
