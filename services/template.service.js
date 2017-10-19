@@ -6,7 +6,7 @@ const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');
 const logger = require('../services/logger.service');
 // const templateDefinitions = require('../templates/definition');
-const handlebarsHelpers = require('../templates/handlebars-helpers');
+const handlebarsHelpers = require('../pages/templates/handlebars-helpers');
 const config = require('../config');
 
 
@@ -50,8 +50,8 @@ class TemplateService {
     _registerPartials(correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            // set partials directory
-            let dirname = config.root + '/templates/partials';
+            // set _partials directory
+            let dirname = config.root + '/pages/templates/_partials';
 
             // read partial directory
             fs.readdir(dirname, (error, filenames) => {
@@ -70,10 +70,10 @@ class TemplateService {
                             // set partial name as filename without the .handlebars extention
                             let partialName = filename.split('.')[0];
 
-                            // register partials
+                            // register _partials
                             try {
                                 handlebars.registerPartial(partialName, source); //
-                                // logger.info('Registered partials', correlationId);
+                                // logger.info('Registered _partials', correlationId);
                                 resolve({}); // resolve promise
                             }
                             catch (error) {
@@ -92,19 +92,20 @@ class TemplateService {
 
     /**
      * Render template
-     * @param templateName              name of the handlebars temlpate file, assume it is in the temlpates root folder
+     * @param templateName              name of the template, also directory of the template
+     * @param templateFileName          name of the handlebars temlpate file, assume it is in the temlpates root folder
      * @param data                      template data
      * @param correlationId             id for correlation through the process chain
      * @private
      */
-    _renderTemplate(templateName, data, correlationId) {
+    _renderTemplate(templateName, templateFileName, data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
             // set directory
-            const dirname = config.root + '/templates';
+            const dirname = config.root + '/pages/templates';
 
             // read template
-            fs.readFile(dirname + '/' + templateName, 'utf-8', (error, source) => {
+            fs.readFile(dirname + '/' + templateName + '/' + templateFileName, 'utf-8', (error, source) => {
                 if (error) {
                     reject(error);
                 }
@@ -164,16 +165,17 @@ class TemplateService {
 
     /**
      * Render controller function
-     * @param template                  name of the handlebars template file, assume it is in the templates root folder
+     * @param name                      name of the template, also the directory of the template file
+     * @param template                  name of the handlebars template file
      * @param data                      template data
      * @param correlationId             id for correlation through the process chain
      */
-    render(template, data, correlationId) {
+    render(name, template, data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions
-                .then(() => { return self._registerPartials(correlationId) }) // register partials
-                .then(() => { return self._renderTemplate(template, data, correlationId) }) // render the template
+                .then(() => { return self._registerPartials(correlationId) }) // register _partials
+                .then(() => { return self._renderTemplate(name, template, data, correlationId) }) // render the template
                 .then((html) => { return self._minifyRenderedTemplate(html, correlationId) }) // minify the rendered template html
                 .then((html) => {
                     resolve(html)

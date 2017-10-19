@@ -6,7 +6,7 @@ const logger = require('./services/logger.service');
 const templateDefinitionsValidator = require('./validators/template.definition.validator');
 const app = require('./config/express');
 const config = require('./config');
-const templateDefinitions = require('./templates/definition');
+// const templateDefinitions = require('./templates/definition');
 
 
 /**
@@ -25,7 +25,7 @@ String.prototype.replaceAll = function (search, replacement) {
 
 
 // validate template definition
-templateDefinitionsValidator.validate(templateDefinitions);
+// templateDefinitionsValidator.validate(templateDefinitions);
 
 
 

@@ -8,7 +8,7 @@ const TemplateDefinitionService = require('./template.definition.service');
 const TemplateService = require('../services/template.service');
 const logger = require('./logger.service');
 const dependencyValidator = require('../validators/template.dependencies.validator');
-const templateDefinitions = require('../templates/definition');
+// const templateDefinitions = require('../templates/definition');
 const config = require('../config');
 
 
@@ -39,9 +39,9 @@ class RenderProcessService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            //
             let templateDefinition = null; // save empty template definition object for later re-use
             let queueItem = { // queue item object, this object will be placed in render queue
+                name: null, // name of the template, also directory of the template file
                 template: null, // filename of template
                 path: null, // path to render the template to
                 data: null // template data
@@ -49,8 +49,11 @@ class RenderProcessService {
 
             // get template definitions
             // find the template that belongs to the data
-            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId)
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId)
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+
+                // set queueItem name
+                .then(() => { return new Promise((res, rej) => { queueItem.name = templateDefinition.name; res({}); }) }) //
 
                 // set queueItem template
                 .then(() => { return new Promise((res, rej) => { queueItem.template = templateDefinition.template; res({}); }) }) //
@@ -101,7 +104,7 @@ class RenderProcessService {
             // set template name in data object
             // template name is set in the templateNameKey property of the data object as defined in the template definition file
             if(typeof data === 'object') {
-                data[templateDefinitions.templateNameKey] = templateName
+                data[config.templateNameKey] = templateName
             }
 
             resolve(data);
@@ -111,13 +114,14 @@ class RenderProcessService {
 
     /**
      * Controller function for rendering a single template from the render queue
+     * @param name                      name of the template, also directory of the template file
      * @param template                  name of the handlebars template file, assume it is in the templates root folder
      * @param path                      path of the template file
      * @param data                      template data
      * @param correlationId
      * @private
      */
-    _renderQueueItem(template, path, data, correlationId) {
+    _renderQueueItem(name, template, path, data, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
             //
@@ -125,12 +129,12 @@ class RenderProcessService {
             let templateHtml = null;
 
             // get template definitions
-            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definition
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // render template
                 .then(() => { return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
-                .then((templateData) => { return self.templateService.render(template, templateData, correlationId) }) // render template
+                .then((templateData) => { return self.templateService.render(name, template, templateData, correlationId) }) // render template
                 .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
                 .then(() => { return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
 
@@ -163,7 +167,7 @@ class RenderProcessService {
 
             // promise group to render all templates in chunk
             const promiseGroup = chunk.map((d) => {
-                return self._renderQueueItem(d.template, d.path, d.data, correlationId);
+                return self._renderQueueItem(d.name, d.template, d.path, d.data, correlationId);
             });
 
             // resolve promise group
@@ -209,7 +213,7 @@ class RenderProcessService {
         return new Promise((resolve, reject) => {
 
             // get page dependencies
-            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definitions
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definitions
                 .then((definition) => { return definition.getDependencies(data, correlationId) }) // get dependencies
                 .then((dependencies) => { return dependencyValidator.validate(dependencies) }) // validate dependency array
 

@@ -10,7 +10,7 @@ const TemplateDefinitionService = require('../services/template.definition.servi
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
 const FileSystemConnector = require('../connectors/filesystem.connector');
-const templateDefinitions = require('../templates/definition');
+// const templateDefinitions = require('../templates/definition');
 const config = require('../config');
 
 
@@ -50,7 +50,7 @@ class PageController {
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received create call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
-            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
             .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
             .then(() => { return self.save(req.body, correlationId, false) }) // save page
@@ -87,7 +87,7 @@ class PageController {
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received update call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
-            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId) }) // get template definition
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
             .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
             .then(() => { return self.save(req.body, correlationId, true) }) // save page
@@ -159,12 +159,12 @@ class PageController {
         logger.info('Received preview call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             // get template definition
-            .then(() => { return self.templateDefinitionService.getDefinition(req.body[templateDefinitions.templateNameKey], correlationId); }) // get template definition
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId); }) // get template definition
             .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
             // render template
             .then(() => { return templateDefinition.preRender(null, req.body, correlationId) }) // execute the pre render hook
-            .then((templateData) => { return self.templateService.render(templateDefinition.template, templateData, correlationId) }) // render template
+            .then((templateData) => { return self.templateService.render(templateDefinition.name, templateDefinition.template, templateData, correlationId) }) // render template
             .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
 
             // send response
@@ -202,11 +202,12 @@ class PageController {
         return new Promise((resolve, reject) => {
             //
             let templateDefinition = null; // save empty template definition object for later re-use
+            let searchSnippetTemplateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
 
             // get template definitions
             // find the template that belongs to the data
-            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definition
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // map data
@@ -217,9 +218,13 @@ class PageController {
                 .then(() => { return templateDefinition.getPath(saveData, correlationId) }) // get path of the template that will be rendered
                 .then((path) => { return new Promise((res, rej) => { saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
+                // get search snippet template definition
+                .then(() => { return self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId); })
+                .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+
                 // set search snippet
                 .then(() => { return templateDefinition.getSearchSnippetData(saveData, correlationId) }) // get search snippet data
-                .then((templateData) => { return self.templateService.render(templateDefinition.searchSnippetTemplate, templateData, correlationId) }) // render search snippet
+                .then((templateData) => { return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateDefinition.searchSnippetTemplate, templateData, correlationId) }) // render search snippet
                 .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
@@ -252,7 +257,7 @@ class PageController {
 
             let templateDefinition = null; // save empty template definition object for later re-use
             // get template definitions
-            self.templateDefinitionService.getDefinition(data[templateDefinitions.templateNameKey], correlationId) // get template definition
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // pre-delete

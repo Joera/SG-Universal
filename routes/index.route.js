@@ -1,15 +1,15 @@
 'use strict';
 
 const express = require('express');
-const pageRoutes = require('./page.route');
+const contentRoutes = require('./content.route');
 
 //
 const router = express.Router();
 
 
 // mount routes
-router.use('/blog', pageRoutes);
-// router.use('/page', pageRoutes);
+router.use('/blog', contentRoutes);
+// router.use('/page', contentRoutes);
 
 //
 module.exports = router;

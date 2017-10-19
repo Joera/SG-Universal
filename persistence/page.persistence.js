@@ -18,14 +18,26 @@ class PagePersistence {
 
     /**
      * Query page collections in MongoDB
-     * @param query                         MongoDB query object, {} query object means find all
+     * @param options
      * @param correlationId
      */
-    find(query, correlationId) {
+    find(options, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
             db.getPageCollection() // get page collection
-                .then((collection) => { return collection.find(query).toArray(); }) // execute find query
+                .then((collection) => { return collection.find(options.query).toArray(); }) // execute find query
+                // .then((collection) => { return collection.find(options.query).limit(options.sort).sort(options.sort).toArray(); }) // execute find query
+                .then((result) => { resolve(result); }) // return results
+        })
+    }
+
+
+
+    findOne(options, correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            db.getPageCollection() // get page collection
+                .then((collection) => { return collection.findOne(options.query).limit(options.sort).sort(options.sort); }) // execute find query
                 .then((result) => { resolve(result); }) // return results
         })
     }
