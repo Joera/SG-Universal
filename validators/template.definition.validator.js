@@ -8,7 +8,7 @@ const Promise = require('bluebird');
 const logger = require('../services/logger.service');
 
 //
-const templateSchema = joi.object().keys({
+const itemsSchema = joi.object().keys({
     name: joi.string().required(),
     template: joi.string().required(),
     searchSnippetTemplate: joi.string().allow('').optional(),
@@ -24,17 +24,8 @@ const templateSchema = joi.object().keys({
 });
 
 //
-const helperSchema = joi.object().keys({
-    name: joi.string().required(),
-    helper: joi.func().required()
-});
+const schema = joi.array().items(itemsSchema).required();
 
-//
-const schema = joi.object({
-    templateNameKey: joi.string().required(),
-    templates: joi.array().items(templateSchema).required(),
-    handlebarsHelpers: joi.array().items(helperSchema)
-}).required();
 
 //
 module.exports = {
