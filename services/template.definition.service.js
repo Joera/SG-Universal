@@ -89,6 +89,7 @@ class TemplateDefinitionService {
                     };
 
                     //
+                    if(!definition) { definition = {}; } // make sure definition is an object if no definition file is supplied
                     definition.name = name; // set template definition name. Template definition name is always the same as the directory name
                     definition.template = templateFile; // set template file name
                     definition = _.merge(defaultDefinition, definition); // set default values of definition if not supplied
