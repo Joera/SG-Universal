@@ -6,6 +6,5 @@ dist/*
 !dist/assets
 !dist/scripts
 npm-debug.log
-pages/*
 config/**/
 !config/

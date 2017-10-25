@@ -206,6 +206,9 @@ class PageController {
 
             // get template definitions
             // find the template that belongs to the data
+
+            console.log(data[config.templateNameKey]);
+
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
@@ -256,6 +259,7 @@ class PageController {
 
             let templateDefinition = null; // save empty template definition object for later re-use
             // get template definitions
+
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
