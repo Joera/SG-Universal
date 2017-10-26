@@ -23,25 +23,25 @@ class PagePersistence {
      */
     find(options, correlationId) {
         const self = this;
+        if (typeof options.limit === "undefined") {
+            options.limit = 0;
+        };
         return new Promise((resolve, reject) => {
             db.getPageCollection() // get page collection
-                .then((collection) => { return collection.find(options.query).toArray(); }) // execute find query
+                .then((collection) => { return collection.find(options.query).limit(options.limit).toArray(); }) // execute find query
                 // .then((collection) => { return collection.find(options.query).limit(options.sort).sort(options.sort).toArray(); }) // execute find query
                 .then((result) => { resolve(result); }) // return results
         })
     }
 
-
-
     findOne(options, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
             db.getPageCollection() // get page collection
-                .then((collection) => { return collection.findOne(options.query).limit(options.sort).sort(options.sort); }) // execute find query
+                .then((collection) => { return collection.findOne(options.query); }) // execute find query
                 .then((result) => { resolve(result); }) // return results
         })
     }
-
 
     /**
      * Save page to database
