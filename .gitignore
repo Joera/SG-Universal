@@ -2,9 +2,9 @@
 .DS_Store
 node_modules
 logs/*
-dist/*
-!dist/assets
-!dist/scripts
+dist/
+dist/assets/
+dist/scripts/
 npm-debug.log
 config/**/
 !config/
