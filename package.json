@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "start": "NODE_ENV=production node index.js",
     "start:dev": "nodemon --inspect index.js --config nodemon.json",
-    "sync": "node tasks/sync.js",
-    "bulkrender": "node tasks/bulkrender.js",
+    "sync": "NODE_ENV=production node tasks/sync.js",
+    "sync:dev": "node tasks/sync.js",
+    "bulkrender": "NODE_ENV=production node tasks/bulkrender.js",
+    "bulkrender:dev": "node tasks/bulkrender.js",
     "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
     "style": "gulp scss-compile",
     "scripts": "gulp js-compile"
