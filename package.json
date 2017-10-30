@@ -12,8 +12,10 @@
     "bulkrender": "NODE_ENV=production node tasks/bulkrender.js",
     "bulkrender:dev": "node tasks/bulkrender.js",
     "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
-    "style": "gulp scss-compile",
-    "scripts": "gulp js-compile"
+    "style": "NODE_ENV=production gulp scss-compile",
+    "style:dev": "gulp scss-compile",
+    "scripts": "NODE_ENV=production gulp js-compile",
+    "scripts:dev": "gulp js-compile"
   },
   "repository": {
     "type": "git",
