@@ -8,7 +8,7 @@
     "start": "node index.js",
     "start:dev": "nodemon --inspect index.js --config nodemon.json",
     "sync": "node tasks/sync.js",
-    "bulkrender": "node --inspect tasks/bulkrender.js",
+    "bulkrender": "node tasks/bulkrender.js",
     "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
     "style": "gulp scss-compile",
     "scripts": "gulp js-compile"
