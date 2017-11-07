@@ -4,6 +4,7 @@ node_modules
 logs/*
 dist/
 dist/assets/
+dist/assets/css/main.css
 dist/scripts/
 npm-debug.log
 config/**/
