@@ -37,7 +37,11 @@ let database = null;
 
 // get connection to mongodb
 function getMongoConnection() {
-    return MongoClient.connect(config.db, { promiseLibrary: Promise, poolSize: 10 })
+    if(database === null) {
+        database =  MongoClient.connect(config.db, { promiseLibrary: Promise, poolSize: 10 })
+    }
+    return database;
+    // return MongoClient.connect(config.db, { promiseLibrary: Promise, poolSize: 10 })
 }
 
 
