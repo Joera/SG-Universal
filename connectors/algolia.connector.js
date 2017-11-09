@@ -22,12 +22,13 @@ class AlgoliaConnector {
      * @param correlationId             id for correlation through the process chain
      */
     addPage(data, correlationId) {
+
         const self = this;
-        const index = this.client.initIndex(config.algoliaIndexNamePrefix + 'all');
+        const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {
 
             // save record to Algolio Search
-            index.addObject(data, data._id, (error, content) => {
+            index.addObject(data.searchSnippet, data._id, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     reject(error);
@@ -46,8 +47,9 @@ class AlgoliaConnector {
      * @param correlationId             id for correlation through the process chain
      */
     updatePage(data, correlationId) {
+
         const self = this;
-        const index = this.client.initIndex(config.algoliaIndexNamePrefix + 'all');
+        const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {
 
             // save record to Algolio Search
@@ -71,7 +73,7 @@ class AlgoliaConnector {
      */
     deletePage(id, correlationId) {
         const self = this;
-        const index = this.client.initIndex(config.algoliaIndexNamePrefix + 'all');
+        const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {
 
             // save record to Algolio Search

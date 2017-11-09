@@ -23,7 +23,8 @@ class FileSystemConnector {
         const self = this;
         return new Promise((resolve, reject) => {
             if(path && path !== null && path !== '') {
-                mkdirp(config.root + '/' + config.dist + '/' + path, (error) => {
+                mkdirp(config.dist + '/' + path, (error) => {
+                // mkdirp(config.root + '/' + config.dist + '/' + path, (error) => {
                     if(error) {
                         reject(error);
                     }
@@ -47,7 +48,8 @@ class FileSystemConnector {
         const self = this;
         return new Promise((resolve, reject) => {
             if(path && path !== null && path !== '') {
-                rimraf(config.root + '/' + config.dist + '/' + path, (error) => {
+                rimraf(config.dist + '/' + path, (error) => {
+                // rimraf(config.root + '/' + config.dist + '/' + path, (error) => {
                     if (error) {
                         reject(error);
                     }
@@ -72,7 +74,8 @@ class FileSystemConnector {
         const self = this;
         return new Promise((resolve, reject) => {
             if(path !== null) {
-                fs.writeFile(config.root + '/' + config.dist + '/' + path + '/index.html', html, (error) => {
+                fs.writeFile(config.dist + '/' + path + '/index.html', html, (error) => {
+                // fs.writeFile(config.root + '/' + config.dist + '/' + path + '/index.html', html, (error) => {
                     if(error) {
                         reject(error);
                     }

@@ -224,7 +224,14 @@ class PageController {
 
                 // set search snippet
                 .then(() => { return templateDefinition.getSearchSnippetData(saveData, correlationId) }) // get search snippet data
-                .then((templateData) => { return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateDefinition.searchSnippetTemplate, templateData, correlationId) }) // render search snippet
+                .then((templateData) => {
+                    return self.templateService.render(
+                        templateDefinition.searchSnippetTemplate,
+                        templateDefinition.searchSnippetTemplate + '.handlebars',
+                        templateData,
+                        correlationId
+                    )
+                }) // render search snippet
                 .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
