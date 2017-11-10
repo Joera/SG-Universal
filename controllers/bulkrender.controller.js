@@ -78,7 +78,7 @@ class BulkRenderController {
     _enqueue(pages, correlationId, dependencies) {
         const self = this;
         return new Promise((resolve, reject) => {
-            const chunkSize = 10; // set chunk size, number of templates that are rendered async at the same time
+            const chunkSize = 3; // set chunk size, number of templates that are rendered async at the same time
             const chunkedPages = _.chunk(pages, chunkSize); // chunk render queue
 
             // set the q function that needs to be called
