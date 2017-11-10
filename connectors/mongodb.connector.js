@@ -51,6 +51,11 @@ module.exports = {
         return getMongoConnection().then((conn) => {
             return conn.collection('page');
         })
+    },
+    getRenderQueueCollection: function() {
+        return getMongoConnection().then((conn) => {
+            return conn.collection('renderQueue');
+        })
     }
 };
 
