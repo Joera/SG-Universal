@@ -75,7 +75,7 @@ class RenderQueueService {
      * Get all items from the render queue and clear the queue
      * @param correlationId
      */
-    get(limit, correlationId) {
+    get(query, limit, correlationId) {
         // const self = this;
         // return new Promise((resolve, reject) => {
         //     const queue = _.map(self.queue, _.clone); // make copy of render queue to return
@@ -97,7 +97,7 @@ class RenderQueueService {
             db.getRenderQueueCollection() // get page collection
                 .then((col) => { return new Promise((res, rej) => { collection = col; res(collection)}) }) // save collection for later use
                 .then(() => {
-                    return collection.find({}).limit(limit).toArray()
+                    return collection.find(query).limit(limit).toArray()
                     // return collection.find({}, {_id : 1}).limit(limit).toArray()
                         // .map((doc) => { return doc._id; });  // pull out just the _ids
                 })
@@ -117,9 +117,9 @@ class RenderQueueService {
      * Get the total number of items in the render queue
      * @param correlationId
      */
-    getCount(correlationId) {
+    getCount(query, correlationId) {
         return db.getRenderQueueCollection() // get page collection
-            .then((collection) => { return collection.count({}); }); // execute find query
+            .then((collection) => { return collection.count(query); }); // execute find query
     }
 
 

@@ -27,13 +27,14 @@ class BulkRenderController {
     /**
      * Start the render process
      */
-    render() {
+    render(type) {
         const self = this;
         return new Promise((resolve, reject) => {
 
             let pages = null; // pages that will to be rendered
+            const query = (type) ? {"type": type} : {};
             const correlationId = uuidv4(); // set correlation id for debugging the process chain
-            self.pagePersistence.find({query: {}}) // get all pages from mongodb
+            self.pagePersistence.find({query: query}) // get all pages from mongodb
                 .then((p) => { return new Promise((res, rej) => { pages = p; res({}); })}) // set pages for later use
 
                 // add pages to render queue

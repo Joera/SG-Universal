@@ -27,10 +27,7 @@ String.prototype.replaceAll = function (search, replacement) {
 
 
 
-
-
-
-bulkrenderController.render()
+bulkrenderController.render(process.argv[2])
     .then((pages) => {
         process.exit(0);
     })

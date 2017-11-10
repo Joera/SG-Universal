@@ -151,36 +151,6 @@ class RenderProcessService {
     }
 
 
-    // /**
-    //  * Render a chunk of the render queue
-    //  * @param chunk                     array of render queue items
-    //  * @param chunkNumber               index of the current chunk
-    //  * @param totalChunks               total number of chunks
-    //  * @param correlationId
-    //  * @private
-    //  */
-    // _renderQueueChunk(chunk, chunkNumber, totalChunks, correlationId) {
-    //     const self = this;
-    //     return new Promise((resolve, reject) => {
-    //         logger.info('Start rendering all templates in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
-    //
-    //         // promise group to render all templates in chunk
-    //         const promiseGroup = chunk.map((d) => {
-    //             return self._renderQueueItem(d.name, d.template, d.path, d.data, correlationId);
-    //         });
-    //
-    //         // resolve promise group
-    //         Promise.all(promiseGroup)
-    //             .then(() => {
-    //                 resolve({});
-    //             })
-    //             .catch(error => {
-    //                 error.correlationId = correlationId;
-    //                 reject(error);
-    //             })
-    //
-    //     })
-    // }
     /**
      * Render a chunk of the render queue
      * @param chunkSize                             the number of items that will be rendered simultaneously
@@ -194,7 +164,7 @@ class RenderProcessService {
         return new Promise((resolve, reject) => {
             logger.info('Start rendering all templates in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
 
-            self.renderQueue.get(chunkSize, correlationId) // get chunk from render queue
+            self.renderQueue.get({}, chunkSize, correlationId) // get chunk from render queue
                 .then((chunk) => {
                     // promise group to render all templates in chunk
                     const promiseGroup = chunk.map((d) => {
@@ -311,7 +281,7 @@ class RenderProcessService {
     render(correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            self.renderQueue.getCount() // get the number of items in the render queue
+            self.renderQueue.getCount({}) // get the number of items in the render queue
                 .then((count) => {
                     const chunkSize = 10; // set chunk size, number of templates that are rendered async at the same time
                     const numberOfChunks = Math.ceil(count / chunkSize); // set the total number of chunks
@@ -328,24 +298,6 @@ class RenderProcessService {
                             reject(error);
                         })
                 })
-
-            // self.renderQueue.get(10, correlationId) // get all items in render queue
-            //     .then((queue) => {
-            //         const chunkSize = 10; // set chunk size, number of templates that are rendered async at the same time
-            //         const chunkedQueue = _.chunk(queue, chunkSize); // chunk render queue
-            //
-            //         // iterate chunks serially
-            //         Promise.each(chunkedQueue, (chunk, i) => { return self._renderQueueChunk(chunk, (i + 1), chunkedQueue.length, correlationId); })
-            //             .then(() => {
-            //                 logger.info('Rendered all templates in render queue', correlationId);
-            //                 resolve({});
-            //             })
-            //             .catch(error => {
-            //                 error.correlationId = correlationId;
-            //                 reject(error);
-            //             })
-            //     })
-
         })
     }
 

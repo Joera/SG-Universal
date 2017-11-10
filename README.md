@@ -1,6 +1,9 @@
 # Static Site Generator Core
 
 
+### Bulk renderer
+- you can add a type argument to the bulk render command. Only the pages of the profided type will be rendered. For example: `node tasks/bulkrender.js post` will render only pages of the type "post".
+
 
 
 ### Template definitions
