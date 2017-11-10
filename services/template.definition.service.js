@@ -33,7 +33,7 @@ class TemplateDefinitionService {
                     let definition = _.find(templateDefinitions, (td) => { return td && td.name === templateName; });
 
                     if(definition) { // return template definition
-                        logger.info('Found template definition for type: ' + templateName, correlationId);
+                        // logger.info('Found template definition for type: ' + templateName, correlationId);
                         resolve(definition);
                     } else { // no template definition found for data.type
                         const proxiedError = new Error();

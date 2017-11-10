@@ -219,12 +219,16 @@ class PageController {
                 .then((path) => { return new Promise((res, rej) => { saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // get search snippet template definition
-                .then(() => { return self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId); })
-                .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+                // .then(() => { return self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId); })
+                // .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // set search snippet
-                .then(() => { return templateDefinition.getSearchSnippetData(saveData, correlationId) }) // get search snippet data
-                .then((templateData) => { return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateDefinition.searchSnippetTemplate, templateData, correlationId) }) // render search snippet
+                // .then(() => { return templateDefinition.getSearchSnippetData(saveData, correlationId) }) // get search snippet data
+                // .then((templateData) => { return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateDefinition.searchSnippetTemplate, templateData, correlationId) }) // render search snippet
+                // .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
+
+                // get search snippet
+                .then(() => { return self.getSearchSnippet(templateDefinition, saveData, correlationId) })
                 .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
@@ -286,6 +290,41 @@ class PageController {
     }
 
 
+
+    getSearchSnippet(templateDefinition, data, correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+            if(templateDefinition.searchSnippetTemplate && templateDefinition.searchSnippetTemplate !== '') {
+                let searchSnippetTemplateDefinition = null;
+
+                // get search snippet template definition
+                self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId)
+                    .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+
+                    // get search snippet
+                    .then(() => { return templateDefinition.getSearchSnippetData(data, correlationId) }) // get search snippet data
+                    .then((templateData) => { return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateDefinition.searchSnippetTemplate, templateData, correlationId) }) // render search snippet
+
+                    //
+                    .then((searchSnippetHtml) => {
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+console.log(searchSnippetHtml);
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+                        resolve(searchSnippetHtml);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    })
+            } else {
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+console.log('leeeeg');
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+                resolve('');
+            }
+
+        })
+    }
 
 
 
