@@ -1,21 +1,12 @@
-#
-
-
-#TODO
-- default template definitions voor de meeste properties als deze niet worden geset
-
-
-
-
-
-
-
+# Static Site Generator Core
 
 
 
 
 ### Template definitions
 
+- If template folder does not contain a .handlebars file, them the template will not be added to the render queue. The defined depenencies will be added to the render queue if they are defined in the definitions file.
+- If the searchSnippetTemplate is not defined in the definitions file no search snippet will be rendered and data will not be pushed to Algolia search 
 
 
 name: 'home', // name of the template. Corresponds with the type property of the page object

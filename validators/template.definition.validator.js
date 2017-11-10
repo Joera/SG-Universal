@@ -10,7 +10,8 @@ const logger = require('../services/logger.service');
 //
 const itemsSchema = joi.object().keys({
     name: joi.string().required(),
-    template: joi.string().required(),
+    template: joi.string().allow(null),
+    // template: joi.string().required(),
     searchSnippetTemplate: joi.string().allow('').optional(),
     getDependencies: joi.func().required(),
     getSearchSnippetData: joi.func().required(),

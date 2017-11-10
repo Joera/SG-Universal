@@ -185,6 +185,7 @@ class RenderProcessService {
 
     /**
      * Add template to render queue
+     * If queueItem template property is undefined or null then do not add item to the render queue
      * @param data
      * @param correlationId
      */
@@ -192,7 +193,18 @@ class RenderProcessService {
         const self = this;
         return new Promise((resolve, reject) => {
             self._createQueueItem(data, correlationId) // save queue item
-                .then((queueItem) => { return self.renderQueue.add(queueItem, correlationId); }) // add to render queue
+                // .then((queueItem) => { return self.renderQueue.add(queueItem, correlationId); }) // add to render queue
+                .then((queueItem) => { // add to render queue
+                    // check if a handlebars template is available for template
+                    // if not than do not add queueItem to render queue
+                    if(queueItem.template && queueItem.template !== null) {
+                        return self.renderQueue.add(queueItem, correlationId);
+                    } else {
+                        // no handlebars template found, do not add queue item to render queue
+                        logger.info('No handlebars template found for: ' + queueItem.name, correlationId)
+                        resolve(data);
+                    }
+                })
                 .then(() => { resolve(data); }) // resolve promise
                 .catch(error => {
                     reject(error);
