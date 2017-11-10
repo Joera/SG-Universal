@@ -51,7 +51,7 @@ class AlgoliaConnector {
         const self = this;
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {
-
+            data.sections = null;
             // save record to Algolio Search
             index.saveObject(data, (error, content) => {
                 if (error) {

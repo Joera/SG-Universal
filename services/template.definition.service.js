@@ -33,7 +33,7 @@ class TemplateDefinitionService {
                     let definition = _.find(templateDefinitions, (td) => { return td && td.name === templateName; });
 
                     if(definition) { // return template definition
-                        logger.info('Found template definition for type: ' + templateName, correlationId);
+                        // logger.info('Found template definition for type: ' + templateName, correlationId);
                         resolve(definition);
                     } else { // no template definition found for data.type
                         const proxiedError = new Error();
@@ -73,9 +73,11 @@ class TemplateDefinitionService {
                 // set definitions
                 // set the template name based on directory name and template file name that is found in the template directory
                 // also set default definition values for the ones that are not supplied
-                if(templateFile) { // check if template is found
+                // if(templateFile) { // check if template is found
                     // default definition values
                     const defaultDefinition = {
+                        name: null,
+                        template: null,
                         searchSnippetTemplate: '', // filename of the handlebars template
                         getSearchSnippetData: (data, correlationId) => { return new Promise((resolve, reject) => { resolve(data); }) },
                         getTemplateData: (data, correlationId) => { return new Promise((resolve, reject) => { resolve(data); }) },
@@ -93,7 +95,7 @@ class TemplateDefinitionService {
                     definition.name = name; // set template definition name. Template definition name is always the same as the directory name
                     definition.template = templateFile; // set template file name
                     definition = _.merge(defaultDefinition, definition); // set default values of definition if not supplied
-                }
+                // }
                 return definition;
             }).filter((d) => { return d !== null }); // filter out null values, null means template file or definitions file is not found
             resolve(definitions);
