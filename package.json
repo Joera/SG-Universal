@@ -11,10 +11,7 @@
     "sync:dev": "node --inspect tasks/sync.js",
     "bulkrender": "NODE_ENV=production node tasks/bulkrender.js",
     "bulkrender:dev": "node --inspect tasks/bulkrender.js",
-    "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
-    "style": "gulp scss-compile",
-    "scripts": "gulp js-compile",
-    "copy-assets": "gulp copy-assets"
+    "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\""
   },
   "repository": {
     "type": "git",
