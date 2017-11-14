@@ -122,6 +122,9 @@ class PageController {
         const self = this;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received delete call', correlationId);
+
+
+        
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             // delete page
             .then(() => { return self.delete(req.body, correlationId) }) // delete page from database and search
