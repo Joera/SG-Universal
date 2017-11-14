@@ -99,9 +99,6 @@ class TemplateService {
      */
     _renderTemplate(templateName, templateFileName, data, correlationId) {
         const self = this;
-        console.log('waddup');
-        console.log(templateName);
-        console.log(templateFileName);
         return new Promise((resolve, reject) => {
             // set directory
             const dirname = config.root + '/pages/templates';
@@ -124,8 +121,7 @@ class TemplateService {
                     const template = handlebars.compile(source);
                     const html = template(templateData);
                     logger.info('Render template: ' + templateName, correlationId);
-                    console.log('dis html');
-                    console.log(html);
+
                     resolve(html); // resolve promise
                 }
                 catch (error) { // error rendering template
@@ -175,7 +171,6 @@ class TemplateService {
      * @param correlationId             id for correlation through the process chain
      */
     render(name, template, data, correlationId) {
-        console.log('rendrin?');
         const self = this;
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions

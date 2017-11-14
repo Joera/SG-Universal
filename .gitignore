@@ -9,3 +9,4 @@ dist/scripts/
 npm-debug.log
 config/**/
 !config/
+pages/
