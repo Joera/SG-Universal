@@ -13,7 +13,8 @@
     "bulkrender:dev": "node --inspect tasks/bulkrender.js",
     "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
     "style": "gulp scss-compile",
-    "scripts": "gulp js-compile"
+    "scripts": "gulp js-compile",
+    "copy-assets": "gulp copy-assets"
   },
   "repository": {
     "type": "git",
