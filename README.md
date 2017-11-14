@@ -26,5 +26,4 @@ preDelete: (data, correlationId)
 postDelete: (data, correlationId)
 
 
-
 ### Handlebar helpers
