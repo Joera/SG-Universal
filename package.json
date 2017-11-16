@@ -13,7 +13,17 @@
     "bulkrender:dev": "node --inspect tasks/bulkrender.js",
     "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
     "style": "gulp scss-compile",
-    "scripts": "gulp js-compile"
+    "scripts": "gulp js-compile",
+    "watch-templates": "npm-watch bulkrender:dev"
+  },
+  "watch": {
+    "bulkrender:dev": {
+      "extensions": "handlebars",
+      "patterns": [
+        "pages/templates/**/"
+      ],
+      "quiet": false
+    }
   },
   "repository": {
     "type": "git",
@@ -36,6 +46,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.17.1",
     "mongodb": "^2.2.31",
+    "npm-watch": "^0.3.0",
     "requestify": "^0.2.5",
     "rimraf": "^2.6.0",
     "uuid": "^3.1.0",

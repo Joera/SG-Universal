@@ -26,10 +26,6 @@ String.prototype.replaceAll = function (search, replacement) {
 
 
 
-
-
-
-
 syncController.sync()
     .then((pages) => {
         process.exit(0);
@@ -37,11 +33,3 @@ syncController.sync()
     .catch((error) => {
         process.exit(1);
     });
-
-
-
-
-
-
-
-

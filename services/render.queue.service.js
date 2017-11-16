@@ -55,9 +55,14 @@ class RenderQueueService {
         const self = this;
         return new Promise((resolve, reject) => {
             queueItem._id = queueItem.path;
-
             db.getRenderQueueCollection() // get page collection
-                .then((collection) => { return collection.save(queueItem); }) // execute save
+                .then((collection) => {
+					collection.findOne({"_id": queueItem._id})
+						.then(foundItem => {
+							console.log('Already exists?');
+						})
+					return collection.save(queueItem);
+				}) // execute save
                 .then((d) => {
                     logger.info('Added template to render queue: ' + queueItem.path, correlationId);
                     resolve(queueItem);
