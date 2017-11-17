@@ -1,7 +1,7 @@
 const devConfig = {
     env: 'production',
     dist: '/var/www/html',
-    db: 'mongodb://localhost/sg-core',
+    db: 'mongodb://localhost/amstelveenlijn',
     port: 8080,
     wordpresUrl: 'http://46.101.100.111',
     algoliaIndexNamePrefix: 'AVL_core',
