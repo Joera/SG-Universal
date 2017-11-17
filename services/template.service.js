@@ -99,9 +99,6 @@ class TemplateService {
      */
     _renderTemplate(templateName, templateFileName, data, correlationId) {
         const self = this;
-        console.log('waddup');
-        console.log(templateName);
-        console.log(templateFileName);
         return new Promise((resolve, reject) => {
             // set directory
             const dirname = config.root + '/pages/templates';
