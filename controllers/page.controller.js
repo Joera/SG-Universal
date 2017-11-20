@@ -199,6 +199,8 @@ class PageController {
      * @param isUpdate                      true if is update, false if new record
      */
     save(data, correlationId, isUpdate) {
+		console.log('data is data');
+		console.log(data);
         const self = this;
         return new Promise((resolve, reject) => {
             //
