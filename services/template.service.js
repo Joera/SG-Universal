@@ -172,7 +172,6 @@ class TemplateService {
      * @param correlationId             id for correlation through the process chain
      */
     render(name, template, data, correlationId) {
-        console.log('rendrin?');
         const self = this;
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions
