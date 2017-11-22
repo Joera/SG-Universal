@@ -121,8 +121,8 @@ class TemplateService {
                     const template = handlebars.compile(source);
                     const html = template(templateData);
                     logger.info('Render template: ' + templateName, correlationId);
-                    console.log('dis html');
-                    console.log(html);
+                    // console.log('dis html');
+                    // console.log(html);
                     resolve(html); // resolve promise
                 }
                 catch (error) { // error rendering template

@@ -1,14 +1,16 @@
 const devConfig = {
-    env: 'production',
-    dist: '/var/www/html',
-    db: 'mongodb://localhost/amstelveenlijn',
+    env: 'development',
+    dist: 'dist',
+    projectfolder: 'pages',
+    db: 'mongodb://localhost/sensire',
     port: 8080,
-    wordpresUrl: 'http://46.101.100.111',
-    algoliaIndexNamePrefix: 'AVL_core',
-    algoliaApplicationId: 'RLZJT7BFZT',
-    algoliaApiKey: 'f0dc506dd42b55db93e55d28c3e667b5',
-    baseUrl: 'http://46.101.100.111',
-    templateNameKey: 'type'
+    wordpressUrl: 'http://wp.sensire2016.nl',
+    algoliaIndexNamePrefix: 'Sensire_locaal_Joera',
+    algoliaApplicationId: '5INGTZ75VW',
+    algoliaApiKey: '831726149d43b0779373277356a18379',
+    baseUrl: 'http://sensire.local',
+    templateNameKey: 'type',
+
 };
 
 module.exports = devConfig;
