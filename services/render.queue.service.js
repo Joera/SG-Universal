@@ -59,7 +59,7 @@ class RenderQueueService {
                 .then((collection) => {
 					collection.findOne({"_id": queueItem._id})
 						.then(foundItem => {
-							console.log('Already exists?');
+							// console.log('Already exists?');
 						})
 					return collection.save(queueItem);
 				}) // execute save
