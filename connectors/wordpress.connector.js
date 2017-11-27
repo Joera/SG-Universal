@@ -18,7 +18,7 @@ class WordpressConnector {
     constructor () {
 
     }
-    
+
     /**
      * Get pages from wordpress api
      * @param correlationId
