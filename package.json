@@ -11,7 +11,20 @@
     "sync:dev": "node --inspect tasks/sync.js",
     "bulkrender": "NODE_ENV=production node tasks/bulkrender.js",
     "bulkrender:dev": "node --inspect tasks/bulkrender.js",
-    "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\""
+    "serve": "concurrently \"gulp serve\" \"gulp js-watch\" \"gulp scss-watch\"",
+    "style": "cd pages && gulp scss-compile",
+    "scripts": "cd pages && gulp js-compile",
+    "copy-assets": "cd pages && gulp copy-assets",
+    "watch-templates": "npm-watch bulkrender:dev"
+  },
+  "watch": {
+    "bulkrender:dev": {
+      "extensions": "handlebars",
+      "patterns": [
+        "pages/templates/**/"
+      ],
+      "quiet": false
+    }
   },
   "repository": {
     "type": "git",
@@ -27,13 +40,17 @@
     "body-parser": "^1.16.1",
     "cors": "^2.8.1",
     "express": "^4.14.1",
+    "gulp-contrib-copy": "0.1.3",
+    "gulp-file": "0.3.0",
+    "gulp-plumber": "1.1.0",
     "handlebars": "^4.0.6",
     "html-minifier": "^3.4.0",
     "joi": "^10.2.2",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
-    "moment": "^2.17.1",
+    "moment": "^2.19.2",
     "mongodb": "^2.2.31",
+    "npm-watch": "^0.3.0",
     "requestify": "^0.2.5",
     "rimraf": "^2.6.0",
     "uuid": "^3.1.0",
@@ -48,6 +65,7 @@
     "gulp-babel": "6.1.2",
     "gulp-concat": "^2.6.1",
     "gulp-postcss": "^6.3.0",
+    "gulp-rename": "1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-sequence": "^0.4.6",
     "gulp-server-livereload": "^1.9.2",

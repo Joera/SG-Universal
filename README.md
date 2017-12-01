@@ -26,6 +26,10 @@ preDelete: (data, correlationId)
 postDelete: (data, correlationId)
 
 
-### Handlebar helpers
 
-Gekkigheid
+
+
+### Handlebar helpers
+Waar is arie?
+
+Hier nie

@@ -10,8 +10,8 @@ const logger = {
 
     error: function(error) {
         console.error(error);
-        // console.error(error.message);
-        // console.error(error.stack);
+        console.error(error.message);
+        console.error(error.stack);
         console.info('------------------------------------------------------------------------------------');
     },
 

@@ -6,6 +6,4 @@ dist
 !dist/assets/
 dist/assets/css/main.css
 npm-debug.log
-config/**/
-!config/
-pages/
+config/development/*

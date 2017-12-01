@@ -28,8 +28,10 @@ class WordpressConnector {
         const self = this;
         return new Promise((resolve, reject) => {
 
+			let url = config.wordpressUrl + '/api/get_posts/?count=-1';
+
             // send http request
-            requestify.get(config.wordpresUrl + '/api/get_posts/?count=-1')
+            requestify.get(url)
                 .then(function(response) {
                     logger.info('Received posts from wordpress', correlationId);
                     resolve(response.getBody().posts); // only return the posts of api response
