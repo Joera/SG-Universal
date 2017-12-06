@@ -28,8 +28,8 @@ class WordpressConnector {
         const self = this;
         return new Promise((resolve, reject) => {
 
-			let url = config.wordpresUrl + '/api/get_posts/?count=-1';
-
+			let url = config.wordpressUrl + '/api/get_posts/?count=-1';
+			console.log(url);
             // send http request
             requestify.get(url)
                 .then((response) => {
