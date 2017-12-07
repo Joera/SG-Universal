@@ -113,7 +113,7 @@ class TemplateService {
                 const templateData = {
                     body: data,
                     baseUrl: config.baseUrl,
-                    wordpresUrl: config.wordpresUrl
+                    wordpressUrl: config.wordpressUrl
                 };
 
                 // render the template
