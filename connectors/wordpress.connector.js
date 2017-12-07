@@ -28,11 +28,11 @@ class WordpressConnector {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            logger.info(config.wordpressUrl);
-
+			let url = config.wordpressUrl + '/api/get_posts/?count=-1';
+			console.log(url);
             // send http request
-            requestify.get(config.wordpressUrl + '/api/get_posts/?count=-1')
-                .then(function(response) {
+            requestify.get(url)
+                .then((response) => {
                     logger.info('Received posts from wordpress', correlationId);
                     resolve(response.getBody().posts); // only return the posts of api response
                 })

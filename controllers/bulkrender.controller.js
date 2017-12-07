@@ -4,6 +4,7 @@ const Promise = require('bluebird');
 const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
 const RenderProcessService = require('../services/render.process.service');
+const RenderQueue = require('../services/render.queue.service');
 const PageController = require('./page.controller');
 const PagePersistence = require('../persistence/page.persistence');
 const logger = require('../services/logger.service');
@@ -18,6 +19,7 @@ class BulkRenderController {
 
     constructor () {
         this.renderProcessService = new RenderProcessService();
+        this.renderQueue = new RenderQueue();
         this.pageController = new PageController();
         this.pagePersistence = new PagePersistence();
     }
@@ -34,6 +36,9 @@ class BulkRenderController {
             const correlationId = uuidv4(); // set correlation id for debugging the process chain
             self.pagePersistence.find({query: query}) // get all pages from mongodb
                 .then((p) => { return new Promise((res, rej) => { pages = p; res({}); })}) // set pages for later use
+
+                // clear the render queue, delete all remaining queue items
+                .then(() => { return self.renderQueue.clear(correlationId) })
 
                 // add pages to render queue
                 .then(() => {

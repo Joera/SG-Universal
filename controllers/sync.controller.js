@@ -37,7 +37,6 @@ class SyncController {
             const correlationId = uuidv4(); // set correlation id for debugging the process chain
             self.cmsConnector.getPages(correlationId)
                 .then((pages) => {
-                    console.log('pages?');
                     return new Promise((res, rej) => { cmsPages = pages; res({}); })}) // save pages received from cms api for later use
 
                 // delete pages

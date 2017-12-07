@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const _ = require('lodash');
 const algoliasearch = require('algoliasearch');
 const logger = require('../services/logger.service');
 const config = require('../config');
@@ -48,12 +49,23 @@ class AlgoliaConnector {
      */
     updatePage(data, correlationId) {
 
+		let algoliaObject = Object.assign({}, data);
+
+		if (algoliaObject.sections) {
+			algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
+				return v.type === 'paragraph';
+			});
+		}
+
+		algoliaObject.exerpt = null;
+		algoliaObject.main_image = null;
+		algoliaObject.author = null;
+
         const self = this;
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {
-            data.sections = null;
             // save record to Algolio Search
-            index.saveObject(data, (error, content) => {
+            index.saveObject(algoliaObject, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     reject(error);
