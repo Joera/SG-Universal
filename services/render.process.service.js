@@ -127,7 +127,7 @@ class RenderProcessService {
             let templateDefinition = null; // save empty template definition object for later re-use
             let templateHtml = null;
 
-            logger.info('bla');
+
 
             // get template definitions
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
@@ -283,6 +283,9 @@ class RenderProcessService {
     render(correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
+
+            logger.info('Start rendering queue', correlationId);
+
             self.renderQueue.getCount({}) // get the number of items in the render queue
                 .then((count) => {
                     const chunkSize = 10; // set chunk size, number of templates that are rendered async at the same time
