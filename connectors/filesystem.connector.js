@@ -71,6 +71,8 @@ class FileSystemConnector {
      * @returns {string}
      */
     writeTemplateFile(path, html, correlationId) {
+
+        logger.info('hieroooooo');
         const self = this;
         return new Promise((resolve, reject) => {
             if(path !== null) {
