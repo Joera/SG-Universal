@@ -192,6 +192,9 @@ class RenderProcessService {
      * @param correlationId
      */
     enqueue(data, correlationId) {
+
+        logger.info('enqueue', correlationId);
+
         const self = this;
         return new Promise((resolve, reject) => {
             self._createQueueItem(data, correlationId) // save queue item
