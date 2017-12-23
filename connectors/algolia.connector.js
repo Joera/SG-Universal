@@ -29,7 +29,8 @@ class AlgoliaConnector {
         return new Promise((resolve, reject) => {
 
             // save record to Algolio Search
-            index.addObject(data.searchSnippet, data._id, (error, content) => {
+            // searchSnippet
+            index.addObject(data, data._id, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     reject(error);
