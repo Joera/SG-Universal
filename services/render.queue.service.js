@@ -39,38 +39,47 @@ class RenderQueueService {
      * @param correlationId
      */
     add(queueItem, correlationId) {
-        // const self = this;
-        // return new Promise((resolve, reject) => {
-        //     const isInQueue = _.find(self.queue, (i) => { return i.path === queueItem.path; }); // find item in queue
-        //
-        //     if(!isInQueue) { // check if item is already in queue
-        //         self.queue.push(queueItem); // add item to queue
-        //         logger.info('Added template to render queue: ' + queueItem.path, correlationId);
-        //     } else {
-        //         logger.info('Template is already in queue: ' + queueItem.path, correlationId);
-        //     }
-        //     resolve(queueItem);
-        // })
-
         const self = this;
         return new Promise((resolve, reject) => {
-            queueItem._id = queueItem.path;
+            queueItem._id = (queueItem.path === '') ? '/' : queueItem.path;
+
             db.getRenderQueueCollection() // get page collection
+
+                // check if template is already in render queue
+                // check id not water tight because the add function is executed async and templates can be added simultaneously
                 .then((collection) => {
-					collection.findOne({"_id": queueItem._id})
-						.then(foundItem => {
-							// console.log('Already exists?');
-						})
+                    return new Promise((res, rej) => {
+                        collection.find({"_id": queueItem._id}).limit(1).toArray()
+                            .then((items) => {
+                                if(items.length === 0) {
+                                    // template not found in queue
+                                    res(collection)
+                                } else {
+                                    // template already in queue
+                                    const proxiedError = new TypeError();
+                                    proxiedError.message = 'Could not add template to render queue because it already is in the render queue';
+                                    rej(proxiedError)
+                                }
+                            })
+                    })
+                })
+
+                // save template to render queue collection
+                .then((collection) => {
 					return collection.save(queueItem);
-				}) // execute save
+				})
+
+                //
                 .then((d) => {
                     logger.info('Added template to render queue: ' + queueItem.path, correlationId);
                     resolve(queueItem);
                 })
                 .catch((error) => {
                     // error.correlationId = correlationId;
-                    reject(error);
-                    // resolve(queueItem);
+                    // logger.warn('Could not add template to render queue: ' + queueItem.path, correlationId);
+                    logger.error(error);
+                    // reject(error);
+                    resolve(queueItem);
                 })
         })
     }
@@ -81,19 +90,6 @@ class RenderQueueService {
      * @param correlationId
      */
     get(query, limit, correlationId) {
-        // const self = this;
-        // return new Promise((resolve, reject) => {
-        //     const queue = _.map(self.queue, _.clone); // make copy of render queue to return
-        //     self.queue = []; // empty queue
-        //     resolve(queue);
-        // })
-
-
-        // if(!limit) limit = 10;
-        // return db.getRenderQueueCollection() // get page collection
-        //         // .then((collection) => { return collection.find({}).limit(limit).toArray(); }); // execute find query
-        //         .then((collection) => { return collection.remove().limit(limit).toArray(); }); // execute find query
-
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -114,7 +110,6 @@ class RenderQueueService {
                 .catch((error) => { reject(error) });
 
         })
-
     }
 
 
@@ -127,6 +122,28 @@ class RenderQueueService {
             .then((collection) => { return collection.count(query); }); // execute find query
     }
 
+
+    /**
+     * Remove all items from the render queue
+     * @param correlationId
+     */
+    clear(correlationId) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            db.getRenderQueueCollection() // get page collection
+                .then((collection) => {
+                    return collection.remove({});
+                })
+                .then((d) => {
+                    logger.info('Cleared the render queue', correlationId);
+                    resolve({});
+                })
+                .catch((error) => {
+                    // error.correlationId = correlationId;
+                    reject(error);
+                })
+        })
+    }
 
 
 }

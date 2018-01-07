@@ -6,6 +6,7 @@ const logger = require('../services/logger.service');
 const AuthService = require('../services/auth.service');
 const TemplateService = require('../services/template.service');
 const RenderProcessService = require('../services/render.process.service');
+const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
@@ -26,6 +27,7 @@ class PageController {
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
         this.renderProcessService = new RenderProcessService();
+        this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.searchService = new SearchService();
         this.searchConnector = new SearchConnector();
@@ -54,6 +56,7 @@ class PageController {
             .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
             .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
+            .then(() => { return self.renderQueue.clear(correlationId) }) // clear the render queue, delete all remaining queue items
             .then(() => { return self.save(req.body, correlationId, false) }) // save page
             .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
             .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
@@ -122,6 +125,9 @@ class PageController {
         const self = this;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received delete call', correlationId);
+
+
+        
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             // delete page
             .then(() => { return self.delete(req.body, correlationId) }) // delete page from database and search

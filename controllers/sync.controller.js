@@ -31,8 +31,6 @@ class SyncController {
         const self = this;
         return new Promise((resolve, reject) => {
 
-			console.log('waddup?');
-
             let cmsPages = null; // all pages received from cms
             let deletedPages = null; // pages that will deleted
 

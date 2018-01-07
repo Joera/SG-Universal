@@ -35,6 +35,12 @@ class PagePersistence {
         })
     }
 
+
+    /**
+     * Query page collection in MongoDb and return single document
+     * @param options
+     * @param correlationId
+     */
     findOne(options, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
@@ -43,6 +49,7 @@ class PagePersistence {
                 .then((result) => { resolve(result); }) // return results
         })
     }
+
 
     /**
      * Save page to database

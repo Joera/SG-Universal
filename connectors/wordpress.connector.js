@@ -31,7 +31,7 @@ class WordpressConnector {
 
             // send http request
             requestify.get(url)
-                .then(function(response) {
+                .then((response) => {
                     logger.info('Received posts from wordpress', correlationId);
                     resolve(response.getBody().posts); // only return the posts of api response
                 })
