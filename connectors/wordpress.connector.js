@@ -28,7 +28,6 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
 			let url = config.wordpressUrl + '/api/get_posts/?count=-1';
-
             // send http request
             requestify.get(url)
                 .then((response) => {

@@ -10,7 +10,6 @@ const PagePersistence = require('../persistence/page.persistence');
 const logger = require('../services/logger.service');
 const config = require('../config');
 
-
 /**
  * Sync controller
  *
@@ -24,7 +23,6 @@ class BulkRenderController {
         this.pageController = new PageController();
         this.pagePersistence = new PagePersistence();
     }
-
 
     /**
      * Start the render process
