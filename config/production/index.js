@@ -1,6 +1,6 @@
 const devConfig = {
     env: 'production',
-    dist: 'dist',
+    dist: '/var/www/html',
     db: 'mongodb://localhost/amstelveenlijn',
     port: 8080,
     wordpressUrl: 'http://46.101.100.111',

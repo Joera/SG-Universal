@@ -233,7 +233,7 @@ class PageController {
 
                 // update search
                 // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
-                .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId); })
+                .then(() => { logger.info(saveData); return self.searchService.updateSearch(saveData, isUpdate, correlationId); })
 
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise

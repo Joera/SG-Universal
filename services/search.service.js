@@ -56,7 +56,7 @@ class SearchService {
 
 
     /**
-     * Update algoia search
+     * Update algolia search
      * Only update if searchSnippet property on data object is NOT undefined or an empty string
      * @param data                          data to be saved in algolia
      * @param isUpdate                      true if is update, false is new record
@@ -83,14 +83,6 @@ class SearchService {
             }
         })
     }
-
-
-
-
 }
-
-
-
-
 
 module.exports = SearchService;
