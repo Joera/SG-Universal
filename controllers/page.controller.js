@@ -8,6 +8,7 @@ const TemplateService = require('../services/template.service');
 const RenderProcessService = require('../services/render.process.service');
 const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
+const DocumentService = require('../services/document.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
@@ -26,6 +27,7 @@ class PageController {
         this.authService = new AuthService();
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
+        this.documentService = new DocumentService();
         this.renderProcessService = new RenderProcessService();
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
@@ -234,6 +236,10 @@ class PageController {
                 // update search
                 // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
                 .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId); })
+
+                .then(() => { return self.documentService.getDocuments(saveData, correlationId); })
+
+                // .then(() => { return self.searchService.saveDocument(saveData, correlationId); })
 
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
