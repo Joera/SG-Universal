@@ -75,25 +75,31 @@ class DocumentService {
 
     _createSnippetData(data,correlationId) {
 
-        return Promise.all(data.documents.map(function (document) {
+        if(data.documents && data.documents.length > 0) {
 
-            return new Promise(function(resolve, reject) {
+            return Promise.all(data.documents.map(function (document) {
 
-                var renderConfig = {
-                    title: document.file_name,
-                    content: document.file_description,
-                    date: document.post.date,
-                    url: document.file_cdn_url,
-                    type: 'document',
-                    tags: document.file_tags,
-                    post: document.post
+                return new Promise(function (resolve, reject) {
 
-                }
-                document.type = 'document';
-                document.snippetData = renderConfig;
-                resolve(document);
-            });
-        }))
+                    var renderConfig = {
+                        title: document.file_name,
+                        content: document.file_description,
+                        date: document.post.date,
+                        url: document.file_cdn_url,
+                        type: 'document',
+                        tags: document.file_tags,
+                        post: document.post
+
+                    }
+                    document.type = 'document';
+                    document.snippetData = renderConfig;
+                    resolve(document);
+                });
+            }))
+
+        } else {
+            data.documents = [];
+        }
     }
 
     _renderSnippets(documents,correlationId) {
