@@ -82,6 +82,7 @@ class DocumentService {
                 var renderConfig = {
                     title: document.file_name,
                     content: document.file_description,
+                    date: data.date,
                     url: document.file_cdn_url,
                     type: 'document'
                 }
