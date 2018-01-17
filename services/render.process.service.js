@@ -300,10 +300,6 @@ class RenderProcessService {
                 })
         })
     }
-
-
-
-
 }
 
 module.exports = RenderProcessService;
