@@ -106,7 +106,7 @@ class DocumentService {
 
         let self = this;
 
-        if(documents && .documents.length > 0) {
+        if(documents && documents.length > 0) {
 
             return Promise.all(documents.map(function (doc) {
                 return self.templateService.render('search-snippet','search-snippet.handlebars', doc.snippetData, correlationId);
