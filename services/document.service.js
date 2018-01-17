@@ -106,21 +106,35 @@ class DocumentService {
 
         let self = this;
 
-        return Promise.all(documents.map(function (doc) {
-            return self.templateService.render('search-snippet','search-snippet.handlebars', doc.snippetData, correlationId);
-        }))
+        if(documents && .documents.length > 0) {
+
+            return Promise.all(documents.map(function (doc) {
+                return self.templateService.render('search-snippet','search-snippet.handlebars', doc.snippetData, correlationId);
+            }))
+
+        } else {
+            documents = [];
+        }
+
     }
 
-    _uploadSnippets(data,correlationId) {
+    _uploadSnippets(data,correlationId){
 
         let self = this;
 
-        return Promise.all(data.documents.map(function (document) {
-            // save of update?
-            return self.searchService.updateSearch(document,false,correlationId);
+        if (data.documents && data.documents.length > 0) {
 
-        }));
+                return Promise.all(data.documents.map(function (document) {
+                    // save of update?
+                    return self.searchService.updateSearch(document, false, correlationId);
+
+                }));
+        } else {
+
+            data.documents = [];
+        }
     }
+
 }
 
 
