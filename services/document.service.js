@@ -84,7 +84,10 @@ class DocumentService {
                     content: document.file_description,
                     date: data.date,
                     url: document.file_cdn_url,
-                    type: 'document'
+                    type: 'document',
+                    tags: document.file_tags,
+                    post: document.post
+
                 }
                 document.type = 'document';
                 document.snippetData = renderConfig;
