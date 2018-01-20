@@ -63,15 +63,15 @@ class CommentSearchService {
                     var renderConfig = {
                         author: thread[0].author,
                         content: thread[0].content,
-                        date: thread.date,
+                        date: thread[0].date,
                         type: 'comments',
-                        // post: data
+                        comments: thread;
 
                     }
 
-                    thread.type = 'comments';
-                    thread.snippetData = renderConfig;
-                    resolve(thread);
+                    newObject.type = 'comments';
+                    newObject.snippetData = renderConfig;
+                    resolve(newObject);
                 });
             }))
 
