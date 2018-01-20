@@ -47,7 +47,7 @@ class CommentSearchService {
                             res(data);
                         });
                     })
-                    .then((data) => { return self._renderSnippets(threads,correlationId); })
+                    .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
                                 for (let i = 0; i < data.comments.length; i++) {
