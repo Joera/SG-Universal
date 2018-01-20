@@ -124,8 +124,6 @@ class CommentSearchService {
             data.documents = [];
         }
     }
-
 }
-
 
 module.exports = CommentSearchService;
