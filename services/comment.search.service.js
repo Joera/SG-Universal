@@ -36,13 +36,14 @@ class CommentSearchService {
                 self._createSnippetData(data,correlationId)
                     .then((threads) => {
 
-                        data.threads = {};
+                        data.threads = [];
 
                         return new Promise((res, rej) => {
                             for (let i = 0; i < threads.length; i++) {
-                                data.threads[i] = {};
-                                data.threads[i].type = 'comments';
-                                data.threads[i].snippetData = threads[i];
+                                let threadObject = {};
+                                threadObject.type = 'comments';
+                                threadObject.snippetData = threads[i];
+                                data.threads.push(threadObject);
                             }
                             res(data);
                         });
@@ -111,7 +112,7 @@ class CommentSearchService {
 
         let self = this;
 
-        if (data.threads) {
+        if (data.threads && data.threads.length > 0) {
 
                 return Promise.all(data.threads.map(function (thread) {
                     // save of update?
