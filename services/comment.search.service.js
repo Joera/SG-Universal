@@ -69,6 +69,7 @@ class CommentSearchService {
 
                     }
 
+                    let newObject = {};
                     newObject.type = 'comments';
                     newObject.snippetData = renderConfig;
                     resolve(newObject);
