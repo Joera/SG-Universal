@@ -110,12 +110,14 @@ class CommentSearchService {
 
         let self = this;
 
+        logger.info('test');
+        logger.info(data);
+
         if (data.threads && data.threads.length > 0) {
 
                 return Promise.all(data.threads.map(function (thread) {
                     // save of update?
-                    logger.info('thread');
-                    logger.info(thread);
+
                     return self.searchService.updateSearch(thread, false, correlationId);
 
                 }));
