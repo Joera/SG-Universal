@@ -40,6 +40,7 @@ class CommentSearchService {
 
                         return new Promise((res, rej) => {
                             for (let i = 0; i < threads.length; i++) {
+                                data.threads[i] = {};
                                 data.threads[i].snippetData = threads[i];
                             }
                             res(data);
