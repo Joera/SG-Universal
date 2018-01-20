@@ -105,7 +105,7 @@ class CommentSearchService {
                     // save of update?
                     logger.info('thread');
                     logger.info(thread);
-                    return self.searchService.updateSearch(thread[0], false, correlationId);
+                    return self.searchService.updateSearch(thread, false, correlationId);
 
                 }));
         } else {
