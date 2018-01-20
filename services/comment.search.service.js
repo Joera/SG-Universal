@@ -30,24 +30,11 @@ class CommentSearchService {
         let self = this;
 
         return new Promise((resolve, reject) => {
+
                 // init template service
 
                 self._createSnippetData(data,correlationId)
-                    .then((threads) => {
-                        return new Promise((res, rej) => {
-                            for (let i = 0; i < data.comments.length; i++) {
-
-                                let newObject = {};
-                                newObject.type = 'comments';
-                                newObject.snippetData = threads[i];
-                                newObject.comments = data.comments[i];
-
-                                data.threads = newObject;
-                            }
-                            res(data);
-                        });
-                    })
-                    .then((data) => { return self._renderSnippets(data,correlationId); })
+                    .then((threads) => { return self._renderSnippets(threads,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
                                 for (let i = 0; i < data.threads.length; i++) {
@@ -70,7 +57,9 @@ class CommentSearchService {
 
         if(data.comments && data.comments.length > 0) {
 
-            return Promise.all(data.comments.map(function (thread) {
+            data.threads = JSON.parse(JSON.stringify(data.comments));
+
+            return Promise.all(data.threads.map(function (thread) {
 
                 return new Promise(function (resolve, reject) {
 
@@ -83,7 +72,7 @@ class CommentSearchService {
 
                     }
 
-                    thread.snippetData = renderConfig;
+                    thread = renderConfig;
 
                     resolve(thread);
                 });
@@ -94,13 +83,13 @@ class CommentSearchService {
         }
     }
 
-    _renderSnippets(data,correlationId) {
+    _renderSnippets(threads,correlationId) {
 
         let self = this;
 
-        if(data.threads && data.threads.length > 0) {
+        if(threads && threads.length > 0) {
 
-            return Promise.all(data.threads.map(function (thread) {
+            return Promise.all(threads.map(function (thread) {
                 return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread.snippetData, correlationId);
             }))
 
