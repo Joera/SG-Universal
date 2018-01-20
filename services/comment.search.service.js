@@ -33,11 +33,25 @@ class CommentSearchService {
                 // init template service
 
                 self._createSnippetData(data,correlationId)
+                    .then((data) => {
+                        return new Promise((res, rej) => {
+                            for (let i = 0; i < data.comments.length; i++) {
+
+                                let newObject = {};
+                                newObject.type = 'comments';
+                                newObject.snippetData = data[i];
+                                newObject.comments = data.comments[i];
+
+                                data.threads = newObject;
+                            }
+                            res(data);
+                        });
+                    })
                     .then((comments) => { return self._renderSnippets(comments,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
-                                for (let i = 0; i < data.comments.length; i++) {
-                                    data.comments[i].searchSnippet = snippets[i];
+                                for (let i = 0; i < data.threads.length; i++) {
+                                    data.threads[i].searchSnippet = snippets[i];
                                 }
                                 res(data);
                             });
@@ -54,9 +68,9 @@ class CommentSearchService {
 
     _createSnippetData(data,correlationId) {
 
-        if(data.comments && data.comments.length > 0) {
+        if(data.threads && data.threads.length > 0) {
 
-            return Promise.all(data.comments.map(function (thread) {
+            return Promise.all(data.threads.map(function (thread) {
 
                 return new Promise(function (resolve, reject) {
 
@@ -69,15 +83,12 @@ class CommentSearchService {
 
                     }
 
-                    let newObject = {};
-                    newObject.type = 'comments';
-                    newObject.snippetData = renderConfig;
-                    resolve(newObject);
+                    resolve(renderConfig);
                 });
             }))
 
         } else {
-            data.comments = [];
+            data.comments = null;
         }
     }
 
@@ -92,7 +103,7 @@ class CommentSearchService {
             }))
 
         } else {
-            comments = [];
+            comments = null;
         }
     }
 
