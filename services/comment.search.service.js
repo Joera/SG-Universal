@@ -114,4 +114,4 @@ class CommentSearchService {
 }
 
 
-module.exports = DocumentService;
+module.exports = CommentSearchService;
