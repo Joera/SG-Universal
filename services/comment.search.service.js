@@ -34,7 +34,18 @@ class CommentSearchService {
                 // init template service
 
                 self._createSnippetData(data,correlationId)
-                    .then((threads) => { return self._renderSnippets(threads,correlationId); })
+                    .then((threads) => {
+
+                        data.threads = {};
+
+                        return new Promise((res, rej) => {
+                            for (let i = 0; i < threads.length; i++) {
+                                data.threads[i] = threads[i];
+                            }
+                            res(data);
+                        });
+                    })
+                    .then((data) => { return self._renderSnippets(threads,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
                                 for (let i = 0; i < data.threads.length; i++) {
@@ -57,7 +68,6 @@ class CommentSearchService {
 
         if(data.comments && data.comments.length > 0) {
 
-            data.threads = JSON.parse(JSON.stringify(data.comments));
 
             return Promise.all(data.threads.map(function (thread) {
 
@@ -83,19 +93,17 @@ class CommentSearchService {
         }
     }
 
-    _renderSnippets(threads,correlationId) {
+    _renderSnippets(data,correlationId) {
 
         let self = this;
 
-        if(threads && threads.length > 0) {
+        if(data.threads && data.threads.length > 0) {
 
-            return Promise.all(threads.map(function (thread) {
+            return Promise.all(data.threads.map(function (thread) {
                 return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread.snippetData, correlationId);
             }))
 
-        } else {
-            data.threads = null;
-        }
+        } 
     }
 
     _uploadSnippets(data,correlationId){
