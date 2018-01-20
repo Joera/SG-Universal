@@ -43,6 +43,7 @@ class CommentSearchService {
                                 let threadObject = {};
                                 threadObject.type = 'comments';
                                 threadObject.snippetData = threads[i];
+                                threadObject.comments = threads[i].comments;
                                 data.threads.push(threadObject);
                             }
                             res(data);
