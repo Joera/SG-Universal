@@ -111,7 +111,7 @@ class CommentSearchService {
 
         let self = this;
 
-        if (data.threads && data.threads.length > 0) {
+        if (data.threads) {
 
                 return Promise.all(data.threads.map(function (thread) {
                     // save of update?
