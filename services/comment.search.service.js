@@ -41,6 +41,7 @@ class CommentSearchService {
                         return new Promise((res, rej) => {
                             for (let i = 0; i < threads.length; i++) {
                                 data.threads[i] = {};
+                                data.threads[i].type = 'comments';
                                 data.threads[i].snippetData = threads[i];
                             }
                             res(data);
@@ -78,7 +79,6 @@ class CommentSearchService {
                         author: thread[0].author,
                         content: thread[0].content,
                         date: thread[0].date,
-                        type: 'comments',
                         comments: thread
 
                     }
