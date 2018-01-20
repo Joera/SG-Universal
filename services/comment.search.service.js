@@ -83,7 +83,9 @@ class CommentSearchService {
 
                     }
 
-                    resolve(renderConfig);
+                    thread.snippetData = renderConfig;
+
+                    resolve(thread);
                 });
             }))
 
