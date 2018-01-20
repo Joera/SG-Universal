@@ -77,11 +77,12 @@ class CommentSearchService {
                 return new Promise(function (resolve, reject) {
 
                     var renderConfig = {
-                        author: thread[0].author,
+                        author: thread[0].name,
                         content: thread[0].content,
                         date: thread[0].date,
-                        comments: thread
-
+                        comments: thread,
+                        reply_count : thread.length - 1,
+                        
                     }
 
                     thread = renderConfig;
