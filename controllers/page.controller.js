@@ -213,6 +213,8 @@ class PageController {
             let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
 
+            logger.info(data.title);
+
             // get template definitions
             // find the template that belongs to the data
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
