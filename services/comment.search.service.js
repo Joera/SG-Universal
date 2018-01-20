@@ -65,7 +65,7 @@ class CommentSearchService {
                         content: thread[0].content,
                         date: thread[0].date,
                         type: 'comments',
-                        comments: thread;
+                        comments: thread
 
                     }
 
