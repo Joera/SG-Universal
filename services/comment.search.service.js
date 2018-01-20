@@ -41,7 +41,7 @@ class CommentSearchService {
                         return new Promise((res, rej) => {
                             for (let i = 0; i < threads.length; i++) {
                                 let threadObject = {};
-                                threadObject.id = threads[i].id;
+                                threadObject.objectID = threads[i].id;
                                 threadObject.type = 'comments';
                                 threadObject.snippetData = threads[i];
                                 threadObject.comments = threads[i].comments;
