@@ -68,6 +68,8 @@ class CommentSearchService {
                         post: thread.post
 
                     }
+                    logger.info('renderConfig');
+                    logger.info(renderConfig);
                     thread.type = 'comments';
                     thread.snippetData = renderConfig;
                     resolve(thread);
