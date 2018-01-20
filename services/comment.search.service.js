@@ -82,7 +82,8 @@ class CommentSearchService {
                         date: thread[0].date,
                         comments: thread,
                         reply_count : thread.length - 1,
-                        
+                        url : data.url + '#dialoog'
+
                     }
 
                     thread = renderConfig;
