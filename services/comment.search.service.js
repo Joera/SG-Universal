@@ -86,7 +86,7 @@ class CommentSearchService {
         if(comments && comments.length > 0) {
 
             return Promise.all(comments.map(function (thread) {
-                return self.templateService.render('search-snippet','search-snippet.handlebars', thread.snippetData, correlationId);
+                return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread.snippetData, correlationId);
             }))
 
         } else {

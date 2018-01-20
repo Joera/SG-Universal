@@ -9,6 +9,7 @@ const RenderProcessService = require('../services/render.process.service');
 const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
 const DocumentService = require('../services/document.search.service');
+const CommentSearchService = require('../services/comment.search.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
@@ -28,6 +29,7 @@ class PageController {
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
         this.documentService = new DocumentService();
+        this.commentSearchService = new CommentSearchService();
         this.renderProcessService = new RenderProcessService();
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
@@ -240,6 +242,8 @@ class PageController {
                 .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId); })
 
                 .then(() => { return self.documentService.documentsToSearch(saveData, correlationId); })
+
+                .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId); })
 
                 // .then(() => { return self.searchService.saveDocument(saveData, correlationId); })
 
