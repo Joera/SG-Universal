@@ -62,14 +62,13 @@ class CommentSearchService {
 
                     var renderConfig = {
                         author: thread[0].author,
-                        content: thread[0].text,
+                        content: thread[0].content,
                         date: thread.date,
                         type: 'comments',
-                        post: data
+                        // post: data
 
                     }
-                    logger.info('renderConfig');
-                    logger.info(renderConfig);
+
                     thread.type = 'comments';
                     thread.snippetData = renderConfig;
                     resolve(thread);
@@ -104,6 +103,8 @@ class CommentSearchService {
 
                 return Promise.all(data.comments.map(function (thread) {
                     // save of update?
+                    logger.info('thread');
+                    logger.info(thread);
                     return self.searchService.updateSearch(thread, false, correlationId);
 
                 }));
