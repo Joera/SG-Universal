@@ -68,9 +68,9 @@ class CommentSearchService {
 
     _createSnippetData(data,correlationId) {
 
-        if(data.threads && data.threads.length > 0) {
+        if(data.comments && data.comments.length > 0) {
 
-            return Promise.all(data.threads.map(function (thread) {
+            return Promise.all(data.comments.map(function (thread) {
 
                 return new Promise(function (resolve, reject) {
 
