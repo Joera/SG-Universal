@@ -33,13 +33,13 @@ class CommentSearchService {
                 // init template service
 
                 self._createSnippetData(data,correlationId)
-                    .then((data) => {
+                    .then((threads) => {
                         return new Promise((res, rej) => {
                             for (let i = 0; i < data.comments.length; i++) {
 
                                 let newObject = {};
                                 newObject.type = 'comments';
-                                newObject.snippetData = data[i];
+                                newObject.snippetData = threads[i];
                                 newObject.comments = data.comments[i];
 
                                 data.threads = newObject;
@@ -47,11 +47,11 @@ class CommentSearchService {
                             res(data);
                         });
                     })
-                    .then((comments) => { return self._renderSnippets(comments,correlationId); })
+                    .then((data) => { return self._renderSnippets(threads,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
-                                for (let i = 0; i < data.threads.length; i++) {
-                                    data.threads[i].searchSnippet = snippets[i];
+                                for (let i = 0; i < data.comments.length; i++) {
+                                    data.comments[i].searchSnippet = snippets[i];
                                 }
                                 res(data);
                             });
@@ -94,18 +94,18 @@ class CommentSearchService {
         }
     }
 
-    _renderSnippets(comments,correlationId) {
+    _renderSnippets(data,correlationId) {
 
         let self = this;
 
-        if(comments && comments.length > 0) {
+        if(data.threads && data.threads.length > 0) {
 
-            return Promise.all(comments.map(function (thread) {
+            return Promise.all(data.threads.map(function (thread) {
                 return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread.snippetData, correlationId);
             }))
 
         } else {
-            comments = null;
+            data.threads = null;
         }
     }
 
@@ -113,9 +113,9 @@ class CommentSearchService {
 
         let self = this;
 
-        if (data.comments && data.comments.length > 0) {
+        if (data.threads && data.threads.length > 0) {
 
-                return Promise.all(data.comments.map(function (thread) {
+                return Promise.all(data.threads.map(function (thread) {
                     // save of update?
                     logger.info('thread');
                     logger.info(thread);
