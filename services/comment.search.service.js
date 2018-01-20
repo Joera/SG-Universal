@@ -63,9 +63,9 @@ class CommentSearchService {
                     var renderConfig = {
                         author: thread[0].author,
                         content: thread[0].text,
-                        date: thread.post.date,
+                        date: thread.date,
                         type: 'comments',
-                        post: thread.post
+                        post: data
 
                     }
                     logger.info('renderConfig');
