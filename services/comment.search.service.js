@@ -33,6 +33,8 @@ class CommentSearchService {
 
                 // init template service
 
+            if(data.comments  && data.comments.length > 0){
+
                 self._createSnippetData(data,correlationId)
                     .then((threads) => {
 
@@ -67,6 +69,7 @@ class CommentSearchService {
                     .catch((error) => {
                         reject(error);
                     });
+            }
         })
     }
 
