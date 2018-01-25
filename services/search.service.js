@@ -80,37 +80,10 @@ class SearchService {
                     .then((d) => { logger.info('succes'); resolve(d) })
                     .catch((error) => { reject(error) });
             } else {
-                resolve(null);
+                resolve(data);
             }
         })
     }
-
-//     /**
-//      * Save document to algolia index
-//      * @param config                Config object {res: express response object, path: path of the template file, response: resonse data that will be send to client, data: {type: page type, body: saved blog post data, navigation: null, documents: array of document objects}}
-//      * @returns {Constructor|*|promise|e}
-//      */
-//     saveDocument(data, correlationId) {
-//         const self = this;
-//         return new Promise((resolve, reject) => {
-//             logger.info(data.documents);
-//             if (data.documents) { // check if config has docuemnts property
-//
-//                 data.documents.forEach(document => {
-//
-//                     let save = self.searchConnector.addPage.bind(self.searchConnector);
-//                     save(document, correlationId)
-//                     .then((d) => {resolve(d)})
-//                     .catch((error) => {reject(error)});
-//
-//                     logger.info('+++ saved document succesfull to algolia');
-//                 });
-//
-//             } else {
-//                 resolve(null);
-//             }
-//         });
-//     }
 }
 
 module.exports = SearchService;
