@@ -128,7 +128,7 @@ class RenderProcessService {
             let templateHtml = null;
 
             logger.info('hier kijken');
-            logger.info(data);
+            logger.info(config);
 
             // get template definitions
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
