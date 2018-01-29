@@ -130,28 +130,33 @@ class RenderProcessService {
             logger.info('hier kijken');
             logger.info(data);
 
-            if(data.type === null) { data.type = 'page'; }
+            if(data.type !== null) {
 
             // get template definitions
-            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
-                .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+                self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
+                    .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
-                // render template
-                .then(() => { return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
-                .then((templateData) => { return self.templateService.render(name, template, templateData, correlationId) }) // render template
-                .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
-                .then(() => { return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
+                    // render template
+                    .then(() => { return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
+                    .then((templateData) => { return self.templateService.render(name, template, templateData, correlationId) }) // render template
+                    .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
+                    .then(() => { return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
 
-                // write template file
-                .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) }) // save template directory
-                .then(() => { return self.fileSystemConnector.writeTemplateFile(path, templateHtml, correlationId) }) // write template file
+                    // write template file
+                    .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) }) // save template directory
+                    .then(() => { return self.fileSystemConnector.writeTemplateFile(path, templateHtml, correlationId) }) // write template file
 
-                //
-                .then(() => { resolve(templateHtml); }) // resolve promise
-                .catch(error => {
-                    logger.error(error);
-                    reject(error);
-                });
+                    //
+                    .then(() => { resolve(templateHtml); }) // resolve promise
+                    .catch(error => {
+                        logger.error(error);
+                        reject(error);
+                    });
+
+            } else {
+
+                reject('data dot type equals null');
+            }
         })
     }
 
