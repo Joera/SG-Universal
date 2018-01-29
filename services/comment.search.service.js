@@ -87,7 +87,7 @@ class CommentSearchService {
 
                 return new Promise(function (resolve, reject) {
 
-                    if(thread && thread[0]) {
+                    if(thread && thread[0] && thread[0] !== null) {
 
                         var renderConfig = {
                             id: thread[0].id,
