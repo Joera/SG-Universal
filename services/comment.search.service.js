@@ -40,24 +40,21 @@ class CommentSearchService {
 
                         data.threads = [];
 
+                        return new Promise((res, rej) => {
+                            for (let i = 0; i < threads.length; i++) {
+                                let threadObject = {};
 
-
-                            return new Promise((res, rej) => {
-                                for (let i = 0; i < threads.length; i++) {
-                                    let threadObject = {};
-
-                                    if (threads[i] !== null) {
-                                        threadObject.objectID = threads[i].id;
-                                        threadObject.date = threads[i].date;
-                                        threadObject.type = 'comments';
-                                        threadObject.snippetData = threads[i];
-                                        threadObject.comments = threads[i].comments;
-                                        data.threads.push(threadObject);
-                                    }
+                                if (threads[i] !== null) {
+                                    threadObject.objectID = threads[i].id;
+                                    threadObject.date = threads[i].date;
+                                    threadObject.type = 'comments';
+                                    threadObject.snippetData = threads[i];
+                                    threadObject.comments = threads[i].comments;
+                                    data.threads.push(threadObject);
                                 }
-                                res(data);
-                            });
-                        }
+                            }
+                            res(data);
+                        });
                     })
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
