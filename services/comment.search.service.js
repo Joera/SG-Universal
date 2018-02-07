@@ -40,7 +40,7 @@ class CommentSearchService {
 
                         data.threads = [];
 
-                        if(threads !== null) {
+                        if(Array.isArray(threads) && threads[0] !== null) {
 
                             return new Promise((res, rej) => {
                                 for (let i = 0; i < threads.length; i++) {
