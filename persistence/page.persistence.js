@@ -28,7 +28,7 @@ class PagePersistence {
         };
         return new Promise((resolve, reject) => {
             db.getPageCollection() // get page collection
-                .then((collection) => {    logger.info(options.query); return collection.find(options.query).sort(options.sort).limit(options.limit).toArray(); }) // execute find query
+                .then((collection) => { return collection.find(options.query).sort(options.sort).limit(options.limit).toArray(); }) // execute find query
 
                 // .then((collection) => { return collection.find(options.query).limit(options.sort).sort(options.sort).toArray(); }) // execute find query
                 .then((result) => { resolve(result); }) // return results
