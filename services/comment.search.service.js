@@ -40,17 +40,20 @@ class CommentSearchService {
 
                         data.threads = [];
 
-                        if(Array.isArray(threads) && threads[0] !== null) {
+
 
                             return new Promise((res, rej) => {
                                 for (let i = 0; i < threads.length; i++) {
                                     let threadObject = {};
-                                    threadObject.objectID = threads[i].id;
-                                    threadObject.date = threads[i].date;
-                                    threadObject.type = 'comments';
-                                    threadObject.snippetData = threads[i];
-                                    threadObject.comments = threads[i].comments;
-                                    data.threads.push(threadObject);
+
+                                    if (threads[i] !== null) {
+                                        threadObject.objectID = threads[i].id;
+                                        threadObject.date = threads[i].date;
+                                        threadObject.type = 'comments';
+                                        threadObject.snippetData = threads[i];
+                                        threadObject.comments = threads[i].comments;
+                                        data.threads.push(threadObject);
+                                    }
                                 }
                                 res(data);
                             });
