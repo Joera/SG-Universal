@@ -127,6 +127,11 @@ class RenderProcessService {
             let templateDefinition = null; // save empty template definition object for later re-use
             let templateHtml = null;
 
+            if(data === null) {
+                data = {};
+                data.type = 'post';
+            }
+
             // get template definitions
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
