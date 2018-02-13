@@ -29,8 +29,9 @@ class WordpressConnector {
 
 			let url = config.wordpressUrl + '/api/get_posts/?count=-1';
             // send http request
-            requestify.get(url)
-                .then((response) => {
+            requestify.get(url,{
+                redirect: true
+            }).then((response) => {
                     logger.info('Received posts from wordpress', correlationId);
                     resolve(response.getBody().posts); // only return the posts of api response
                 })
