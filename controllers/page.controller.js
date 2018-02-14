@@ -91,6 +91,7 @@ class PageController {
      */
     handleUpdateCall(req, res, next) {
         const self = this;
+        const options = {};
 
         let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
