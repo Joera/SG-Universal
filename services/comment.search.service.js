@@ -25,7 +25,7 @@ class CommentSearchService {
      * @param config
      * @returns {*|promise|Constructor|e}
      */
-    commentsToSearch(data,correlationId) {
+    commentsToSearch(data,correlationId, options) {
 
         let self = this;
 

@@ -56,7 +56,7 @@ class PagePersistence {
      * @param data
      * @param correlationId
      */
-    save(data, correlationId) {
+    save(data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
             data._id = String(data._id); // make sure id is a string

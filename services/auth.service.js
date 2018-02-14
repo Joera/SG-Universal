@@ -11,7 +11,7 @@ class AuthService {
 
 
 
-    isAuthorized(token, correlationId) {
+    isAuthorized(token, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
             // check if call is authorized

@@ -26,7 +26,7 @@ class SearchService {
      * @param data                              page data
      * @param correlationId
      */
-    getSearchSnippet(templateDefinition, data, correlationId) {
+    getSearchSnippet(templateDefinition, data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -63,7 +63,7 @@ class SearchService {
      * @param correlationId
      */
 
-    updateSearch(data, isUpdate, correlationId) {
+    updateSearch(data, isUpdate, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
             if(data.searchSnippet && data.searchSnippet !== '') {

@@ -25,7 +25,7 @@ class DocumentService {
      * @param config
      * @returns {*|promise|Constructor|e}
      */
-    documentsToSearch(data,correlationId) {
+    documentsToSearch(data, correlationId, options) {
 
         let self = this;
 
