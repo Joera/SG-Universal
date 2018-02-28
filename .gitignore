@@ -9,3 +9,4 @@ npm-debug.log
 config/development/*
 config/production/*
 wp-content/plugins/headless/lib/cors.php
+config/production/index.js
