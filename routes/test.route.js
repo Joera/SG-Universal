@@ -12,5 +12,6 @@ router.route('/')
         res.status(200); // set http status code for response
         res.json({message: config.baseUrl + ':' + config.port + '/api is up, test succeeded.'}); // send response body
     })
+    
 
 module.exports = router;
