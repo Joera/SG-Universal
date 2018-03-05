@@ -1,13 +1,14 @@
 const devConfig = {
     env: 'production',
-    dist: '/var/www/html',
-    db: 'mongodb://localhost/amstelveenlijn',
+    dist: 'dist',
+    db: 'mongodb://localhost/manon',
     port: 8080,
-    wordpressUrl: 'http://amstelveenlijn.nl',
-    algoliaIndexNamePrefix: 'AVL_core',
-    algoliaApplicationId: 'RLZJT7BFZT',
-    algoliaApiKey: 'f0dc506dd42b55db93e55d28c3e667b5',
-    baseUrl: 'http://amstelveenlijn.nl',
+    wordpressUrl: 'http://manon-sg.local',
+    wordpressApiPath: 'wp-json/wp/v2/all',
+    algoliaIndexNamePrefix: 'test_',
+    algoliaApplicationId: 'ABLQBAQF04',
+    algoliaApiKey: 'ae42b70689c1ec9f99ead26a257f16df',
+    baseUrl: 'http://manon-sg.local',
     templateNameKey: 'type'
 };
 
