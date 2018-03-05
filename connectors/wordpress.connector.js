@@ -14,7 +14,6 @@ const config = require('../config');
  */
 class WordpressConnector {
 
-
     constructor () {
 
     }
@@ -43,8 +42,6 @@ class WordpressConnector {
 
         })
     }
-
-
 }
 
 module.exports = WordpressConnector;
