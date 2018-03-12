@@ -27,9 +27,4 @@ postDelete: (data, correlationId)
 
 
 
-
-
 ### Handlebar helpers
-Waar is arie?
-
-Hier nie
