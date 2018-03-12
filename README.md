@@ -28,3 +28,6 @@ postDelete: (data, correlationId)
 
 
 ### Handlebar helpers
+
+### GIT
+git remote add live ssh://root@146.185.149.132/opt/sg-core.git
