@@ -21,7 +21,7 @@
     "bulkrender:dev": {
       "extensions": "handlebars",
       "patterns": [
-        "pages/templates/**/"
+          "pages/templates/**/"
       ],
       "quiet": false
     }
