@@ -25,11 +25,15 @@ postRender: (data, correlationId)
 preDelete: (data, correlationId)
 postDelete: (data, correlationId)
 
+### Install
+npm install
+git remote add live ssh://root@146.185.149.132/opt/sg-core.git
 
+### Development
+nodemon index.js
 
+### Sync
+npm run sync:dev
 
-
-### Handlebar helpers
-Waar is arie?
-
-Hier nie
+### Bulkrender
+npm run bulkrender:dev
