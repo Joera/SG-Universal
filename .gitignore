@@ -8,3 +8,4 @@ dist/assets/css/main.css
 npm-debug.log
 config/development/*
 config/production/*
+

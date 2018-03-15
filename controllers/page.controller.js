@@ -93,6 +93,8 @@ class PageController {
         const self = this;
         const options = {};
 
+        logger.info('ebdjhcvdjvbf');
+
         let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received update call', correlationId);
