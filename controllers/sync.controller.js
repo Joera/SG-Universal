@@ -69,8 +69,7 @@ class SyncController {
                 });
         });
     }
-
-
+    
     /**
      * Delete pages in pages array
      * @param pages                     array of pages that need to be deleted
