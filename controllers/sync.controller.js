@@ -69,6 +69,8 @@ class SyncController {
                 });
         });
     }
+
+
     
     /**
      * Delete pages in pages array
