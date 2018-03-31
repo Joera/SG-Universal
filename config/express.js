@@ -12,7 +12,7 @@ const app = express();
 
 // parse body params and attache them to req.body
 app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 1000000 }));
 // app.use(function (error, req, res, next) { // catch bodyParser syntax error and send custom error message
 //     if (error instanceof SyntaxError) {
 //         res.status(400).send("Invalid json");
