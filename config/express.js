@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     }
 // });
 
-app.use(express.bodyParser({limit: '32mb'}));
+app.use(bodyParser({limit: '32mb'}));
 
 
 /********* DEZE HEADERS STRAKS MOGELIJK VERWIJDEREN *********/
