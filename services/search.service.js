@@ -75,9 +75,13 @@ class SearchService {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
                 logger.info(data);
+
+                // trim comments
+                let algoliaData = JSON.parse(JSON.stringify(data));
+                algoliaData.comments = algoliaData.comments.slice(0,10);
                 // save page to algolia
-                save(data, correlationId)
-                    .then((d) => { logger.info('succes'); resolve(d) })
+                save(algoliaData, correlationId)
+                    .then((d) => { logger.info('succes'); resolve(data) })
                     .catch((error) => { reject(error) });
             } else {
                 resolve(data);
