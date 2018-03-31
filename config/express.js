@@ -11,8 +11,8 @@ const app = express();
 
 
 // parse body params and attache them to req.body
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // app.use(function (error, req, res, next) { // catch bodyParser syntax error and send custom error message
 //     if (error instanceof SyntaxError) {
 //         res.status(400).send("Invalid json");
@@ -21,7 +21,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     }
 // });
 
-app.use(bodyParser({limit: '32mb'}));
 
 
 /********* DEZE HEADERS STRAKS MOGELIJK VERWIJDEREN *********/
