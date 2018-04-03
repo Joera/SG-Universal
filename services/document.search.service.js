@@ -84,13 +84,12 @@ class DocumentService {
                     var renderConfig = {
                         title: document.file_name,
                         content: document.file_description,
-                        date: document.post.date,
+                        date: document.date,
                         url: document.file_cdn_url,
                         type: 'document',
                         tags: document.file_tags,
                         post: document.post
-
-                    }
+                    };
                     document.type = 'document';
                     document.snippetData = renderConfig;
                     resolve(document);
