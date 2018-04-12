@@ -74,7 +74,7 @@ class SearchService {
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
-                logger.info(data);
+                // logger.info(data);
 
                 // trim comments
                 let algoliaData = JSON.parse(JSON.stringify(data));
