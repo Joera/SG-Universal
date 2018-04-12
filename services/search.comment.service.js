@@ -52,6 +52,7 @@ class CommentSearchService {
                                     threadObject.comments = threads[i].comments;
                                     data.threads.push(threadObject);
                                 }
+                                
                             }
                             res(data);
                         });
@@ -120,12 +121,11 @@ class CommentSearchService {
         let self = this;
 
         if(data.threads && data.threads.length > 0) {
-
             return Promise.all(data.threads.map(function (thread) {
                 return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread.snippetData, correlationId);
             }))
-
         }
+
     }
 
     _uploadSnippets(data,correlationId){

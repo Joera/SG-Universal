@@ -29,6 +29,7 @@ postDelete: (data, correlationId)
 npm install
 git remote add live ssh://root@146.185.149.132/opt/sg-core.git
 
+
 ### Development
 nodemon index.js
 
@@ -37,3 +38,6 @@ npm run sync:dev
 
 ### Bulkrender
 npm run bulkrender:dev
+=======
+### Handlebar helpers
+
