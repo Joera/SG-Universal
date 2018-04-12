@@ -31,19 +31,12 @@ class ThreadSearchService {
 
         return new Promise((resolve, reject) => {
 
-                // init template service
-
-            // console.log(data.interaction.comments);
-
             if(data.interaction.comments && data.interaction.comments.length > 0) {
 
                 self._renderSnippets(data,correlationId)
                     .then((snippets) => {
                             return new Promise((res, rej) => {
                                 for (let i = 0; i < data.interaction.comments.length; i++) {
-
-                                    logger.info('snippet');
-                                    logger.info(snippets[i]);
                                     data.interaction.comments[i].searchSnippet = snippets[i];
                                 }
                                 res(data);
