@@ -109,7 +109,7 @@ class DocumentService {
         if(documents && documents.length > 0) {
 
             return Promise.all(documents.map(function (doc) {
-                return self.templateService.render('search-snippet','search-snippet.handlebars', doc.snippetData, correlationId);
+                return self.templateService.render('search-snippet','document-search-snippet.handlebars', doc.snippetData, correlationId);
             }))
 
         } else {
