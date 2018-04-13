@@ -79,7 +79,7 @@ class SearchService {
                 // trim comments
                 let algoliaData = JSON.parse(JSON.stringify(data));
                 if(algoliaData.comments && algoliaData.comments.length > 0) {
-                    algoliaData.comments = algoliaData.comments.slice(0,10);
+                    algoliaData.comments = algoliaData.comments.slice(0,1);
                 }
                 // save page to algolia
                 save(algoliaData, correlationId)
