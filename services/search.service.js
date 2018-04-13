@@ -81,7 +81,7 @@ class SearchService {
                 if(algoliaData.comments && algoliaData.comments.length > 0) {
                     algoliaData.comments = algoliaData.comments.slice(0,1);
                 }
-                if(algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
+                if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
                     algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
                 }
                 // save page to algolia
