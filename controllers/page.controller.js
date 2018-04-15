@@ -242,10 +242,8 @@ class PageController {
 
                 .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
 
-             //    .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
-
+               // .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
               //  .then(() => { return self.threadSearchService.toSearch(saveData, correlationId, options); })
-
                 // .then(() => { return self.searchService.saveDocument(saveData, correlationId); })
 
                 // resolve promise
