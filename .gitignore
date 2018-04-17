@@ -11,3 +11,4 @@ config/production/*
 wp-content/plugins/headless/lib/cors.php
 config/production/index.js
 package-lock.json
+
