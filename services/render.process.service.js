@@ -34,7 +34,8 @@ class RenderProcessService {
      * @param correlationId
      * @private
      */
-    _createQueueItem(data, correlationId) {
+
+    _createQueueItem(data, correlationId, options) {
 
         const self = this;
         return new Promise((resolve, reject) => {
@@ -49,7 +50,7 @@ class RenderProcessService {
 
             // get template definitions
             // find the template that belongs to the data
-            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId)
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId, options)
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // set queueItem name
@@ -59,11 +60,11 @@ class RenderProcessService {
                 .then(() => { return new Promise((res, rej) => { queueItem.template = templateDefinition.template; res({}); }) }) //
 
                 // set queueItem path
-                .then(() => { return templateDefinition.getPath(data, correlationId) }) // get path of the template that will be rendered
+                .then(() => { return templateDefinition.getPath(data, correlationId, options) }) // get path of the template that will be rendered
                 .then((path) => { return new Promise((res, rej) => { queueItem.path = path; res({}); }) }) // set url on data object that will be saved
 
                 // set queueItem data
-                .then(() => { return templateDefinition.getTemplateData(data, correlationId) }) // get data for the template that will be rendered
+                .then(() => { return templateDefinition.getTemplateData(data, correlationId, options) }) // get data for the template that will be rendered
                 .then((templateData) => { return new Promise((res, rej) => { queueItem.data = templateData; res({}); }) }) // set url on data object that will be saved
 
                 // resolve promise
@@ -85,7 +86,7 @@ class RenderProcessService {
      * @param correlationId
      * @private
      */
-    _setDependencyDataObject(templateName, data, correlationId) {
+    _setDependencyDataObject(templateName, data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -121,15 +122,17 @@ class RenderProcessService {
      * @param correlationId
      * @private
      */
-    _renderQueueItem(name, template, path, data, correlationId) {
+    _renderQueueItem(name, template, path, data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
             //
             let templateDefinition = null; // save empty template definition object for later re-use
             let templateHtml = null;
 
-
-
+            if(data === null) {
+                data = {};
+                data.type = 'post'
+            }
             // get template definitions
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
@@ -162,7 +165,7 @@ class RenderProcessService {
      * @param correlationId
      * @private
      */
-    _renderQueueChunk(chunkSize, chunkNumber, totalChunks, correlationId) {
+    _renderQueueChunk(chunkSize, chunkNumber, totalChunks, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
             logger.info('Start rendering all templates in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
@@ -171,7 +174,7 @@ class RenderProcessService {
                 .then((chunk) => {
                     // promise group to render all templates in chunk
                     const promiseGroup = chunk.map((d) => {
-                        return self._renderQueueItem(d.name, d.template, d.path, d.data, correlationId);
+                        return self._renderQueueItem(d.name, d.template, d.path, d.data, correlationId, options);
                     });
 
                     // resolve promise group
@@ -192,9 +195,8 @@ class RenderProcessService {
      * @param data
      * @param correlationId
      */
-    enqueue(data, correlationId) {
 
-        logger.info('enqueue', correlationId);
+    enqueue(data, correlationId, options) {
 
         const self = this;
         return new Promise((resolve, reject) => {
@@ -225,13 +227,13 @@ class RenderProcessService {
      * @param data
      * @param correlationId
      */
-    enqueueDependencies(data, correlationId) {
+    enqueueDependencies(data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
 
             // get page dependencies
-            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definitions
-                .then((definition) => { return definition.getDependencies(data, correlationId) }) // get dependencies
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId, options) // get template definitions
+                .then((definition) => { return definition.getDependencies(data, correlationId, options) }) // get dependencies
                 .then((dependencies) => { return dependencyValidator.validate(dependencies) }) // validate dependency array
 
                 // set data objects for enqueueing templates
@@ -239,7 +241,7 @@ class RenderProcessService {
                 .then((dependencies) => { return new Promise((res, rej) => {
                     // save promise group for setting data objects
                     const promiseGroup = dependencies.map((d) => {
-                        return self._setDependencyDataObject(d.template, d.data, correlationId);
+                        return self._setDependencyDataObject(d.template, d.data, correlationId, options);
                     });
 
                     // resolve promise group
@@ -256,7 +258,7 @@ class RenderProcessService {
                 .then((dependencies) => { return new Promise((res, rej) => {
                     // save promise group enqueueing templates
                     const promiseGroup = dependencies.map((d) => {
-                        return self.enqueue(d, correlationId);
+                        return self.enqueue(d, correlationId, options);
                     });
 
                     // resolve promise group
@@ -284,7 +286,7 @@ class RenderProcessService {
      * Render all the templates in the queue
      * @param correlationId
      */
-    render(correlationId) {
+    render(correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -297,7 +299,7 @@ class RenderProcessService {
                     const chunks = new Array(numberOfChunks); // create chunks array for the Promise.each. Just a array with empty items for looping, does not contain data
 
                     // loop the cunks
-                    Promise.each(chunks, (chunk, i) => { return self._renderQueueChunk(chunkSize, (i + 1), numberOfChunks, correlationId); })
+                    Promise.each(chunks, (chunk, i) => { return self._renderQueueChunk(chunkSize, (i + 1), numberOfChunks, correlationId, options); })
                         .then(() => {
                             logger.info('Rendered all templates in render queue', correlationId);
                             resolve({});
@@ -309,10 +311,6 @@ class RenderProcessService {
                 })
         })
     }
-
-
-
-
 }
 
 module.exports = RenderProcessService;

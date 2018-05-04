@@ -127,7 +127,7 @@ class RenderQueueService {
      * Remove all items from the render queue
      * @param correlationId
      */
-    clear(correlationId) {
+    clear(correlationId,options) {
         const self = this;
         return new Promise((resolve, reject) => {
             db.getRenderQueueCollection() // get page collection

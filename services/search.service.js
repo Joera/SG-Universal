@@ -26,7 +26,7 @@ class SearchService {
      * @param data                              page data
      * @param correlationId
      */
-    getSearchSnippet(templateDefinition, data, correlationId) {
+    getSearchSnippet(templateDefinition, data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -56,13 +56,14 @@ class SearchService {
 
 
     /**
-     * Update algoia search
+     * Update algolia search
      * Only update if searchSnippet property on data object is NOT undefined or an empty string
      * @param data                          data to be saved in algolia
      * @param isUpdate                      true if is update, false is new record
      * @param correlationId
      */
-    updateSearch(data, isUpdate, correlationId) {
+
+    updateSearch(data, isUpdate, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
             if(data.searchSnippet && data.searchSnippet !== '') {
@@ -73,24 +74,16 @@ class SearchService {
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
-
+                logger.info(data);
                 // save page to algolia
                 save(data, correlationId)
-                    .then((d) => { resolve(d) })
+                    .then((d) => { logger.info('succes'); resolve(d) })
                     .catch((error) => { reject(error) });
             } else {
-                resolve(null);
+                resolve(data);
             }
         })
     }
-
-
-
-
 }
-
-
-
-
 
 module.exports = SearchService;

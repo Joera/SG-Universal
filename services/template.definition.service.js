@@ -20,7 +20,7 @@ class TemplateDefinitionService {
      * @param templateName                      name of the template to search for
      * @param correlationId
      */
-    getDefinition(templateName, correlationId) {
+    getDefinition(templateName, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
             // logger.info('Get template definition: ' + templateName, correlationId);

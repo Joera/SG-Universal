@@ -19,7 +19,6 @@ class WordpressConnector {
 
     }
 
-
     /**
      * Get pages from wordpress api
      * @param correlationId
@@ -29,10 +28,12 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
 			let url = config.wordpressUrl + '/api/get_posts/?count=-1';
-			console.log(url);
             // send http request
-            requestify.get(url)
-                .then((response) => {
+            logger.info(url);
+            requestify.get(url,{
+                redirect: true,
+                timeout: 120000
+            }).then((response) => {
                     logger.info('Received posts from wordpress', correlationId);
                     resolve(response.getBody().posts); // only return the posts of api response
                 })

@@ -8,6 +8,8 @@ const TemplateService = require('../services/template.service');
 const RenderProcessService = require('../services/render.process.service');
 const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
+const DocumentService = require('../services/document.search.service');
+const CommentSearchService = require('../services/comment.search.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
@@ -26,6 +28,8 @@ class PageController {
         this.authService = new AuthService();
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
+        this.documentService = new DocumentService();
+        this.commentSearchService = new CommentSearchService();
         this.renderProcessService = new RenderProcessService();
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
@@ -51,16 +55,17 @@ class PageController {
 
         let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
+        const options = {};
         logger.info('Received create call', correlationId);
-        self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
-            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId) }) // get template definition
-            .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
+        self.authService.isAuthorized(req.headers.authorization, correlationId, options) // check if authorized to make call
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId, options) }) // get template definition
+            .then((definition) => { return definition.getPath(req.body, correlationId, options) }) // get path of the template that will be rendered
             .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
-            .then(() => { return self.renderQueue.clear(correlationId) }) // clear the render queue, delete all remaining queue items
-            .then(() => { return self.save(req.body, correlationId, false) }) // save page
-            .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
-            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
-            .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
+            .then(() => { return self.renderQueue.clear(correlationId, options) }) // clear the render queue, delete all remaining queue items
+            .then(() => { return self.save(req.body, correlationId, options, false) }) // save page
+            .then((data) => { return self.renderProcessService.enqueue(data, correlationId, options) }) // add page to render queue
+            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId, options) }) // add page dependencies to render queue
+            .then((data) => { return self.renderProcessService.render(correlationId, options) }) // render all templates in the render queue
             .then((data) => { // send response
                 return new Promise((resolve, reject) => {
                     logger.info('Finished successfully, send response', correlationId);
@@ -86,18 +91,19 @@ class PageController {
      */
     handleUpdateCall(req, res, next) {
         const self = this;
+        const options = {};
 
         let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received update call', correlationId);
-        self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
-            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId) }) // get template definition
-            .then((definition) => { return definition.getPath(req.body, correlationId) }) // get path of the template that will be rendered
+        self.authService.isAuthorized(req.headers.authorization, correlationId, options) // check if authorized to make call
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId, options) }) // get template definition
+            .then((definition) => { return definition.getPath(req.body, correlationId, options) }) // get path of the template that will be rendered
             .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
-            .then(() => { return self.save(req.body, correlationId, true) }) // save page
-            .then((data) => { return self.renderProcessService.enqueue(data, correlationId) }) // add page to render queue
-            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId) }) // add page dependencies to render queue
-            .then((data) => { return self.renderProcessService.render(correlationId) }) // render all templates in the render queue
+            .then(() => { return self.save(req.body, correlationId, options, true) }) // save page
+            .then((data) => { return self.renderProcessService.enqueue(data, correlationId, options) }) // add page to render queue
+            .then((data) => { return self.renderProcessService.enqueueDependencies(data, correlationId, options) }) // add page dependencies to render queue
+            .then((data) => { return self.renderProcessService.render(correlationId, options) }) // render all templates in the render queue
             .then((data) => { // send response
                 return new Promise((resolve, reject) => {
                     logger.info('Finished successfully, send response', correlationId);
@@ -204,36 +210,44 @@ class PageController {
      * @param correlationId
      * @param isUpdate                      true if is update, false if new record
      */
-    save(data, correlationId, isUpdate) {
+    save(data, correlationId, options, isUpdate) {
         const self = this;
         return new Promise((resolve, reject) => {
             //
             let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
 
+            logger.info(data.title);
+
             // get template definitions
             // find the template that belongs to the data
-            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
+            self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId, options) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // map data
-                .then(() => { return templateDefinition.getMapping(data, correlationId); }) // map incoming data to data format that will be saved in database
+                .then(() => { return templateDefinition.getMapping(data, correlationId, options); }) // map incoming data to data format that will be saved in database
                 .then((mappedData) => { return new Promise((res, rej) => { saveData = mappedData; res({}); }) }) // set saveData object for later use
 
                 // set url
-                .then(() => { return templateDefinition.getPath(saveData, correlationId) }) // get path of the template that will be rendered
+                .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
                 .then((path) => { return new Promise((res, rej) => { saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // set search snippet
-                .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId) }) // get search snippet
+                .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
                 .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
-                .then(() => { return self.pagePersistence.save(saveData, correlationId) }) // save page to database
+                .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
 
                 // update search
                 // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
-                .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId); })
+                .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
+
+                .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
+
+                .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
+
+                // .then(() => { return self.searchService.saveDocument(saveData, correlationId); })
 
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
