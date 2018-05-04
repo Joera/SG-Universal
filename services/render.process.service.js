@@ -35,6 +35,7 @@ class RenderProcessService {
      * @private
      */
     _createQueueItem(data, correlationId) {
+
         const self = this;
         return new Promise((resolve, reject) => {
 

@@ -24,19 +24,19 @@ class TemplateDefinitionService {
         const self = this;
         return new Promise((resolve, reject) => {
             // logger.info('Get template definition: ' + templateName, correlationId);
-
             self._getDefinitions() // get all template definitions
                 .then((templateDefinitions) => { return templateDefinitionsValidator.validate(templateDefinitions); }) // validate template definitions
                 .then((templateDefinitions) => { // find requested definition
                     // search template definition for type
                     // data.type should match the name property of a template definition
-                    
-                    let definition = _.find(templateDefinitions, (td) => { return td && td.name === templateName; });
 
+                    let definition = _.find(templateDefinitions, (td) => { return td && td.name === templateName; });
                     if(definition) { // return template definition
                         // logger.info('Found template definition for type: ' + templateName, correlationId);
+
                         resolve(definition);
                     } else { // no template definition found for data.type
+                        logger.info('no', correlationId);
                         const proxiedError = new Error();
                         proxiedError.correlationId = correlationId;
                         proxiedError.message = 'No templates definition found for page type: ' + templateName;
