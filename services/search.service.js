@@ -84,10 +84,13 @@ class SearchService {
                 if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
                     algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
                 }
-                // save page to algolia
+
                 save(algoliaData, correlationId)
-                    .then((d) => { logger.info('succes'); resolve(data) })
+                    .then((d) => { resolve(data) })
                     .catch((error) => { reject(error) });
+
+
+                // save page to algolia
             } else {
                 resolve(data);
             }

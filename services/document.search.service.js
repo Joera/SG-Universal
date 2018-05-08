@@ -82,15 +82,17 @@ class DocumentService {
                 return new Promise(function (resolve, reject) {
 
                     var renderConfig = {
-                        title: document.file_name,
-                        content: document.file_description,
+                        objectID: 'doc_' + document.file.file_object.ID,
+                        title: document.name,
+                        content: document.description,
                         date: data.date,
-                        url: document.file_cdn_url,
+                        url: document.url,
                         type: 'document',
                         tags: document.file_tags,
                         postTitle: data.title.rendered
 
                     }
+
                     document.type = 'document';
                     document.snippetData = renderConfig;
                     resolve(document);
@@ -109,6 +111,8 @@ class DocumentService {
         if(documents && documents.length > 0) {
 
             return Promise.all(documents.map(function (doc) {
+                logger.info('whats up doc');
+                logger.info(doc.snippetData);
                 return self.templateService.render('search-snippet','document-search-snippet.handlebars', doc.snippetData, correlationId);
             }))
 

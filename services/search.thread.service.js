@@ -101,6 +101,14 @@ class ThreadSearchService {
         if(data.interaction.comments && data.interaction.comments.length > 0) {
 
             return Promise.all(data.interaction.comments.map(function (thread) {
+
+                thread.objectID = 'thread_' + thread.comment_ID;
+                thread.type = 'comments';
+                thread.date = thread.comment_date;
+                thread.comment_count = thread.comment_children.length + 1;
+                thread.post = {};
+                thread.post.url = data.url;
+
                 return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread, correlationId);
             }))
 
@@ -111,9 +119,11 @@ class ThreadSearchService {
 
         let self = this;
 
-        if (data.threads && data.threads.length > 0) {
 
-                return Promise.all(data.threads.map(function (thread) {
+
+        if (data.interaction.comments && data.interaction.comments.length > 0) {
+
+                return Promise.all(data.interaction.comments.map(function (thread) {
                     // save of update?
                     // logger.info('test');
                     // logger.info(thread);
