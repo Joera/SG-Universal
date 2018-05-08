@@ -51,8 +51,4 @@ app.use(cors());
 // mount all routes on /api path
 app.use('/api', routes);
 
-// helps with large amounts of open handlebars templates
-app.enable('view cache')
-
-
 module.exports = app;
