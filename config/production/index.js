@@ -1,13 +1,13 @@
 const devConfig = {
     env: 'production',
-    dist: '/var/www/html',
+    dist: 'dist',
     db: 'mongodb://localhost/eureka',
     port: 8080,
     wordpressUrl: 'http://wp.eurekarail.net',
-    algoliaIndexNamePrefix: 'eureka-staging_',
-    algoliaApplicationId: 'RLZJT7BFZT',
-    algoliaApiKey: 'f0dc506dd42b55db93e55d28c3e667b5',
-    baseUrl: 'http://eurekarail.net',
+    algoliaIndexNamePrefix: 'test_',
+    algoliaApplicationId: 'ABLQBAQF04',
+    algoliaApiKey: 'ae42b70689c1ec9f99ead26a257f16df',
+    baseUrl: 'http://eureka.local',
     templateNameKey: 'type'
 };
 
