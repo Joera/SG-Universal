@@ -141,8 +141,6 @@ class BulkRenderController {
             return self.renderProcessService.enqueueDependencies(page, correlationId); // add page to render queue
         }));
     }
-
-
 }
 
 module.exports = BulkRenderController;
