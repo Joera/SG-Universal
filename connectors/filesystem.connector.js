@@ -78,6 +78,7 @@ class FileSystemConnector {
                 fs.writeFile(config.dist + '/' + path + '/index.html', html, (error) => {
                 // fs.writeFile(config.root + '/' + config.dist + '/' + path + '/index.html', html, (error) => {
                     if(error) {
+
                         reject(error);
                     }
                     resolve(path); // resolve promise
