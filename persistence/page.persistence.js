@@ -87,7 +87,6 @@ class PagePersistence {
             db.getPageCollection() // get page collection
                 .then((collection) => {
 
-                    logger.info(id);
                     return collection.remove({"_id": id});
 
                 }) // execute delete
