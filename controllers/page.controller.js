@@ -280,7 +280,7 @@ class PageController {
                 .then(() => { return templateDefinition.preDelete(data, correlationId) }) // pre delete function
 
                 // delete from mongo and search
-                .then(() => { logger.info(data); return self.pagePersistence.delete(data.id, correlationId) }) // delete page from database
+                .then(() => { return self.pagePersistence.delete(data.id, correlationId) }) // delete page from database
                 .then(() => { return self.searchConnector.deletePage(data.id, correlationId) }) // delete page from algolia search
 
                 // delete rendered template from cache/disk
