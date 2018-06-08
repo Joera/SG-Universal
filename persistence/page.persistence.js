@@ -85,7 +85,12 @@ class PagePersistence {
         const self = this;
         return new Promise((resolve, reject) => {
             db.getPageCollection() // get page collection
-                .then((collection) => { return collection.remove({"_id": id}); }) // execute delete
+                .then((collection) => {
+
+                    logger.info(id);
+                    return collection.remove({"_id": id});
+
+                }) // execute delete
                 .then((d) => {
                     logger.info('Deleted page from database', correlationId);
                     resolve(id);
