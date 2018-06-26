@@ -96,6 +96,7 @@ class PageController {
         let url = null;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         logger.info('Received update call', correlationId);
+        logger.info(req);
         self.authService.isAuthorized(req.headers.authorization, correlationId, options) // check if authorized to make call
             .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId, options) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId, options) }) // get path of the template that will be rendered
