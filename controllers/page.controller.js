@@ -9,7 +9,8 @@ const RenderProcessService = require('../services/render.process.service');
 const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
 const DocumentService = require('../services/document.search.service');
-const CommentSearchService = require('../services/comment.search.service');
+const CommentSearchService = require('../services/search.comment.service');
+const ThreadSearchService = require('../services/search.thread.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
@@ -30,6 +31,7 @@ class PageController {
         this.templateService = new TemplateService();
         this.documentService = new DocumentService();
         this.commentSearchService = new CommentSearchService();
+        this.threadSearchService = new ThreadSearchService();
         this.renderProcessService = new RenderProcessService();
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
@@ -37,8 +39,6 @@ class PageController {
         this.searchConnector = new SearchConnector();
         this.fileSystemConnector = new FileSystemConnector();
     }
-
-
 
     /***********************************************************************************************
      * CRUD handlers
@@ -197,9 +197,6 @@ class PageController {
             });
     }
 
-
-
-
     /***********************************************************************************************
      *
      ***********************************************************************************************/
@@ -217,7 +214,7 @@ class PageController {
             let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
 
-            logger.info(data.title);
+            logger.info(data.type);
 
             // get template definitions
             // find the template that belongs to the data
@@ -241,14 +238,10 @@ class PageController {
 
                 // update search
                 // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
-                .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
-
-                .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
-
-                .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
-
-                // .then(() => { return self.searchService.saveDocument(saveData, correlationId); })
-
+             //   .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
+              //  .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
+               // .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
+              //  .then(() => { return self.threadSearchService.toSearch(saveData, correlationId, options); })
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
 

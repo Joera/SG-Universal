@@ -29,7 +29,6 @@ class TemplateDefinitionService {
                 .then((templateDefinitions) => { // find requested definition
                     // search template definition for type
                     // data.type should match the name property of a template definition
-
                     let definition = _.find(templateDefinitions, (td) => { return td && td.name === templateName; });
                     if(definition) { // return template definition
                         // logger.info('Found template definition for type: ' + templateName, correlationId);

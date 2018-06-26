@@ -39,7 +39,7 @@ class SearchService {
                     // get search snippet
                     .then(() => { return templateDefinition.getSearchSnippetData(data, correlationId) }) // get search snippet data
                     .then((templateData) => {
-                        return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateData, correlationId) }) // render search snippet
+                        return self.templateService.render('search-snippet', 'search-snippet.handlebars', templateData, correlationId) }) // render search snippet
                     // resolve rendered search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
@@ -74,11 +74,23 @@ class SearchService {
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
-                logger.info(data);
-                // save page to algolia
-                save(data, correlationId)
-                    .then((d) => { logger.info('succes'); resolve(d) })
+                // logger.info(data);
+
+                // trim comments
+                let algoliaData = JSON.parse(JSON.stringify(data));
+                if(algoliaData.comments && algoliaData.comments.length > 0) {
+                    algoliaData.comments = algoliaData.comments.slice(0,1);
+                }
+                if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
+                    algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
+                }
+
+                save(algoliaData, correlationId)
+                    .then((d) => { resolve(data) })
                     .catch((error) => { reject(error) });
+
+
+                // save page to algolia
             } else {
                 resolve(data);
             }

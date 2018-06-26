@@ -15,6 +15,7 @@
     "style": "cd pages && gulp scss-compile",
     "scripts": "cd pages && gulp js-compile",
     "copy-assets": "cd pages && gulp copy-assets",
+    "copy-html": "cd pages && gulp copy-html",
     "watch-templates": "npm-watch bulkrender:dev"
   },
   "watch": {
@@ -60,11 +61,14 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.7.6",
+    "babelify": "^8.0.0",
     "concurrently": "^3.5.0",
     "cssnano": "^3.10.0",
     "gulp": "^3.9.1",
     "gulp-babel": "6.1.2",
+    "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.6.1",
+    "gulp-imports": "0.0.3",
     "gulp-postcss": "^6.3.0",
     "gulp-rename": "1.2.2",
     "gulp-sass": "^3.1.0",

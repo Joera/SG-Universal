@@ -14,7 +14,6 @@ const config = require('../config');
  */
 class WordpressConnector {
 
-
     constructor () {
 
     }
@@ -27,7 +26,8 @@ class WordpressConnector {
         const self = this;
         return new Promise((resolve, reject) => {
 
-			let url = config.wordpressUrl + '/api/get_posts/?count=-1';
+			let url = config.wordpressUrl + '/' + config.wordpressApiPath;
+			logger.info(url);
             // send http request
             logger.info(url);
             requestify.get(url,{
@@ -35,7 +35,7 @@ class WordpressConnector {
                 timeout: 120000
             }).then((response) => {
                     logger.info('Received posts from wordpress', correlationId);
-                    resolve(response.getBody().posts); // only return the posts of api response
+                    resolve(response.getBody()); // .posts // only return the posts of api response
                 })
                 .catch((error) => {
                     reject(error);
@@ -43,8 +43,6 @@ class WordpressConnector {
 
         })
     }
-
-
 }
 
 module.exports = WordpressConnector;
