@@ -50,10 +50,10 @@ class DatasetService {
 
         return new Promise((resolve, reject) => {
 
-            if (path && path !== null && data.datasets) {
+            if (path && path !== null && data) {
                 logger.info({message: 'write json file', path: path});
 
-                fs.writeFile(config.dist + path + '/' + filename, JSON.stringify(data.datasets), function (error) {
+                fs.writeFile(config.dist + path + '/' + filename, JSON.stringify(data), function (error) {
                     if (error) {
                         logger.error(error);
                         reject({status: 500, message: 'error writing json file'});
@@ -77,7 +77,13 @@ class DatasetService {
         return new Promise((resolve, reject) => {
 
             self.getDataset(data, path)
-                .then(self.writeJsonFile(data,path,'dataset.json'))
+                .then( data => {
+                    if(data.datasets) {
+                        self.writeJsonFile(data.datasets, path, 'dataset.json');
+                    } else {
+                        resolve(data);
+                    }
+                })
                 .then(data => {
                     resolve(data)
                 })
