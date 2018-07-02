@@ -58,7 +58,7 @@ class RenderQueueService {
                                     // template already in queue
                                     const proxiedError = new TypeError();
                                     proxiedError.message = 'Could not add template to render queue because it already is in the render queue';
-                                    rej()
+                                    rej(proxiedError.message)
                                     // rej(proxiedError)
                                 }
                             })
