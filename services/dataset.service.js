@@ -65,8 +65,6 @@ class DatasetService {
             }
         });
     }
-
-
     /**
      * Controller function for writing the dataset to a json file
      * @param config
