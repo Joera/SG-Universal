@@ -3,7 +3,7 @@
 const Promise = require('bluebird');
 const logger = require('./logger.service');
 const Feed = require('feed');
-const BlogPersistence = require('../persistences/blog.persistence');
+const PagePersistence = require('../persistence/page.persistence');
 
 class RSSService {
 
@@ -33,9 +33,16 @@ class RSSService {
                 }
             });
 
-            const blogPersistence = new BlogPersistence(); // create instance of blog persistence
+            const pagePersistence = new PagePersistence(); // create instance of blog persistence
 
-            blogPersistence.getRecentAsPromise(10)
+            pagePersistence.find({
+                    query : {
+                        "type":"post"
+                    },
+                    "sort": {"date":-1},
+                    "limit":12
+                }
+            )
                 .then((posts) => {
 
                     posts.forEach(post => {
