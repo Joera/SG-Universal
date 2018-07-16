@@ -1,9 +1,6 @@
 'use strict';
 
-let Q = require('q'),
-    appConfig = require('../config/env'),
-    logger = require('../config/winston'),
-    RSSService = require('../services/rss.service'),
+let RSSService = require('../services/rss.service'),
     xml = require('xml');
 
 /**
