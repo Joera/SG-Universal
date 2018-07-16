@@ -52,6 +52,11 @@ module.exports = {
             return conn.collection('page');
         })
     },
+    getSocialCollection: function() {
+        return getMongoConnection().then((conn) => {
+            return conn.collection('socials');
+        })
+    },
     getRenderQueueCollection: function() {
         return getMongoConnection().then((conn) => {
             return conn.collection('renderQueue');
