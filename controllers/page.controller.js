@@ -214,8 +214,6 @@ class PageController {
             let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
 
-            logger.info(data.type);
-
             // get template definitions
             // find the template that belongs to the data
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId, options) // get template definition
@@ -238,7 +236,7 @@ class PageController {
 
                 // update search
                 // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
-             //   .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
+               .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
               //  .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
                // .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
               //  .then(() => { return self.threadSearchService.toSearch(saveData, correlationId, options); })
