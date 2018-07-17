@@ -66,13 +66,18 @@ class SearchService {
     updateSearch(data, isUpdate, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
+
+            logger.info('updateSearch');
             if(data.searchSnippet && data.searchSnippet !== '') {
                 // set algolia save function
+                logger.info('2');
                 let save;
                 if(isUpdate) { // if update use the update call else use add
                     save = self.searchConnector.updatePage.bind(self.searchConnector);
+                    logger.info('3a');
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
+                    logger.info('3b');
                 }
                 // logger.info(data);
 
@@ -86,7 +91,7 @@ class SearchService {
                 }
 
                 save(algoliaData, correlationId)
-                    .then((d) => { resolve(data) })
+                    .then((d) => { logger.info('4'); resolve(data) })
                     .catch((error) => { reject(error) });
 
 
