@@ -80,7 +80,7 @@ class DocumentService {
             return Promise.all(data.documents.map(function (document) {
 
 
-                logger.info(document);
+
 
                 return new Promise(function (resolve, reject) {
 
@@ -99,6 +99,9 @@ class DocumentService {
                     document.objectID = document['file-id']; // keep algolia id consistent
                     document.language = data.language;
                     document.snippetData = renderConfig;
+
+                    logger.info(document);
+
                     resolve(document);
                 });
             }))
