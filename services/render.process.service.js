@@ -290,7 +290,7 @@ class RenderProcessService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            logger.info('Start rendering queue', correlationId);
+         //   logger.info('Start rendering queue', correlationId);
 
             self.renderQueue.getCount({}) // get the number of items in the render queue
                 .then((count) => {
@@ -301,7 +301,7 @@ class RenderProcessService {
                     // loop the cunks
                     Promise.each(chunks, (chunk, i) => { return self._renderQueueChunk(chunkSize, (i + 1), numberOfChunks, correlationId, options); })
                         .then(() => {
-                            logger.info('Rendered all templates in render queue', correlationId);
+                     //       logger.info('Rendered all templates in render queue', correlationId);
                             resolve({});
                         })
                         .catch(error => {

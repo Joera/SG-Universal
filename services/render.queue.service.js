@@ -72,7 +72,7 @@ class RenderQueueService {
 
                 //
                 .then((d) => {
-                    logger.info('Added template to render queue: ' + queueItem.path, correlationId);
+                //    logger.info('Added template to render queue: ' + queueItem.path, correlationId);
                     resolve(queueItem);
                 })
                 .catch((error) => {
