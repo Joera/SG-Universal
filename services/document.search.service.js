@@ -85,10 +85,10 @@ class DocumentService {
                 return new Promise(function (resolve, reject) {
 
                     var renderConfig = {
-                        title: document.file_name,
+                        title: document['file-name'],
                         // content: document.file_description,
                         date: data.date,
-                        url: document.file_cdn_url,
+                        url: document['file-cdn-url'],
                         // tags: document.file_tags,
                         post_url : data.url,
                         post_title : data.title,
