@@ -85,22 +85,20 @@ class DocumentService {
                 return new Promise(function (resolve, reject) {
 
                     var renderConfig = {
-                        title: document['file-name'],
-                        // content: document.file_description,
+                        title: document.file_name,
+                        content: document.file_description,
                         date: data.date,
-                        url: document['file-cdn-url'],
-                        // tags: document.file_tags,
+                        url: document.file_cdn_url,
+                        tags: document.file_tags,
                         post_url : data.url,
                         post_title : data.title,
 
                     }
 
                     document.type = 'document';
-                    document.objectID = document['file-id']; // keep algolia id consistent
+                    document.objectID = document.file_id; // keep algolia id consistent
                     document.language = data.language;
                     document.snippetData = renderConfig;
-
-                    logger.info(document);
 
                     resolve(document);
                 });
