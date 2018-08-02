@@ -89,12 +89,13 @@ class DocumentService {
                         type: 'document',
                         tags: document.file_tags,
                         post_url : data.url,
-                        post_title : data.title
+                        post_title : data.title,
 
                     }
 
                     document.type = 'document';
                     document.objectID = document.file_id; // keep algolia id consistent
+                    document.language = data.language;
                     document.snippetData = renderConfig;
                     resolve(document);
                 });
