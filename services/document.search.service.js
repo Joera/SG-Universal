@@ -86,18 +86,17 @@ class DocumentService {
 
                     var renderConfig = {
                         title: document.file_name,
-                        content: document.file_description,
+                        // content: document.file_description,
                         date: data.date,
                         url: document.file_cdn_url,
-                        type: 'document',
-                        tags: document.file_tags,
+                        // tags: document.file_tags,
                         post_url : data.url,
                         post_title : data.title,
 
                     }
 
                     document.type = 'document';
-                    document.objectID = document.file_id; // keep algolia id consistent
+                    document.objectID = document['file-id']; // keep algolia id consistent
                     document.language = data.language;
                     document.snippetData = renderConfig;
                     resolve(document);
