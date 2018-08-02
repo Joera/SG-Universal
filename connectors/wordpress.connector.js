@@ -28,8 +28,6 @@ class WordpressConnector {
 
 			let url = config.wordpressUrl + '/' + config.wordpressApiPath;
 			logger.info(url);
-            // send http request
-            logger.info(url);
             requestify.get(url,{
                 redirect: true,
                 timeout: 120000

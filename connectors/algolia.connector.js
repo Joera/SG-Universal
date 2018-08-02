@@ -34,7 +34,7 @@ class AlgoliaConnector {
                     error.correlationId = correlationId;
                     reject(error);
                 }
-                logger.info('Added page to Algolia search', correlationId);
+            //    logger.info('Added page to Algolia search', correlationId);
                 resolve(data); // resolve promise
             });
 
@@ -70,7 +70,7 @@ class AlgoliaConnector {
                     error.correlationId = correlationId;
                     reject(error);
                 }
-                logger.info('Updated page in Algolia search', correlationId);
+            //    logger.info('Updated page in Algolia search', correlationId);
                 resolve(data); // resolve promise
             });
 
@@ -94,7 +94,7 @@ class AlgoliaConnector {
                     error.correlationId = correlationId;
                     reject(error);
                 }
-                logger.info('Deleted page from Algolia search', correlationId);
+          //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(id); // resolve promise
             });
 

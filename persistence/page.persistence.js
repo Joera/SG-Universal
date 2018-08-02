@@ -65,7 +65,7 @@ class PagePersistence {
             db.getPageCollection() // get page collection
                 .then((collection) => { return collection.save(data); }) // execute save
                 .then((d) => {
-                    logger.info('Saved page to database', correlationId);
+              //      logger.info('Saved page to database', correlationId);
                     resolve(data);
                 })
                 .catch((error) => {
@@ -87,7 +87,7 @@ class PagePersistence {
             db.getPageCollection() // get page collection
                 .then((collection) => { return collection.remove({"_id": id}); }) // execute delete
                 .then((d) => {
-                    logger.info('Deleted page from database', correlationId);
+               //     logger.info('Deleted page from database', correlationId);
                     resolve(id);
                 })
                 .catch((error) => {
