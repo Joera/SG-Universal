@@ -88,6 +88,8 @@ class DocumentService {
                         url: document.file_cdn_url,
                         type: 'document',
                         tags: document.file_tags,
+                        post_url : data.url,
+                        post_title : data.title
 
                     }
 
