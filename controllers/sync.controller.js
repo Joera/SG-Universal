@@ -104,7 +104,7 @@ class SyncController {
         const self = this;
         logger.info('Start saving pages in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
         return Promise.all(pages.map((page) => { // create promise group for saving pages
-            return self.pageController.save(page, correlationId, true); //
+            return self.pageController.save(correlationId); //
         }));
     }
 
