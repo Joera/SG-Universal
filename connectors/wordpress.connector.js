@@ -35,7 +35,8 @@ class WordpressConnector {
             }).then((response) => {
 
                     if(response.getBody() === null) {
-                        logger.info('Received posts from wordpress', correlationId);
+                        logger.info('Received ' + concatenatedResponse.length + 'items from wordpress', correlationId);
+
                         resolve(concatenatedResponse);
                     } else {
                      //   logger.info(response.getBody());
