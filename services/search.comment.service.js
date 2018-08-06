@@ -116,7 +116,8 @@ class CommentSearchService {
                             date: c.date,
                             thread: thread,
                             reply_count: thread.length - 1,
-                            url: data.url + '#dialoog'
+                            url: data.url + '#dialoog',
+                            post_title: data.title.rendered || data.title
 
                         }
 
