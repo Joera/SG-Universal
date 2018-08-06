@@ -17,37 +17,38 @@ class WordpressConnector {
 
     constructor () {
 
+        this.concatenatedResponse = [];
     }
 
     /**
      * Get pages from wordpress api
      * @param correlationId
      */
-    getPages(page,concatenatedResponse,correlationId) {
+    getPages(page,correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
 
 			let url = config.wordpressUrl + '/' + config.wordpressApiPath + '?page=' + page;
 
 			logger.info(url);
-            logger.info(concatenatedResponse.length);
+            logger.info(self.concatenatedResponse.length);
             requestify.get(url,{
                 redirect: true,
                 timeout: 120000
             }).then((response) => {
 
                     if(response.getBody() === null) {
-                        logger.info('Received ' + concatenatedResponse.length + 'items from wordpress', correlationId);
+                        logger.info('Received ' + self.concatenatedResponse.length + 'items from wordpress', correlationId);
 
-                        resolve(concatenatedResponse);
+                        resolve(self.concatenatedResponse);
                     } else {
 
                         let items = response.getBody();
-                        concatenatedResponse.concat(items);
-                        logger.info(concatenatedResponse.length);
+                        self.concatenatedResponse.concat(items);
+                        logger.info(self.concatenatedResponse.length);
 
                         page++;
-                       self.getPages(page,concatenatedResponse,correlationId)
+                       self.getPages(page,correlationId)
                     }
                 })
                 .catch((error) => {
