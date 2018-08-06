@@ -40,7 +40,8 @@ class WordpressConnector {
                     } else {
                      //   logger.info(response.getBody());
                         concatenatedResponse.concat(response.getBody());
-                       self.getPages(page++,correlationId)
+                        page++
+                       self.getPages(page,correlationId)
                     }
                 })
                 .catch((error) => {
