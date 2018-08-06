@@ -92,7 +92,7 @@ class CommentSearchService {
 
         return new Promise((res, rej) => {
 
-            let comments;
+            let comments,comment;
 
 
             if (data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
@@ -103,22 +103,24 @@ class CommentSearchService {
 
                 data.interaction.nested_comments.forEach((thread) => {
 
-                    thread.forEach((comment) => {
+                    thread.forEach((c) => {
+
+                        comment = {};
 
                         // logger.info(thread);
 
                         var renderConfig = {
-                            id: comment.id,
-                            author: comment.name,
-                            content: comment.content,
-                            date: comment.date,
+                            id: c.id,
+                            author: c.name,
+                            content: c.content,
+                            date: c.date,
                             thread: thread,
                             reply_count: thread.length - 1,
                             url: data.url + '#dialoog'
 
                         }
 
-                        comment.objectID = comment.id;
+                        comment.objectID = c.id;
                         comment.type = 'comment';
                         comment.snippetData = renderConfig;
                         comments.push(comment);
