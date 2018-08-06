@@ -56,7 +56,7 @@ class CommentSearchService {
                         //     }
                         //     res(data);
                         // });
-                        resolve(data);
+                        return comments;
                     })
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
