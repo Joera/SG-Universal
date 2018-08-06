@@ -27,7 +27,7 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
 			let url = config.wordpressUrl + '/' + config.wordpressApiPath + '?page=' + page;
-			let concatenatedResponse;
+			let concatenatedResponse = [];
 			logger.info(url);
             requestify.get(url,{
                 redirect: true,
@@ -38,8 +38,9 @@ class WordpressConnector {
                         logger.info('Received posts from wordpress', correlationId);
                         resolve(concatenatedResponse);
                     } else {
+                        logger.info(response.getBody());
                         concatenatedResponse.concat(response.getBody());
-                        self.getPages(page++,correlationId)
+                       // self.getPages(page++,correlationId)
                     }
                 })
                 .catch((error) => {
