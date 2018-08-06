@@ -7,6 +7,8 @@ const logger = require('../services/logger.service');
 
 const config = require('../config');
 
+let concatenatedResponse = [];
+
 
 /**
  * Wordpress connector
@@ -27,7 +29,7 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
 			let url = config.wordpressUrl + '/' + config.wordpressApiPath + '?page=' + page;
-			let concatenatedResponse = [];
+
 			logger.info(url);
             requestify.get(url,{
                 redirect: true,
