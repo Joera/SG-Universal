@@ -179,14 +179,14 @@ class CommentSearchService {
 
         let self = this;
 
-        logger.info(data.comments);
+        // logger.info(data.comments);
 
         if (data.comments && data.comments.length > 0) {
 
                 return Promise.all(data.comments.map(function (comment) {
                     // save of update?
-                    // logger.info('test');
-                    // logger.info(thread);
+                    logger.info('test');
+                    logger.info(comment);
 
                     return self.searchService.updateSearch(comment, false, correlationId);
 
