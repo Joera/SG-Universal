@@ -113,7 +113,7 @@ class CommentSearchService {
                 })
             });
 
-            resolve(comments);
+            return comments;
 
 
             // return Promise.all(data.interaction.nested_comments.map(function (thread) {
