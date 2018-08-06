@@ -109,7 +109,7 @@ class CommentSearchService {
                     comment.snippetData = renderConfig
                     comments.push(comment);
                 })
-            }
+            });
 
             resolve(comments);
 
