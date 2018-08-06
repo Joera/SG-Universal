@@ -177,14 +177,14 @@ class CommentSearchService {
 
         let self = this;
 
-        if (data.threads && data.threads.length > 0) {
+        if (data.comments && data.comments.length > 0) {
 
-                return Promise.all(data.threads.map(function (thread) {
+                return Promise.all(data.comments.map(function (comment) {
                     // save of update?
                     // logger.info('test');
                     // logger.info(thread);
 
-                    return self.searchService.updateSearch(thread, false, correlationId);
+                    return self.searchService.updateSearch(comment, false, correlationId);
 
                 }));
         } else {
