@@ -33,7 +33,7 @@ class CommentSearchService {
 
                 // init template service
 
-            if(data.comments && data.comments.length > 0) {
+            if(data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
                 self._createSnippetData(data,correlationId)
                     .then((threads) => {
@@ -84,10 +84,10 @@ class CommentSearchService {
 
     _createSnippetData(data,correlationId) {
 
-        if(data.comments && data.comments.length > 0) {
+        if(data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
 
-            return Promise.all(data.comments.map(function (thread) {
+            return Promise.all(data.interaction.nested_comments.map(function (thread) {
 
                 return new Promise(function (resolve, reject) {
 
@@ -122,7 +122,7 @@ class CommentSearchService {
 
         if(data.threads && data.threads.length > 0) {
             return Promise.all(data.threads.map(function (thread) {
-                return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread.snippetData, correlationId);
+                return self.templateService.render('search-snippet','thread.handlebars', thread.snippetData, correlationId);
             }))
         }
 
