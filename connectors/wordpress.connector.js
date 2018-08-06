@@ -43,7 +43,7 @@ class WordpressConnector {
                     } else {
 
                         let items = response.getBody();
-                        self.concatenatedResponse.concat(items);
+                        self.concatenatedResponse = self.concatenatedResponse.concat(items);
                         logger.info(self.concatenatedResponse);
                         page++;
                        self.getPages(page,correlationId)
