@@ -22,11 +22,11 @@ class WordpressConnector {
      * Get pages from wordpress api
      * @param correlationId
      */
-    getPages(correlationId) {
+    getPages(page,correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
 
-			let url = config.wordpressUrl + '/' + config.wordpressApiPath;
+			let url = config.wordpressUrl + '/' + config.wordpressApiPath + '?page=' + page;
 			logger.info(url);
             requestify.get(url,{
                 redirect: true,
@@ -34,6 +34,9 @@ class WordpressConnector {
             }).then((response) => {
                     logger.info('Received posts from wordpress', correlationId);
                     resolve(response.getBody()); // .posts // only return the posts of api response
+                    if(response !== null) {
+                        self.getPages(page++,correlationId)
+                    }
                 })
                 .catch((error) => {
                     reject(error);
