@@ -37,14 +37,10 @@ class WordpressConnector {
             }).then((response) => {
 
                     if(response.getBody() === null) {
-                        logger.info('Received ' + self.concatenatedResponse.length + 'items from wordpress', correlationId);
-
+                        logger.info('Received ' + self.concatenatedResponse.length + ' items from wordpress', correlationId);
                         resolve(self.concatenatedResponse);
                     } else {
-
-                        let items = response.getBody();
-                        self.concatenatedResponse = self.concatenatedResponse.concat(items);
-                        logger.info(self.concatenatedResponse);
+                        self.concatenatedResponse = self.concatenatedResponse.concat(response.getBody());
                         page++;
                        self.getPages(page,correlationId)
                     }
