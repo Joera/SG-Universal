@@ -106,7 +106,8 @@ class CommentSearchService {
 
                     }
 
-                    comments.push(renderConfig);
+                    comment.snippetData = renderConfig
+                    comments.push(comment);
                 })
             }
 
