@@ -95,13 +95,15 @@ class CommentSearchService {
 
                 thread.forEach ( (comment) => {
 
+                    logger.info(thread);
+
                     var renderConfig = {
                         id: comment.id,
                         author: comment.name,
                         content: comment.content,
                         date: comment.date,
                         thread: thread,
-                        reply_count: thread.comments.length - 1,
+                        reply_count: 0, // thread.comments.length - 1,
                         url: data.url + '#dialoog'
 
                     }
