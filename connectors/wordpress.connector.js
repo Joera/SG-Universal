@@ -7,7 +7,7 @@ const logger = require('../services/logger.service');
 
 const config = require('../config');
 
-let concatenatedResponse = [];
+let concatenatedResponse = [],items;
 
 
 /**
@@ -31,6 +31,7 @@ class WordpressConnector {
 			let url = config.wordpressUrl + '/' + config.wordpressApiPath + '?page=' + page;
 
 			logger.info(url);
+            logger.info(concatenatedResponse.length);
             requestify.get(url,{
                 redirect: true,
                 timeout: 120000
@@ -42,9 +43,9 @@ class WordpressConnector {
                         resolve(concatenatedResponse);
                     } else {
 
-                        logger.info(response.getBody().length);
+                        items = response.getBody();
                      //   logger.info(response.getBody());
-                        concatenatedResponse.concat(response.getBody());
+                        concatenatedResponse.concat(items);
 
                         page++;
                        self.getPages(page,correlationId)
