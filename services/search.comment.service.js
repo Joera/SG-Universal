@@ -177,6 +177,8 @@ class CommentSearchService {
 
         let self = this;
 
+        logger.info(data.comments);
+
         if (data.comments && data.comments.length > 0) {
 
                 return Promise.all(data.comments.map(function (comment) {
