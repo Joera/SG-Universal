@@ -39,10 +39,10 @@ class WordpressConnector {
                     if(response.getBody() !== null) {
                         self.concatenatedResponse = self.concatenatedResponse.concat(response.getBody());
                         page++;
-                       self.getPages(page,correlationId)
+                       return self.getPages(page,correlationId)
                     } else {
                         logger.info('Received ' + self.concatenatedResponse.length + ' items from wordpress', correlationId);
-                        return resolve(self.concatenatedResponse);
+                        resolve(self.concatenatedResponse);
                     }
                 })
                 .catch((error) => {
