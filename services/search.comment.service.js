@@ -40,7 +40,7 @@ class CommentSearchService {
 
                         return new Promise((res, rej) => {
                             data.comments = comments;
-                            res(comments);
+                            res(data);
                         });
 
                         // return new Promise((res, rej) => {
@@ -64,6 +64,7 @@ class CommentSearchService {
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
+                       
                                 for (let i = 0; i < data.comments.length; i++) {
                                     data.comments[i].searchSnippet = snippets[i];
                                 }
