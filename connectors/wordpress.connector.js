@@ -42,7 +42,7 @@ class WordpressConnector {
                        self.getPages(page,correlationId)
                     } else {
                         logger.info('Received ' + self.concatenatedResponse.length + ' items from wordpress', correlationId);
-                        resolve(self.concatenatedResponse);
+                        return resolve(self.concatenatedResponse);
                     }
                 })
                 .catch((error) => {
