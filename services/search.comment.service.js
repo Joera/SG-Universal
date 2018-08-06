@@ -174,7 +174,7 @@ class CommentSearchService {
 
         if(data.comments && data.comments.length > 0) {
             return Promise.all(data.comments.map(function (comment) {
-                return self.templateService.render('search-snippet','thread.handlebars', comment.snippetData, correlationId);
+                return self.templateService.render('search-snippet','commment-snippet.handlebars', comment.snippetData, correlationId);
             }))
         }
 
