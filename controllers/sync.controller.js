@@ -36,7 +36,7 @@ class SyncController {
             let page = 0;
 
             const correlationId = uuidv4(); // set correlation id for debugging the process chain
-            self.cmsConnector.getPages(page,correlationId)
+            self.cmsConnector.getPages(correlationId)
                 .then((pages) => {
                     logger.info('back out');
                     logger.info(pages.length);
@@ -104,7 +104,7 @@ class SyncController {
         const self = this;
         logger.info('Start saving pages in chunk ' + chunkNumber + '/' + totalChunks, correlationId);
         return Promise.all(pages.map((page) => { // create promise group for saving pages
-            return self.pageController.save(correlationId); //
+            return self.pageController.save(page, correlationId, true); //
         }));
     }
 

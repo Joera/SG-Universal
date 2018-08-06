@@ -39,6 +39,7 @@ class WordpressConnector {
      * @param correlationId
      */
     getPages(correlationId) {
+
         const self = this;
 
         let done = false;
