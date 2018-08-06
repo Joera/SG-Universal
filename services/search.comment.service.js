@@ -122,6 +122,7 @@ class CommentSearchService {
 
                         comment.objectID = c.id;
                         comment.type = 'comment';
+                        comment.language = data.language;
                         comment.snippetData = renderConfig;
                         comment.content = c.content;
                         comment.author = c.author;
