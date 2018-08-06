@@ -31,7 +31,7 @@ class WordpressConnector {
 			let url = config.wordpressUrl + '/' + config.wordpressApiPath + '?page=' + page;
 
 			logger.info(url);
-            logger.info(self.concatenatedResponse.length);
+            logger.info(self.concatenatedResponse);
             requestify.get(url,{
                 redirect: true,
                 timeout: 120000
@@ -45,8 +45,6 @@ class WordpressConnector {
 
                         let items = response.getBody();
                         self.concatenatedResponse.concat(items);
-                        logger.info(self.concatenatedResponse.length);
-
                         page++;
                        self.getPages(page,correlationId)
                     }
