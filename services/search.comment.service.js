@@ -38,7 +38,10 @@ class CommentSearchService {
                 self._createSnippetData(data,correlationId)
                     .then((comments) => {
 
-                        data.comments = comments;
+                        return new Promise((res, rej) => {
+                            data.comments = comments;
+                            res(comments);
+                        });
 
                         // return new Promise((res, rej) => {
                         //     for (let i = 0; i < comments.length; i++) {
@@ -56,7 +59,7 @@ class CommentSearchService {
                         //     }
                         //     res(data);
                         // });
-                        return comments;
+
                     })
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
@@ -85,35 +88,47 @@ class CommentSearchService {
 
     _createSnippetData(data,correlationId) {
 
-        if(data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
-            // alle comments los .. maar thread insluiten
+        return new Promise((res, rej) => {
 
-            let comments = [];
+            let comments;
 
-            data.interaction.nested_comments.forEach ( (thread)  => {
 
-                thread.forEach ( (comment) => {
+            if (data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
-                    logger.info(thread);
+                // alle comments los .. maar thread insluiten
 
-                    var renderConfig = {
-                        id: comment.id,
-                        author: comment.name,
-                        content: comment.content,
-                        date: comment.date,
-                        thread: thread,
-                        reply_count: 0, // thread.comments.length - 1,
-                        url: data.url + '#dialoog'
+                comments = [];
 
-                    }
+                data.interaction.nested_comments.forEach((thread) => {
 
-                    comment.snippetData = renderConfig
-                    comments.push(comment);
-                })
-            });
+                    thread.forEach((comment) => {
 
-            return comments;
+                        logger.info(thread);
+
+                        var renderConfig = {
+                            id: comment.id,
+                            author: comment.name,
+                            content: comment.content,
+                            date: comment.date,
+                            thread: thread,
+                            reply_count: 0, // thread.comments.length - 1,
+                            url: data.url + '#dialoog'
+
+                        }
+
+                        comment.snippetData = renderConfig
+                        comments.push(comment);
+                    })
+                });
+
+            } else {
+                comments = false;
+            }
+
+            res(comments);
+
+        });
 
 
             // return Promise.all(data.interaction.nested_comments.map(function (thread) {
@@ -140,9 +155,7 @@ class CommentSearchService {
             //     });
             // }))
 
-        } else {
-            data.comments = null;
-        }
+
     }
 
     _renderSnippets(data,correlationId) {
