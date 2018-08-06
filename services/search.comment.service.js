@@ -33,7 +33,7 @@ class CommentSearchService {
 
                 // init template service
 
-            if(data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
+            if(data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
                 self._createSnippetData(data,correlationId)
                     .then((comments) => {
