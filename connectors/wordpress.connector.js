@@ -7,7 +7,6 @@ const logger = require('../services/logger.service');
 
 const config = require('../config');
 
-let concatenatedResponse = [],items;
 
 
 /**
@@ -24,7 +23,7 @@ class WordpressConnector {
      * Get pages from wordpress api
      * @param correlationId
      */
-    getPages(page,correlationId) {
+    getPages(page,concatenatedResponse,correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -43,12 +42,12 @@ class WordpressConnector {
                         resolve(concatenatedResponse);
                     } else {
 
-                        items = response.getBody();
+                        let items = response.getBody();
                      //   logger.info(response.getBody());
                         concatenatedResponse.concat(items);
 
                         page++;
-                       self.getPages(page,correlationId)
+                       self.getPages(page,concatenatedResponse,correlationId)
                     }
                 })
                 .catch((error) => {
