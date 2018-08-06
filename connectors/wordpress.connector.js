@@ -44,6 +44,7 @@ class WordpressConnector {
                     } else {
 
                         let items = response.getBody();
+                        logger.info(items.length);
                         self.concatenatedResponse.concat(items);
                         page++;
                        self.getPages(page,correlationId)
