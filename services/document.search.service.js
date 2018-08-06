@@ -96,7 +96,7 @@ class DocumentService {
                     }
 
                     document.type = 'document';
-                    document.objectID = document.file_id; // keep algolia id consistent
+                    document.objectID = document.file_id || 99999999; // keep algolia id consistent
                     document.language = data.language;
                     document.snippetData = renderConfig;
 
