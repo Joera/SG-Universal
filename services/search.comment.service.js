@@ -118,6 +118,8 @@ class CommentSearchService {
 
                         }
 
+                        comment.objectID = comment.id;
+                        comment.type = 'comment';
                         comment.snippetData = renderConfig
                         comments.push(comment);
                     })
