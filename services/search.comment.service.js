@@ -64,7 +64,7 @@ class CommentSearchService {
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
-                       
+
                                 for (let i = 0; i < data.comments.length; i++) {
                                     data.comments[i].searchSnippet = snippets[i];
                                 }
@@ -105,7 +105,7 @@ class CommentSearchService {
 
                     thread.forEach((comment) => {
 
-                        logger.info(thread);
+                        // logger.info(thread);
 
                         var renderConfig = {
                             id: comment.id,
@@ -113,7 +113,7 @@ class CommentSearchService {
                             content: comment.content,
                             date: comment.date,
                             thread: thread,
-                            reply_count: 0, // thread.comments.length - 1,
+                            reply_count: thread.length - 1,
                             url: data.url + '#dialoog'
 
                         }
