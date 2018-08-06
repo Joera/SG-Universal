@@ -36,14 +36,14 @@ class WordpressConnector {
                 timeout: 120000
             }).then((response) => {
 
-                    if(response.getBody() === null) {
-                        logger.info('Received ' + self.concatenatedResponse.length + ' items from wordpress', correlationId);
-                        resolve(self.concatenatedResponse);
-                    } else {
+                    if(response.getBody() !== null) {
                         self.concatenatedResponse = self.concatenatedResponse.concat(response.getBody());
                         page++;
                        self.getPages(page,correlationId)
                     }
+
+                    logger.info('Received ' + self.concatenatedResponse.length + ' items from wordpress', correlationId);
+                    resolve(self.concatenatedResponse);
                 })
                 .catch((error) => {
                     reject(error);
