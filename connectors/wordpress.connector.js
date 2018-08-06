@@ -41,9 +41,11 @@ class WordpressConnector {
 
                         resolve(concatenatedResponse);
                     } else {
+
+                        logger.info(response.getBody().length);
                      //   logger.info(response.getBody());
                         concatenatedResponse.concat(response.getBody());
-                        logger.info(concatenatedResponse.length);
+
                         page++;
                        self.getPages(page,correlationId)
                     }
