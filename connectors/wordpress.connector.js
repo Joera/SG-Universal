@@ -38,9 +38,9 @@ class WordpressConnector {
                         logger.info('Received posts from wordpress', correlationId);
                         resolve(concatenatedResponse);
                     } else {
-                        logger.info(response.getBody());
+                     //   logger.info(response.getBody());
                         concatenatedResponse.concat(response.getBody());
-                       // self.getPages(page++,correlationId)
+                       self.getPages(page++,correlationId)
                     }
                 })
                 .catch((error) => {
