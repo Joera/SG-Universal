@@ -33,6 +33,7 @@ class SyncController {
 
             let cmsPages = null; // all pages received from cms
             let deletedPages = null; // pages that will deleted
+            let page = 0;
 
             const correlationId = uuidv4(); // set correlation id for debugging the process chain
             self.cmsConnector.getPages(page,correlationId)

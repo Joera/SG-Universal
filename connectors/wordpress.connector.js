@@ -33,7 +33,7 @@ class WordpressConnector {
                 redirect: true,
                 timeout: 120000
             }).then((response) => {
-                
+
                     if(response === null) {
                         logger.info('Received posts from wordpress', correlationId);
                         resolve(concatenatedResponse);
