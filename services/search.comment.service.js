@@ -123,6 +123,9 @@ class CommentSearchService {
                         comment.objectID = c.id;
                         comment.type = 'comment';
                         comment.snippetData = renderConfig;
+                        comment.content = c.content;
+                        comment.author = c.author;
+                        comment.comments = thread;
                         comments.push(comment);
                     })
                 });
@@ -184,10 +187,6 @@ class CommentSearchService {
         if (data.comments && data.comments.length > 0) {
 
                 return Promise.all(data.comments.map(function (comment) {
-                    // save of update?
-                    logger.info('test');
-                    logger.info(comment);
-
                     return self.searchService.updateSearch(comment, false, correlationId);
 
                 }));
