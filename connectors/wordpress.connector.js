@@ -70,7 +70,7 @@ class WordpressConnector {
 
             logger.info(url);
 
-            return new Promise((res, rej) => {
+            return new Promise((resolver, rej) => {
 
                 return Promise.try( () => {
 
@@ -90,7 +90,7 @@ class WordpressConnector {
                     } else {
                         // Done looping
                         logger.info('finished stuff');
-                        res(self.results);
+                        resolver();
                         // logger.info(self.results.length);
                         // return [r];
                     }
