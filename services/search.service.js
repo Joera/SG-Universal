@@ -78,11 +78,18 @@ class SearchService {
 
                 // trim comments
                 let algoliaData = JSON.parse(JSON.stringify(data));
-                // if(algoliaData.comments && algoliaData.comments.length > 0) {
-                //     algoliaData.comments = algoliaData.comments.slice(0,1);
-                // }
+
+                // trim comments
                 if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
                     algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
+                }
+                // trim documents
+                if(algoliaData.sections) {
+                    algoliaData.sections.forEach(s => {
+                        if(s.type == 'documents') {
+                            s = undefined;
+                        }
+                    })
                 }
 
                 save(algoliaData, correlationId)
