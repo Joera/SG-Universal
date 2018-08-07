@@ -43,6 +43,7 @@ class WordpressConnector {
                     self.loop(r["_links"]["next"][0]["href"]);
                 }).then( (recursiveResults) => {
                         logger.info('adding stuff');
+                        logger.info(logger.info);
                         return recursiveResults;
                     });
             } else {
