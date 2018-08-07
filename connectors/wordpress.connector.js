@@ -25,58 +25,17 @@ class WordpressConnector {
 
     loop(url) {
 
+        const self = this;
+
         logger.info(url);
-        const self = this;
 
-        return Promise.try( () => {
+        return new Promise((resolver, rejecter) => {
 
-            return requestify.get(url, {redirect: true, timeout: 120000});
+            // return Promise.try( () => {
 
-        }).then(function (response) {
+            return requestify.get(url, {redirect: true, timeout: 120000}) // ;
 
-            let r = response.getBody();
-
-            // self.results = self.results.concat(_.values(r));
-
-            if (r["_links"] && r["_links"]["next"]) {
-                return Promise.try( () => {
-                    self.loop(r["_links"]["next"][0]["href"]);
-                }).then( (recursiveResults) => {
-                        logger.info('adding stuff');
-                        logger.info(logger.info);
-                        return recursiveResults;
-                    });
-            } else {
-                // Done looping
-                logger.info('finished stuff');
-                // logger.info(self.results.length);
-                return [r];
-            }
-        });
-
-    }
-
-
-
-    /**
-     * Get pages from wordpress api
-     * @param correlationId
-     */
-    getPages(correlationId) {
-
-        const self = this;
-
-        function loop(url) {
-
-            logger.info(url);
-
-            return new Promise((resolver, rejecter) => {
-
-                // return Promise.try( () => {
-
-                    return requestify.get(url, {redirect: true, timeout: 120000}) // ;
-
-               // })
+            // })
                 .then(response => {
 
                     let r = response.getBody();
@@ -86,7 +45,7 @@ class WordpressConnector {
 
                     if (r["_links"] && r["_links"]["next"]) {
                         Promise.try(() => {
-                            loop(r["_links"]["next"][0]["href"]);
+                            self.loop(r["_links"]["next"][0]["href"]);
                         });
                     } else {
                         // Done looping
@@ -100,13 +59,22 @@ class WordpressConnector {
                     rejecter(error);
                 });
 
-            });
+        });
 
-        }
+
+
+
+        /**
+     * Get pages from wordpress api
+     * @param correlationId
+     */
+    getPages(correlationId) {
+
+        const self = this;
 
         return new Promise((resolve, reject) => {
 
-            loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
+            self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
 
             .then(results => {
                 // logger.info(results.length);
