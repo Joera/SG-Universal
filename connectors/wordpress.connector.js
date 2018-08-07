@@ -27,6 +27,7 @@ class WordpressConnector {
         return requestify.get(url,{redirect: true,timeout: 120000})
         .then(function(response) {
             logger.info('r');
+            return;
             // r = response.getBody();
             // logger.info(r);
             // if (r !== null) {
@@ -53,12 +54,9 @@ class WordpressConnector {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
-        //     return self.loop("");
-        // }).then(function (results) {
-        //     // Now `results` is an array that contains the response for each HTTP request made.
-        //     return results;
-        // })
+            return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
+            .then(function (results) {
+            logger.info('coomes back');
         });
 
     }
