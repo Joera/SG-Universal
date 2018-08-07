@@ -69,7 +69,6 @@ class WordpressConnector {
         function loop(url) {
 
             logger.info(url);
-            const self = this;
 
             return Promise.try( () => {
 
