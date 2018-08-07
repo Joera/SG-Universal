@@ -100,7 +100,7 @@ class WordpressConnector {
 
         }
 
-        return new Promise((res, rej) => {
+        return new Promise((resolve, reject) => {
 
             Promise.try( () => {
 
