@@ -2,6 +2,7 @@
 const Promise = require('bluebird');
 const uuidv4 = require('uuid/v4');
 const requestify = require('requestify');
+const bhttp = require('bhttp');
 const logger = require('../services/logger.service');
 
 const config = require('../config');
@@ -37,7 +38,7 @@ class WordpressConnector {
         let r;
         return Promise.try(function() {
             logger.info(url);
-            return requestify.get(url,{redirect: true,timeout: 120000});
+            return bhttp.get(url); // ,{redirect: true,timeout: 120000}
         }).then(function(response) {
             logger.info('r');
             // r = response.getBody();
