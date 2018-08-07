@@ -33,14 +33,16 @@ class WordpressConnector {
 
                     r = response.getBody();
 
+                    results.concat(Object.values(r);
+
                     if (r["_links"] && r["_links"]["next"]) {
                         return Promise.try( () => {
                             self.loop(r["_links"]["next"][0]["href"]);
                         }).then( () => {
                                 logger.info('adding stuff');
-                                logger.info(r);
-
-                                results = results.concat(r);
+                                // logger.info(r);
+                                //
+                                // results = results.concat(r);
                                 logger.info(results.length);
                             });
                     } else {
