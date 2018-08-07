@@ -38,6 +38,7 @@ class WordpressConnector {
                             self.loop(r["_links"]["next"][0]["href"]);
                         }).then(function (recursiveResults) {
                                 logger.info('adding stuff');
+                                logger.info(recursiveResults);
                                 return results.concat(recursiveResults);
                             });
                     } else {
