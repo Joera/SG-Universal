@@ -30,13 +30,11 @@ class WordpressConnector {
 
         return Promise.try( () => {
 
-            let r;
             return requestify.get(url, {redirect: true, timeout: 120000});
-
 
         }).then(function (response) {
 
-            r = response.getBody();
+            let r = response.getBody();
 
             // self.results = self.results.concat(_.values(r));
 
@@ -51,7 +49,7 @@ class WordpressConnector {
                 // Done looping
                 logger.info('finished stuff');
                 // logger.info(self.results.length);
-                return r;
+                return [r];
             }
         });
 
