@@ -72,11 +72,12 @@ class WordpressConnector {
 
             return new Promise((resolver, rejecter) => {
 
-                return Promise.try( () => {
+                // return Promise.try( () => {
 
-                    return requestify.get(url, {redirect: true, timeout: 120000});
+                    return requestify.get(url, {redirect: true, timeout: 120000}) // ;
 
-                }).then(response => {
+               // })
+                .then(response => {
 
                     let r = response.getBody();
 
