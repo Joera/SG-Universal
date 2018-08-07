@@ -28,10 +28,10 @@ class WordpressConnector {
         .then(function(response) {
 
             r = response.getBody();
-            logger.info(r["_links"]["next"]);
+            logger.info(r["_links"]["next"][0]["href"]);
             if (r !== null) {
                 return Promise.try(function() {
-                    return loop(r["_links"]["next"]["href"]);
+                    return loop(r["_links"]["next"][0]["href"]);
                 }).then(function(recursiveResults) {
                     return [r].concat(recursiveResults);
                 });
