@@ -35,12 +35,17 @@ class WordpressConnector {
             .then(response => {
 
                     let r = response.getBody();
+
                     self.results = self.results.concat(_.values(r));
 
                     if (r["_links"] && r["_links"]["next"]) {
                             loop(r["_links"]["next"][0]["href"],resolve, reject);
                     } else {
                         // Done looping
+
+                        self.results = self.results.filter( (r) => {
+                            return r.title !== undefined;
+                        });
                         resolve(self.results);
                     }
                 }).catch(error => {
