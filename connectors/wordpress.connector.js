@@ -36,23 +36,20 @@ class WordpressConnector {
 
                     r = response.getBody();
 
-                    self.results = self.results.concat(_.values(r));
+                    // self.results = self.results.concat(_.values(r));
 
                     if (r["_links"] && r["_links"]["next"]) {
                         return Promise.try( () => {
                             self.loop(r["_links"]["next"][0]["href"]);
-                        }).then( () => {
+                        }).then( (recursiveResults) => {
                                 logger.info('adding stuff');
-                                // logger.info(r);
-                                //
-                                // results = results.concat(r);
-                                logger.info(self.results.length);
+                                return recursiveResults;
                             });
                     } else {
                         // Done looping
                         logger.info('finished stuff');
-                        logger.info(self.results.length);
-                        return self.results;
+                        // logger.info(self.results.length);
+                        return r;
                     }
                 });
         });
@@ -71,6 +68,7 @@ class WordpressConnector {
 
             return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
             .then( (results) =>{
+                logger.info(results.length);
                 logger.info('comes back');
             });
         });
