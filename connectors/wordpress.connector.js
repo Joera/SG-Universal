@@ -76,7 +76,7 @@ class WordpressConnector {
 
                     return requestify.get(url, {redirect: true, timeout: 120000});
 
-                }).then(function (response) {
+                }).then(response => {
 
                     let r = response.getBody();
 
@@ -106,9 +106,11 @@ class WordpressConnector {
 
                 return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
 
-            }).then((results) => {
+            }).then(results => {
                 // logger.info(results.length);
                 logger.info('comes back');
+            }).catch(error => {
+                logger.error(error, correlationId);
             });
         });
     }
