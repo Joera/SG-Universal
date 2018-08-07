@@ -106,11 +106,9 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-            return Promise.try( () => {
+            loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
 
-                return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
-
-            }).then(results => {
+            .then(results => {
                 // logger.info(results.length);
                 logger.info('comes back');
             }).catch(error => {
