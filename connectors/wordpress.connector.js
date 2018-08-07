@@ -28,11 +28,10 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
             let r, results = [];
-            return requestify.get(url, {redirect: true, timeout: 120000})
+            requestify.get(url, {redirect: true, timeout: 120000})
                 .then(function (response) {
 
                     r = response.getBody();
-                    logger.info(r["_links"]);
 
                     if (r["_links"] && r["_links"]["next"]) {
                         return Promise.try(function() {
