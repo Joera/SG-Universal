@@ -1,7 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
-const fs = require('fs');
+const fs = require('graceful-fs');
 const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');
 const logger = require('../services/logger.service');
