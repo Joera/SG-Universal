@@ -70,7 +70,7 @@ class WordpressConnector {
 
             logger.info(url);
 
-            return Promise.try( () => {
+            Promise.try( () => {
 
                 return requestify.get(url, {redirect: true, timeout: 120000});
 
