@@ -32,6 +32,29 @@ class WordpressConnector {
         this.page = 0;
     }
 
+    loop(url) {
+
+        let r;
+        return Promise.try(function() {
+            logger.info(url);
+            return requestify.get(url,{redirect: true,timeout: 120000});
+        }).then(function(response) {
+
+            r = response.getBody();
+            logger.info(r);
+            if (r !== null) {
+                return Promise.try(function() {
+                    return loop(r["_link"]["next"]);
+                }).then(function(recursiveResults) {
+                    return [r].concat(recursiveResults);
+                });
+            } else {
+                // Done looping
+                return [r];
+            }
+        });
+    }
+
 
 
     /**
@@ -41,36 +64,13 @@ class WordpressConnector {
     getPages(correlationId) {
 
         const self = this;
-        let done = false;
 
-        promiseWhile(function() {
-            // Condition for stopping
-            if (!done) return;
-
-        }, function() {
-            // The function to run, should return a promise
-            return new Promise(function(resolve, reject) {
-                let url = config.wordpressUrl + '/' + config.wordpressApiPath + '?page=' + self.page;
-                logger.info(url);
-                requestify.get(url,{
-                    redirect: true,
-                    timeout: 120000
-                }).then((response) => {
-
-                    if(response.getBody() !== null) {
-                        self.concatenatedResponse = self.concatenatedResponse.concat(response.getBody());
-                        self.page++;
-                        resolve();
-                    } else {
-                        done = true;
-                    }
-                });
-
-            });
-        }).then(function() {
-            // Notice we can chain it because it's a Promise, this will run after completion of the promiseWhile Promise!
-            resolve(self.concatenatedResponse);
-        });
+        Promise.try(function() {
+            return self.loop("http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0");
+        }).then(function(results) {
+            // Now `results` is an array that contains the response for each HTTP request made.
+            return results;
+        })
 
     }
 }
