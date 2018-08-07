@@ -27,9 +27,9 @@ class WordpressConnector {
 
         const self = this;
 
-        logger.info(url);
-
         function loop(url,resolver, rejecter) {
+
+            logger.info(url);
 
             return requestify.get(url, {redirect: true, timeout: 120000}) // ;
 
@@ -41,13 +41,13 @@ class WordpressConnector {
                     logger.info(self.results.length);
 
                     if (r["_links"] && r["_links"]["next"]) {
-                        Promise.try(() => {
+                        return Promise.try(() => {
                             loop(r["_links"]["next"][0]["href"]);
                         });
                     } else {
                         // Done looping
                         logger.info('finished stuff');
-                        resolver();
+                        return resolver();
                         // logger.info(self.results.length);
                         // return [r];
                     }
