@@ -41,12 +41,11 @@ class WordpressConnector {
     getPages(correlationId) {
 
         const self = this;
-
         let done = false;
 
         promiseWhile(function() {
             // Condition for stopping
-            return done;
+            if (!done) return;
 
         }, function() {
             // The function to run, should return a promise
