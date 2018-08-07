@@ -34,9 +34,10 @@ class WordpressConnector {
                     r = response.getBody();
 
                     if (r["_links"] && r["_links"]["next"]) {
-                        return Promise.try(function() {
-                            self.loop(r["_links"]["next"][0]["href"]);
-                        }).then(function (recursiveResults) {
+
+                        return self.loop(r["_links"]["next"][0]["href"])
+
+                        .then( (recursiveResults) => {
                                 logger.info('adding stuff');
                                 logger.info(recursiveResults);
                                 return results.concat(recursiveResults);
