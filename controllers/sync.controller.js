@@ -38,34 +38,30 @@ class SyncController {
             const correlationId = uuidv4(); // set correlation id for debugging the process chain
             self.cmsConnector.getPages(correlationId)
                 .then((pages) => {
-                    logger.info('back out');
-                    logger.info(pages.length);
                     return new Promise((res, rej) => { cmsPages = pages; res({}); })
                 }) // save pages received from cms api for later use
+                .then(() => { return self.syncService.findDeletedPages(cmsPages, correlationId) }) // find the deleted pages
+                .then((pages) => { // delete pages from database and algolia
+                    deletedPages = pages; // save deleted pages for later use
+                    const chunkSize = 5; // set chunk size, number of pages that are deleted async at the same time
+                    const chunkedPages = _.chunk(deletedPages, chunkSize); // chunk render queue
+                    return Promise.each(chunkedPages, (chunk, i) => { return self.deletePages(chunk, (i + 1), chunkedPages.length, correlationId); }) // delete pages, iterate chunks serially
+                })
 
-                // delete pages
-                // .then(() => { return self.syncService.findDeletedPages(cmsPages, correlationId) }) // find the deleted pages
-                // .then((pages) => { // delete pages from database and algolia
-                //     deletedPages = pages; // save deleted pages for later use
-                //     const chunkSize = 5; // set chunk size, number of pages that are deleted async at the same time
-                //     const chunkedPages = _.chunk(deletedPages, chunkSize); // chunk render queue
-                //     return Promise.each(chunkedPages, (chunk, i) => { return self.deletePages(chunk, (i + 1), chunkedPages.length, correlationId); }) // delete pages, iterate chunks serially
-                // })
-                //
-                // // save pages
-                // .then(() => { // save pages to database and search
-                //     const chunkSize = 5; // set chunk size, number of pages that are saved async at the same time
-                //     const chunkedPages = _.chunk(cmsPages, chunkSize); // chunk render queue
-                //     return Promise.each(chunkedPages, (chunk, i) => { return self.savePages(chunk, (i + 1), chunkedPages.length, correlationId); }) // save pages, iterate chunks serially
-                // })
-                //
-                // // resolve promise
-                // .then(() => {
-                //     const countSave = cmsPages.length || 0; // number of updated pages
-                //     const countDelete = deletedPages.length || 0; // number of deleted pages
-                //     logger.info('Sync completed. Saved ' + countSave + ' pages and deleted ' + countDelete + ' pages', correlationId);
-                //     resolve(cmsPages);
-                // })
+                // save pages
+                .then(() => { // save pages to database and search
+                    const chunkSize = 5; // set chunk size, number of pages that are saved async at the same time
+                    const chunkedPages = _.chunk(cmsPages, chunkSize); // chunk render queue
+                    return Promise.each(chunkedPages, (chunk, i) => { return self.savePages(chunk, (i + 1), chunkedPages.length, correlationId); }) // save pages, iterate chunks serially
+                })
+
+                // resolve promise
+                .then(() => {
+                    const countSave = cmsPages.length || 0; // number of updated pages
+                    const countDelete = deletedPages.length || 0; // number of deleted pages
+                    logger.info('Sync completed. Saved ' + countSave + ' pages and deleted ' + countDelete + ' pages', correlationId);
+                    resolve(cmsPages);
+                })
                 .catch(error => {
                     error.correlationId = correlationId;
                     logger.error(error, correlationId);
