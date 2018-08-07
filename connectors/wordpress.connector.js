@@ -32,11 +32,9 @@ class WordpressConnector {
             logger.info(url);
 
 
-            Promise.try(() => {
+            requestify.get(url, {redirect: true, timeout: 120000}) // ;
 
-                requestify.get(url, {redirect: true, timeout: 120000}) // ;
-
-            }).then(response => {
+            .then(response => {
 
                     let r = response.getBody();
 
