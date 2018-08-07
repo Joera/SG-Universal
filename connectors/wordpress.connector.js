@@ -98,8 +98,8 @@ class WordpressConnector {
             });
 
         }
-        
-        Promise.try( () => {
+
+        return Promise.try( () => {
 
             return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
 
