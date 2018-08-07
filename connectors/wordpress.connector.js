@@ -51,13 +51,15 @@ class WordpressConnector {
     getPages(correlationId) {
 
         const self = this;
+        return new Promise((resolve, reject) => {
 
-        Promise.try(function() {
-            return self.loop("http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0");
-        }).then(function(results) {
-            // Now `results` is an array that contains the response for each HTTP request made.
-            return results;
-        })
+            return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
+        //     return self.loop("");
+        // }).then(function (results) {
+        //     // Now `results` is an array that contains the response for each HTTP request made.
+        //     return results;
+        // })
+        });
 
     }
 }
