@@ -70,27 +70,32 @@ class WordpressConnector {
 
             logger.info(url);
 
-            Promise.try( () => {
+            return new Promise((res, rej) => {
 
-                return requestify.get(url, {redirect: true, timeout: 120000});
+                Promise.try( () => {
 
-            }).then(function (response) {
+                    return requestify.get(url, {redirect: true, timeout: 120000});
 
-                let r = response.getBody();
+                }).then(function (response) {
 
-                self.results = self.results.concat(_.values(r));
-                logger.info(self.results.length);
+                    let r = response.getBody();
 
-                if (r["_links"] && r["_links"]["next"]) {
-                    Promise.try( () => {
-                        loop(r["_links"]["next"][0]["href"]);
-                    });
-                } else {
-                    // Done looping
-                    logger.info('finished stuff');
-                    // logger.info(self.results.length);
-                    // return [r];
-                }
+                    self.results = self.results.concat(_.values(r));
+                    logger.info(self.results.length);
+
+                    if (r["_links"] && r["_links"]["next"]) {
+                        Promise.try(() => {
+                            loop(r["_links"]["next"][0]["href"]);
+                        });
+                    } else {
+                        // Done looping
+                        logger.info('finished stuff');
+                        res(self.results);
+                        // logger.info(self.results.length);
+                        // return [r];
+                    }
+                });
+
             });
 
         }
