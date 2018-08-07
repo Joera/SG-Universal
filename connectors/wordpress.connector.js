@@ -35,11 +35,10 @@ class WordpressConnector {
 
     loop(url) {
 
+        logger.info(url);
         let r;
-        return Promise.try(function() {
-            logger.info(url);
-            return bhttp.get(url); // ,{redirect: true,timeout: 120000}
-        }).then(function(response) {
+        return requestify.get(url,{redirect: true,timeout: 120000})
+        .then(function(response) {
             logger.info('r');
             // r = response.getBody();
             // logger.info(r);
@@ -53,7 +52,6 @@ class WordpressConnector {
             //     // Done looping
             //     return [r];
             // }
-            return;
         });
     }
 
