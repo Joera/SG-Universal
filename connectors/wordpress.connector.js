@@ -31,28 +31,30 @@ class WordpressConnector {
         return Promise.try( () => {
 
             let r;
-            return requestify.get(url, {redirect: true, timeout: 120000})
-                .then(function (response) {
+            return requestify.get(url, {redirect: true, timeout: 120000});
 
-                    r = response.getBody();
 
-                    // self.results = self.results.concat(_.values(r));
+        }).then(function (response) {
 
-                    if (r["_links"] && r["_links"]["next"]) {
-                        return Promise.try( () => {
-                            self.loop(r["_links"]["next"][0]["href"]);
-                        }).then( (recursiveResults) => {
-                                logger.info('adding stuff');
-                                return recursiveResults;
-                            });
-                    } else {
-                        // Done looping
-                        logger.info('finished stuff');
-                        // logger.info(self.results.length);
-                        return r;
-                    }
-                });
+            r = response.getBody();
+
+            // self.results = self.results.concat(_.values(r));
+
+            if (r["_links"] && r["_links"]["next"]) {
+                return Promise.try( () => {
+                    self.loop(r["_links"]["next"][0]["href"]);
+                }).then( (recursiveResults) => {
+                        logger.info('adding stuff');
+                        return recursiveResults;
+                    });
+            } else {
+                // Done looping
+                logger.info('finished stuff');
+                // logger.info(self.results.length);
+                return r;
+            }
         });
+
     }
 
 
@@ -68,7 +70,7 @@ class WordpressConnector {
 
             return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
             .then( (results) =>{
-                logger.info(results.length);
+                // logger.info(results.length);
                 logger.info('comes back');
             });
         });
