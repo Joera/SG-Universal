@@ -56,7 +56,7 @@ class WordpressConnector {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
+            self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
             .then(function (results) {
                 logger.info('coomes back');
             });
