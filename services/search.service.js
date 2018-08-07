@@ -85,11 +85,12 @@ class SearchService {
                 }
                 // trim documents
                 if(algoliaData.sections) {
-                    algoliaData.sections.forEach(s => {
-                        if(s.type == 'documents') {
-                            s = undefined;
+
+                    for (var i in algoliaData.sections) {
+                        if(algoliaData.sections[i].type == 'documents') {
+                            delete algoliaData.sections[i];
                         }
-                    })
+                    }
                 }
 
                 save(algoliaData, correlationId)
