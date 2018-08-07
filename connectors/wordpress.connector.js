@@ -30,31 +30,22 @@ class WordpressConnector {
         function loop(url,resolve, reject) {
 
             logger.info(url);
-
-
             requestify.get(url, {redirect: true, timeout: 120000}) // ;
 
             .then(response => {
 
                     let r = response.getBody();
-
                     self.results = self.results.concat(_.values(r));
-                    logger.info(self.results.length);
 
                     if (r["_links"] && r["_links"]["next"]) {
-
                             loop(r["_links"]["next"][0]["href"],resolve, reject);
-
                     } else {
                         // Done looping
-                        logger.info('finished stuff');
-                        resolve();
-                        // logger.info(self.results.length);
-                        // return [r];
+                        resolve(self.results);
                     }
                 }).catch(error => {
                     logger.error(error, correlationId);
-                    rejecter(error);
+                    reject(error);
                 });
 
 
@@ -81,8 +72,8 @@ class WordpressConnector {
             self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0',correlationId)
 
             .then(results => {
-                // logger.info(results.length);
                 logger.info('comes back');
+                logger.info(results.length);
             }).catch(error => {
                 logger.error(error, correlationId);
                 reject(error);
