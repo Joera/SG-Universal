@@ -28,7 +28,7 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
             let r, results = [];
-            requestify.get(url, {redirect: true, timeout: 120000})
+            return requestify.get(url, {redirect: true, timeout: 120000})
                 .then(function (response) {
 
                     r = response.getBody();
@@ -60,7 +60,7 @@ class WordpressConnector {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
+            return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
             .then( (results) =>{
                 logger.info('comes back');
             });
