@@ -100,15 +100,15 @@ class WordpressConnector {
 
         }
 
-        return Promise.try( () => {
+        return new Promise((res, rej) => {
 
-            return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
+            return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
 
-        }).then( (results) => {
-            // logger.info(results.length);
-            logger.info('comes back');
+                .then((results) => {
+                    // logger.info(results.length);
+                    logger.info('comes back');
+                });
         });
-
     }
 }
 
