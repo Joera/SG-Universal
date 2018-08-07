@@ -33,7 +33,7 @@ class WordpressConnector {
 
                     r = response.getBody();
 
-                    results.concat(Object.values(r);
+                    results = results.concat(Object.values(r));
 
                     if (r["_links"] && r["_links"]["next"]) {
                         return Promise.try( () => {
