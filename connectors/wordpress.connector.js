@@ -84,16 +84,12 @@ class WordpressConnector {
                 if (r["_links"] && r["_links"]["next"]) {
                     return Promise.try( () => {
                         loop(r["_links"]["next"][0]["href"]);
-                    }).then( (recursiveResults) => {
-                        logger.info('adding stuff');
-                        // logger.info(recursiveResults);
-                        // return [r].concat(recursiveResults);
                     });
                 } else {
                     // Done looping
                     logger.info('finished stuff');
                     // logger.info(self.results.length);
-                    return [r];
+                    // return [r];
                 }
             });
 
