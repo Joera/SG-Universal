@@ -70,7 +70,7 @@ class WordpressConnector {
 
             logger.info(url);
 
-            return new Promise((resolver, rej) => {
+            return new Promise((resolver, rejecter) => {
 
                 return Promise.try( () => {
 
@@ -94,6 +94,9 @@ class WordpressConnector {
                         // logger.info(self.results.length);
                         // return [r];
                     }
+                }).catch(error => {
+                    logger.error(error, correlationId);
+                    rejecter(error);
                 });
 
             });
@@ -111,6 +114,7 @@ class WordpressConnector {
                 logger.info('comes back');
             }).catch(error => {
                 logger.error(error, correlationId);
+                reject(error);
             });
         });
     }
