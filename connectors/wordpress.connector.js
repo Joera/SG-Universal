@@ -56,7 +56,8 @@ class WordpressConnector {
 
             return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
             .then(function (results) {
-            logger.info('coomes back');
+                logger.info('coomes back');
+            });
         });
 
     }
