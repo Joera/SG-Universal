@@ -42,11 +42,9 @@ class WordpressConnector {
                             loop(r["_links"]["next"][0]["href"],resolve, reject);
                     } else {
                         // Done looping
-
-                        self.results = self.results.filter( (r) => {
+                        resolve(self.results.filter( (r) => {
                             return r.title !== undefined;
-                        });
-                        resolve(self.results);
+                        }));
                     }
                 }).catch(error => {
                     logger.error(error, correlationId);
