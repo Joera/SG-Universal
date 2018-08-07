@@ -23,19 +23,16 @@ class WordpressConnector {
         this.results = []
     }
 
-    loop(url) {
+    getPage(url) {
 
         const self = this;
 
         logger.info(url);
 
-        return new Promise((resolver, rejecter) => {
-
-            // return Promise.try( () => {
+        function loop(url,resolver, rejecter) {
 
             return requestify.get(url, {redirect: true, timeout: 120000}) // ;
 
-            // })
                 .then(response => {
 
                     let r = response.getBody();
@@ -45,7 +42,7 @@ class WordpressConnector {
 
                     if (r["_links"] && r["_links"]["next"]) {
                         Promise.try(() => {
-                            self.loop(r["_links"]["next"][0]["href"]);
+                            loop(r["_links"]["next"][0]["href"]);
                         });
                     } else {
                         // Done looping
@@ -59,10 +56,15 @@ class WordpressConnector {
                     rejecter(error);
                 });
 
+
+        }
+
+        return new Promise((resolver, rejecter) => {
+
+            loop(url,resolver, rejecter)
+
         });
     }
-
-
 
 
         /**
@@ -75,7 +77,7 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-            self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
+            self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
 
             .then(results => {
                 // logger.info(results.length);
