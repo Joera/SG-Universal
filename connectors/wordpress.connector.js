@@ -7,19 +7,6 @@ const logger = require('../services/logger.service');
 
 const config = require('../config');
 
-const promiseWhile = function(condition, action) {
-    return new Promise(function(resolve, reject) {
-        var loop = function() {
-            if (!condition()) return resolve();
-            return Promise.cast(action())
-                .then(loop)
-                .catch(function(e) {
-                    reject(e);
-                });
-        };
-        process.nextTick(loop);
-    });
-};
 
 /**
  * Wordpress connector
@@ -29,8 +16,8 @@ class WordpressConnector {
 
     constructor () {
 
-        this.concatenatedResponse = [];
-        this.page = 0;
+        // this.concatenatedResponse = [];
+        // this.page = 0;
     }
 
     loop(url) {
