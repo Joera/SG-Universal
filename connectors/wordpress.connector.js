@@ -72,7 +72,7 @@ class WordpressConnector {
 
             return new Promise((res, rej) => {
 
-                Promise.try( () => {
+                return Promise.try( () => {
 
                     return requestify.get(url, {redirect: true, timeout: 120000});
 
@@ -102,7 +102,7 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-            Promise.try( () => {
+            return Promise.try( () => {
 
                 return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
 
