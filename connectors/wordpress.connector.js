@@ -32,11 +32,12 @@ class WordpressConnector {
                 .then(function (response) {
 
                     r = response.getBody();
+                    logger.info(r["_links"]);
 
-                    if (r["_links"]["next"]) {
-                        // return Promise.try(function() {
-                        return self.loop(r["_links"]["next"][0]["href"])
-                            .then(function (recursiveResults) {
+                    if (r["_links"] && r["_links"]["next"]) {
+                        return Promise.try(function() {
+                            self.loop(r["_links"]["next"][0]["href"]);
+                        }).then(function (recursiveResults) {
                                 logger.info('adding stuff');
                                 return results.concat(recursiveResults);
                             });
