@@ -2,8 +2,10 @@
 const Promise = require('bluebird');
 const uuidv4 = require('uuid/v4');
 const requestify = require('requestify');
-const bhttp = require('bhttp');
+
 const logger = require('../services/logger.service');
+const _ = require('lodash');
+
 
 const config = require('../config');
 
@@ -33,7 +35,7 @@ class WordpressConnector {
 
                     r = response.getBody();
 
-                    results = results.concat(Object.values(r));
+                    results = results.concat(_.values(r));
 
                     if (r["_links"] && r["_links"]["next"]) {
                         return Promise.try( () => {
