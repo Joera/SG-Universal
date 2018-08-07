@@ -39,7 +39,7 @@ class WordpressConnector {
             logger.info(url);
             return requestify.get(url,{redirect: true,timeout: 120000});
         }).then(function(response) {
-
+            logger.info('r');
             r = response.getBody();
             logger.info(r);
             if (r !== null) {
