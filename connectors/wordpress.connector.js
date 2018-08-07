@@ -23,7 +23,7 @@ class WordpressConnector {
         this.results = []
     }
 
-    getPage(url) {
+    getPage(url,correlationId) {
 
         const self = this;
 
@@ -46,7 +46,7 @@ class WordpressConnector {
                     if (r["_links"] && r["_links"]["next"]) {
 
                             loop(r["_links"]["next"][0]["href"]);
-                     
+
                     } else {
                         // Done looping
                         logger.info('finished stuff');
@@ -80,7 +80,7 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-            self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
+            self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0',correlationId)
 
             .then(results => {
                 // logger.info(results.length);
