@@ -65,11 +65,45 @@ class WordpressConnector {
     getPages(correlationId) {
 
         const self = this;
+
+        function loop(url) {
+
+            logger.info(url);
+            const self = this;
+
+            return Promise.try( () => {
+
+                return requestify.get(url, {redirect: true, timeout: 120000});
+
+            }).then(function (response) {
+
+                let r = response.getBody();
+
+                // self.results = self.results.concat(_.values(r));
+
+                if (r["_links"] && r["_links"]["next"]) {
+                    return Promise.try( () => {
+                        self.loop(r["_links"]["next"][0]["href"]);
+                    }).then( (recursiveResults) => {
+                        logger.info('adding stuff');
+                        logger.info(logger.info);
+                        return recursiveResults;
+                    });
+                } else {
+                    // Done looping
+                    logger.info('finished stuff');
+                    // logger.info(self.results.length);
+                    return [r];
+                }
+            });
+
+        }
+        
         Promise.try( () => {
 
-            return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
+            return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
 
-        }).then( (results) =>{
+        }).then( (results) => {
             // logger.info(results.length);
             logger.info('comes back');
         });
