@@ -68,10 +68,10 @@ class WordpressConnector {
         Promise.try( () => {
 
             return self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
-            .then( (results) =>{
-                // logger.info(results.length);
-                logger.info('comes back');
-            });
+
+        }).then( (results) =>{
+            // logger.info(results.length);
+            logger.info('comes back');
         });
 
     }
