@@ -72,7 +72,7 @@ class WordpressConnector {
 
             Promise.try( () => {
 
-                requestify.get(url, {redirect: true, timeout: 120000});
+                return requestify.get(url, {redirect: true, timeout: 120000});
 
             }).then(function (response) {
 
@@ -82,7 +82,7 @@ class WordpressConnector {
                 logger.info(self.results.length);
 
                 if (r["_links"] && r["_links"]["next"]) {
-                    return Promise.try( () => {
+                    Promise.try( () => {
                         loop(r["_links"]["next"][0]["href"]);
                     });
                 } else {
