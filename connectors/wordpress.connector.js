@@ -23,6 +23,7 @@ class WordpressConnector {
     loop(url) {
 
         logger.info(url);
+        const self = this;
         let r;
         return requestify.get(url,{redirect: true,timeout: 120000})
         .then(function(response) {
