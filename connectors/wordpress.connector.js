@@ -47,8 +47,6 @@ class WordpressConnector {
                     logger.error(error, correlationId);
                     reject(error);
                 });
-
-
         }
 
         return new Promise((resolve, reject) => {
@@ -70,10 +68,8 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
             self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0',correlationId)
-
             .then(results => {
-                logger.info('comes back');
-                logger.info(results.length);
+                resolve(results)
             }).catch(error => {
                 logger.error(error, correlationId);
                 reject(error);
