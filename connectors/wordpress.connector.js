@@ -20,6 +20,7 @@ class WordpressConnector {
 
         // this.concatenatedResponse = [];
         // this.page = 0;
+        this.results = []
     }
 
     loop(url) {
@@ -29,13 +30,13 @@ class WordpressConnector {
 
         return Promise.try( () => {
 
-            let r, results = [];
+            let r;
             return requestify.get(url, {redirect: true, timeout: 120000})
                 .then(function (response) {
 
                     r = response.getBody();
 
-                    results = results.concat(_.values(r));
+                    self.results = self.results.concat(_.values(r));
 
                     if (r["_links"] && r["_links"]["next"]) {
                         return Promise.try( () => {
@@ -45,13 +46,13 @@ class WordpressConnector {
                                 // logger.info(r);
                                 //
                                 // results = results.concat(r);
-                                logger.info(results.length);
+                                logger.info(self.results.length);
                             });
                     } else {
                         // Done looping
                         logger.info('finished stuff');
-                        logger.info(results);
-                        return results;
+                        logger.info(self.results.length);
+                        return self.results;
                     }
                 });
         });
