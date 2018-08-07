@@ -43,6 +43,7 @@ class WordpressConnector {
                     } else {
                         // Done looping
                         logger.info('finished stuff');
+                        logger.info(results);
                         resolve(results);
                     }
                 });
