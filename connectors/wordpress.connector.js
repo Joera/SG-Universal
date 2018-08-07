@@ -40,18 +40,18 @@ class WordpressConnector {
             return requestify.get(url,{redirect: true,timeout: 120000});
         }).then(function(response) {
             logger.info('r');
-            r = response.getBody();
-            logger.info(r);
-            if (r !== null) {
-                return Promise.try(function() {
-                    return loop(r["_link"]["next"]);
-                }).then(function(recursiveResults) {
-                    return [r].concat(recursiveResults);
-                });
-            } else {
-                // Done looping
-                return [r];
-            }
+            // r = response.getBody();
+            // logger.info(r);
+            // if (r !== null) {
+            //     return Promise.try(function() {
+            //         return loop(r["_link"]["next"]);
+            //     }).then(function(recursiveResults) {
+            //         return [r].concat(recursiveResults);
+            //     });
+            // } else {
+            //     // Done looping
+            //     return [r];
+            // }
         });
     }
 
