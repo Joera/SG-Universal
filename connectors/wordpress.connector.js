@@ -24,24 +24,28 @@ class WordpressConnector {
 
         logger.info(url);
         const self = this;
-        let r,results = [];
-        return requestify.get(url,{redirect: true,timeout: 120000})
-        .then(function(response) {
 
-            r = response.getBody();
+        return new Promise((resolve, reject) => {
 
-            if (r["_links"]["next"]) {
-                // return Promise.try(function() {
-                    return self.loop(r["_links"]["next"][0]["href"])
-                .then(function(recursiveResults) {
-                    logger.info('adding stuff');
-                    return results.concat(recursiveResults);
+            let r, results = [];
+            return requestify.get(url, {redirect: true, timeout: 120000})
+                .then(function (response) {
+
+                    r = response.getBody();
+
+                    if (r["_links"]["next"]) {
+                        // return Promise.try(function() {
+                        return self.loop(r["_links"]["next"][0]["href"])
+                            .then(function (recursiveResults) {
+                                logger.info('adding stuff');
+                                return results.concat(recursiveResults);
+                            });
+                    } else {
+                        // Done looping
+                        logger.info('finished stuff');
+                        resolve(results);
+                    }
                 });
-            } else {
-                // Done looping
-                logger.info('finished stuff');
-                return results;
-            }
         });
     }
 
