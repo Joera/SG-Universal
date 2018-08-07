@@ -79,15 +79,16 @@ class WordpressConnector {
 
                 let r = response.getBody();
 
-                // self.results = self.results.concat(_.values(r));
+                self.results = self.results.concat(_.values(r));
+                logger.info(self.results.length);
 
                 if (r["_links"] && r["_links"]["next"]) {
                     return Promise.try( () => {
                         loop(r["_links"]["next"][0]["href"]);
                     }).then( (recursiveResults) => {
                         logger.info('adding stuff');
-                        logger.info(recursiveResults);
-                        return [r].concat(recursiveResults);
+                        // logger.info(recursiveResults);
+                        // return [r].concat(recursiveResults);
                     });
                 } else {
                     // Done looping
