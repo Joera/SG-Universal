@@ -53,6 +53,7 @@ class WordpressConnector {
             //     // Done looping
             //     return [r];
             // }
+            return;
         });
     }
 
