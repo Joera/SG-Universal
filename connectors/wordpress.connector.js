@@ -27,7 +27,7 @@ class WordpressConnector {
 
         const self = this;
 
-        function loop(url,resolver, rejecter) {
+        function loop(url,resolve, reject) {
 
             logger.info(url);
 
@@ -43,12 +43,12 @@ class WordpressConnector {
 
                     if (r["_links"] && r["_links"]["next"]) {
 
-                            loop(r["_links"]["next"][0]["href"]);
+                            loop(r["_links"]["next"][0]["href"],resolve, reject);
 
                     } else {
                         // Done looping
                         logger.info('finished stuff');
-                        resolver();
+                        resolve();
                         // logger.info(self.results.length);
                         // return [r];
                     }
@@ -60,9 +60,9 @@ class WordpressConnector {
 
         }
 
-        return new Promise((resolver, rejecter) => {
+        return new Promise((resolve, reject) => {
 
-            return loop(url,resolver, rejecter)
+            return loop(url,resolve, reject)
 
         });
     }
