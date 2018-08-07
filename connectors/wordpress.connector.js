@@ -61,7 +61,7 @@ class WordpressConnector {
 
         return new Promise((resolver, rejecter) => {
 
-            loop(url,resolver, rejecter)
+            return loop(url,resolver, rejecter)
 
         });
     }
