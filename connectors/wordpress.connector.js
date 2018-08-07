@@ -28,7 +28,7 @@ class WordpressConnector {
         .then(function(response) {
 
             r = response.getBody();
-            logger.info(r["_links"]["next"]["href"]);
+            logger.info(r["_links"]["next"]);
             if (r !== null) {
                 return Promise.try(function() {
                     return loop(r["_links"]["next"]["href"]);
