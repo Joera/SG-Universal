@@ -40,7 +40,7 @@ class WordpressConnector {
             } else {
                 // Done looping
                 logger.info('finished stuff');
-                return [r];
+                return r;
             }
         });
     }
