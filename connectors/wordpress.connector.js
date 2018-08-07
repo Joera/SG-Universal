@@ -95,7 +95,7 @@ class WordpressConnector {
 
         }
 
-        return Promise.try( () => {
+        Promise.try( () => {
 
             return loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0');
 
