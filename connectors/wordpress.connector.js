@@ -38,6 +38,8 @@ class WordpressConnector {
                             self.loop(r["_links"]["next"][0]["href"]);
                         }).then( () => {
                                 logger.info('adding stuff');
+                                logger.info(r);
+
                                 results = results.concat(r);
                                 logger.info(results.length);
                             });
