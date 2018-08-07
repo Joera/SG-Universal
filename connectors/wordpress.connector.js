@@ -31,9 +31,9 @@ class WordpressConnector {
             r = response.getBody();
 
             if (r["_links"]["next"]) {
-                return Promise.try(function() {
-                    return self.loop(r["_links"]["next"][0]["href"]);
-                }).then(function(recursiveResults) {
+                // return Promise.try(function() {
+                    return self.loop(r["_links"]["next"][0]["href"])
+                .then(function(recursiveResults) {
                     logger.info('adding stuff');
                     return results.concat(recursiveResults);
                 });
@@ -57,8 +57,8 @@ class WordpressConnector {
         return new Promise((resolve, reject) => {
 
             self.loop('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0')
-            .then(function (results) {
-                logger.info('coomes back');
+            .then( (results) =>{
+                logger.info('comes back');
             });
         });
 
