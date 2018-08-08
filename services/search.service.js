@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const _ = require('lodash');
 const logger = require('./logger.service');
 const TemplateService = require('../services/template.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
