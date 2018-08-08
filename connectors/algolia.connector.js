@@ -51,16 +51,6 @@ class AlgoliaConnector {
 
 		let algoliaObject = Object.assign({}, data);
 
-		if (algoliaObject.sections) {
-			algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
-				return v.type === 'paragraph';
-			});
-		}
-
-		algoliaObject.exerpt = null;
-		algoliaObject.main_image = null;
-		algoliaObject.author = null;
-
         const self = this;
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {

@@ -83,6 +83,13 @@ class SearchService {
                 if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
                     algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
                 }
+
+                if (algoliaObject.sections) {
+                    algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
+                        return v.type === 'paragraph';
+                    });
+                }
+                
                 // trim documents
                 if(algoliaData.sections) {
 
@@ -92,6 +99,10 @@ class SearchService {
                         }
                     }
                 }
+
+                algoliaObject.exerpt = null;
+                algoliaObject.main_image = null;
+                algoliaObject.author = null;
 
                 save(algoliaData, correlationId)
                     .then((d) => { resolve(data) })
