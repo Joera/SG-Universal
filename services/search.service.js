@@ -101,9 +101,9 @@ class SearchService {
                     }
                 }
 
-                algoliaObject.exerpt = null;
-                algoliaObject.main_image = null;
-                algoliaObject.author = null;
+                algoliaData.exerpt = null;
+                algoliaData.main_image = null;
+                algoliaData.author = null;
 
                 save(algoliaData, correlationId)
                     .then((d) => { resolve(data) })
