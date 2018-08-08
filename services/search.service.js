@@ -84,12 +84,12 @@ class SearchService {
                     algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
                 }
 
-                if (algoliaObject.sections) {
-                    algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
+                if (algoliaData.sections) {
+                    algoliaData.sections = _.pickBy(algoliaData.sections, (v, k) => {
                         return v.type === 'paragraph';
                     });
                 }
-                
+
                 // trim documents
                 if(algoliaData.sections) {
 
