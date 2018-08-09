@@ -115,7 +115,7 @@ class CommentSearchService {
                             content: c.content,
                             date: c.date,
                             thread: thread.filter( t => { t.id != c.id }),
-                            reply_count: thread.length - 1,
+                            reply_count: thread.filter( t => { t.id != c.id }).length,
                             url: data.url + '#comment-id-' + c.id,
                             post_title: data.title.rendered || data.title
 
@@ -125,8 +125,8 @@ class CommentSearchService {
                         comment.type = 'comment';
                         comment.language = data.language;
                         comment.snippetData = renderConfig;
-                        comment.title = c.content.slice(0,120);
-                        comment.content = c.content;
+                        comment.title = c.content.slice(0,120).replace(/<(?:.|\n)*?>/gm, '');
+                        comment.content = c.content.replace(/<(?:.|\n)*?>/gm, '');
                         comment.author = c.author;
                         comment.comments = thread.filter( t => { t.id != c.id });
                         comments.push(comment);
