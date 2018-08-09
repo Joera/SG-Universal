@@ -100,6 +100,12 @@ class DocumentService {
                     document.language = data.language;
                     document.snippetData = renderConfig;
 
+
+                    // for equitable search results
+
+                    document.title = document.file_name;
+                    document.content = document.file_description;
+
                     resolve(document);
                 });
             }))
