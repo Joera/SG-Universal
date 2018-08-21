@@ -215,7 +215,7 @@ class PageController {
             //
             let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
-            let presistent_path = null;
+            let persistent_path = null;
 
             // get template definitions
             // find the template that belongs to the data
@@ -228,7 +228,7 @@ class PageController {
 
                 // set url
                 .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
-                .then((path) => { return new Promise((res, rej) => { presistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
+                .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // set search snippet
                 .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
@@ -238,7 +238,7 @@ class PageController {
                 .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
 
 
-                .then(() => { return self.datasetService.saveDataset(saveData,presistent_path) // save page to database
+                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) // save page to database
 
                 // update search
                 // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
