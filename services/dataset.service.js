@@ -18,7 +18,7 @@ class DatasetService {
      */
     getDataset(data,path) {
 
-        self = this;
+        let self = this;
 
         return new Promise((resolve, reject) => {
 
@@ -74,7 +74,7 @@ class DatasetService {
      */
     saveDataset(data,path) {
 
-        self = this;
+        let self = this;
 
         return new Promise((resolve, reject) => {
 
