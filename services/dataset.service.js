@@ -27,8 +27,10 @@ class DatasetService {
                 // loop all sections on the page
                 Object.keys(data.sections).forEach(key => {
                     let sectionKeys = Object.keys(data.sections[key]);
+                    logger.info('1');
                     // check if section contains a dataset property
                     if (sectionKeys.indexOf('dataset') !== -1) {
+                        logger.info('2');
                         if (!data.datasets) data.datasets = {}; // init datasets property if it is not set
                         data.datasets['datasetSection' + key] = data.sections[key].dataset; // add dataset from section to datasets variable
                     } else if (sectionKeys.indexOf('datavismap') !== -1) {
@@ -79,6 +81,7 @@ class DatasetService {
             self.getDataset(data, path)
                 .then( data => {
                     if(data.datasets) {
+                        logger.info('4');
                         self.writeJsonFile(data.datasets, path, 'dataset.json');
                     } else {
                         resolve(data);
