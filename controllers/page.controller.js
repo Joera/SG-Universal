@@ -227,7 +227,7 @@ class PageController {
                 .then((mappedData) => { return new Promise((res, rej) => { saveData = mappedData; res({}); }) }) // set saveData object for later use
 
                 // set url
-                .then(() => { logger.info(saveData); return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
+                .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
                 .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // set search snippet

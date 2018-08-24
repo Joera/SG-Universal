@@ -66,7 +66,7 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-            self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0',correlationId)
+                self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0',correlationId)
             .then(results => {
                 resolve(results)
             }).catch(error => {
