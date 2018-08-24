@@ -38,6 +38,8 @@ class DatasetService {
                 });
 
                 resolve(data,path);
+            } else {
+                resolve(data,path);
             }
         });
     }
