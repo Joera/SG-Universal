@@ -23,7 +23,7 @@ class TemplateDefinitionService {
     getDefinition(templateName, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
-            // logger.info('Get template definition: ' + templateName, correlationId);
+            logger.info('Get template definition: ' + templateName, correlationId);
             self._getDefinitions() // get all template definitions
                 .then((templateDefinitions) => { return templateDefinitionsValidator.validate(templateDefinitions); }) // validate template definitions
                 .then((templateDefinitions) => { // find requested definition
@@ -35,7 +35,6 @@ class TemplateDefinitionService {
 
                         resolve(definition);
                     } else { // no template definition found for data.type
-                        logger.info('no', correlationId);
                         const proxiedError = new Error();
                         proxiedError.correlationId = correlationId;
                         proxiedError.message = 'No templates definition found for page type: ' + templateName;
