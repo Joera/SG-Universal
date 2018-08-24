@@ -236,7 +236,7 @@ class PageController {
 
                 // save page
                 .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
-                // .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
+                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
                 // // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
                 // .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
                 // .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
