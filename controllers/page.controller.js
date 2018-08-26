@@ -242,7 +242,7 @@ class PageController {
                 .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
                 .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
                 // resolve promise
-                .then(() => { logger.info('7'); resolve(saveData) }) // resolve promise
+                .then(() => { resolve(saveData) }) // resolve promise
 
                 // catch errors
                 .catch(error => {
