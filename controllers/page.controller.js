@@ -60,7 +60,7 @@ class PageController {
         const options = {};
         logger.info('Received create call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId, options) // check if authorized to make call
-            .then(() => { logger.info(req.body); return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId, options) }) // get template definition
+            .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId, options) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId, options) }) // get path of the template that will be rendered
             .then((path) => { return new Promise((res, rej) => { url = config.baseUrl + '/' + path; res({}); }) }) // set url for response
             .then(() => { return self.renderQueue.clear(correlationId, options) }) // clear the render queue, delete all remaining queue items
