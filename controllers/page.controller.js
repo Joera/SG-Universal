@@ -180,7 +180,7 @@ class PageController {
             // render template
             .then(() => { return templateDefinition.preRender(null, req.body, correlationId) }) // execute the pre render hook
             .then((templateData) => { return self.templateService.render(templateDefinition.name, templateDefinition.template, templateData, correlationId) }) // render template
-            .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
+            // .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
 
             // send response
             .then((html) => { // send response
