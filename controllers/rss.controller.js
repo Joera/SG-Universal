@@ -19,7 +19,6 @@ class RSSController {
     get (eq, res, next) {
 
         let rssService = new RSSService();
-        logger.info('rss get');
         rssService.get().then( (feed) => {
             logger.info('rss received');
             logger.info(feed);

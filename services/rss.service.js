@@ -57,7 +57,7 @@ class RSSService {
                                 name: post.author.name,
                                 email: post.author.email
                             }],
-                            date: post.date,
+                            date: new Date(post.date),
                             image: 'https://ucarecdn.com/' + post.main_image.external_id + '/-/resize/760x/' + post.main_image.filename
                         });
 
