@@ -1,5 +1,7 @@
 'use strict';
 
+const logger = require('../services/logger.service');
+
 let RSSService = require('../services/rss.service'),
     xml = require('xml');
 
