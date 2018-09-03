@@ -17,7 +17,10 @@ class RSSController {
     get (eq, res, next) {
 
         let rssService = new RSSService();
+        logger.info('rss get');
         rssService.get().then( (feed) => {
+            logger.info('rss received');
+            logger.info(feed);
             res.type('application/xml');
             res.status(200); // set http status code for response
             res.send(feed.rss2()); // send response body
