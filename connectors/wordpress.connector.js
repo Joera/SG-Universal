@@ -2,12 +2,10 @@
 const Promise = require('bluebird');
 const uuidv4 = require('uuid/v4');
 const requestify = require('requestify');
-
 const logger = require('../services/logger.service');
+const config = require('../config');
 const _ = require('lodash');
 
-
-const config = require('../config');
 
 
 /**
@@ -66,7 +64,7 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-                self.getPage('http://zuidas.publikaan.nl/wp-json/wp/v2/all?page=0',correlationId)
+                self.getPage(config.baseUrl + '/' +  config.wordpressApiPath + '?page=0',correlationId)
             .then(results => {
                 resolve(results)
             }).catch(error => {
