@@ -29,7 +29,13 @@ class SocialPersistence {
         return new Promise((resolve, reject) => {
             db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.find(options.query).sort({'date' : -1}).limit(options.limit).toArray(); }) // execute find query
-                .then((result) => { resolve(result); }) // return results
+                .then((result) => {
+                    result.forEach( i => {
+                        i.id = i._id;
+                    });
+                    resolve(result);
+
+                }) // return results
         })
     }
 
