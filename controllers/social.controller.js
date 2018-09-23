@@ -23,9 +23,9 @@ class SocialController {
     constructor () {
         //
         const socialPersistence = new SocialPersistence();
-        this.getSocial = socialPersistence.get.bind(socialPersistence);
-        this.updateSocial = socialPersistence.update.bind(socialPersistence);
-        this.createSocial = socialPersistence.create.bind(socialPersistence);
+        this.getSocial = socialPersistence.find.bind(socialPersistence);
+        this.updateSocial = socialPersistence.save.bind(socialPersistence);
+        this.createSocial = socialPersistence.save.bind(socialPersistence);
 
         // init home controller
         // const homeController = new HomeController();
