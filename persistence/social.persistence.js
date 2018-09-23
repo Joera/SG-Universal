@@ -29,7 +29,7 @@ class SocialPersistence {
         };
         return new Promise((resolve, reject) => {
             db.getSocialCollection() // get page collection
-                .then((collection) => { return collection.find(options.query).sort({'date' : -1}).limit(options.limit).toArray(); }) // execute find query
+                .then((collection) => { return collection.find(options.query).sort({'created_at' : -1}).limit(options.limit).toArray(); }) // execute find query
                 .then((result) => {
                     result.forEach( i => {
                         i.id = i._id;
@@ -69,7 +69,6 @@ class SocialPersistence {
             // data.objectID = String(data.objectID); // make sure objectID is a string
 
             data.date = moment(data.created_at).format('YYYY-MM-DD HH:mm:ss');
-            logger.info(data);
 
             db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.save(data); }) // execute save
