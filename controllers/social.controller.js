@@ -61,11 +61,7 @@ class SocialController {
 
            // .then(setFilters) // set filters for getting data from database
            // .then(getItems) // get social procedure
-            .then(
-                c => {
-                    self._sendResponse(res);
-                }
-            )
+            .then(self._sendResponse(res))
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
