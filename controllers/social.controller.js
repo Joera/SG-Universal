@@ -11,6 +11,7 @@
     const logger = require('../services/logger.service');
     const SocialPersistence = require('../persistence/social.persistence');
     const AuthService = require('../services/auth.service');
+    const RenderProcessService = require('../services/render.process.service');
 
 
 
@@ -26,13 +27,9 @@ class SocialController {
         this.getSocial = socialPersistence.find.bind(socialPersistence);
         this.updateSocial = socialPersistence.save.bind(socialPersistence);
         this.createSocial = socialPersistence.save.bind(socialPersistence);
-
-        // init home controller
-        // const homeController = new HomeController();
-        // this.updateHome = homeController.update.bind(homeController);
-
-        // init authorization service
+        
         this.authService = new AuthService();
+        this.renderProcessService = new RenderProcessService();
     }
 
 
