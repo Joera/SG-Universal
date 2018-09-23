@@ -64,11 +64,10 @@ class SocialPersistence {
         const self = this;
         return new Promise((resolve, reject) => {
 
-
-
             data._id = String(data.id); // make sure id is a string
             data.objectID = String(data.objectID); // make sure objectID is a string
 
+            logger.info('data');
             logger.info(data);
 
             db.getSocialCollection() // get page collection
