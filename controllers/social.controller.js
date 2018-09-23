@@ -77,6 +77,7 @@ class SocialController {
      */
     handleCreateCall(req, res, next) {
         const self = this;
+        const correlationId = uuidv4();
         let create = self.create.bind(self); // bind social controller context to this of the create function
 
         self.authService.isAuthorized(req.headers.authorization, correlationId)
@@ -98,6 +99,7 @@ class SocialController {
      */
     handleUpdateCall(req, res, next) {
         const self = this;
+        const correlationId = uuidv4();
         let update = self.update.bind(self); // bind social controller context to this of the update function
 
         self.authService.isAuthorized(req.headers.authorization, correlationId)
