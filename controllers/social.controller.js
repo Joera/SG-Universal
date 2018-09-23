@@ -122,6 +122,8 @@ class SocialController {
         // req.params
         let self = this;
 
+        logger.info(query);
+
         return new Promise((resolve, reject) => {
 
             // set filters
@@ -239,13 +241,8 @@ class SocialController {
      * @private
      */
     _sendResponse(res) {
-
-        logger.info('2');
-
         let self = this;
         return new Promise((resolve, reject) => {
-
-            logger.info('3');
 
             res.json('hoi');
            // config.res.json(config.response);
