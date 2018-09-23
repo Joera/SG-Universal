@@ -49,6 +49,8 @@ class SocialController {
      */
     handleGetCall(req, res, next) {
         const self = this;
+        const correlationId = uuidv4();
+
         let getItems = self.getItems.bind(self), // bind social controller context to this of the update function
             setFilters = self._setFilters.bind(self);
 
