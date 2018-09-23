@@ -28,7 +28,7 @@ class SocialPersistence {
         };
         return new Promise((resolve, reject) => {
             db.getSocialCollection() // get page collection
-                .then((collection) => { return collection.find(options.query).sort('-date').limit(options.limit).toArray(); }) // execute find query
+                .then((collection) => { return collection.find(options.query).sort({'date' : -1}).limit(options.limit).toArray(); }) // execute find query
                 .then((result) => { resolve(result); }) // return results
         })
     }
