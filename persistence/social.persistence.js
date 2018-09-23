@@ -63,6 +63,9 @@ class SocialPersistence {
     save(data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
+
+            logger.info(data);
+
             data._id = String(data._id); // make sure id is a string
             data.objectID = String(data.objectID); // make sure objectID is a string
 

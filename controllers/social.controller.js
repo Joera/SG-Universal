@@ -79,9 +79,9 @@ class SocialController {
         const self = this;
         let create = self.create.bind(self); // bind social controller context to this of the create function
 
-        self.isAuthorized(req, res) // check if authorized to make call
+        self.authService.isAuthorized(req.headers.authorization, correlationId)
             .then(self._sendResponse)
-            .then(create) // create social procedure
+            .then(create(req.body)) // create social procedure
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
@@ -100,9 +100,9 @@ class SocialController {
         const self = this;
         let update = self.update.bind(self); // bind social controller context to this of the update function
 
-        self.isAuthorized(req, res) // check if authorized to make call
+        self.authService.isAuthorized(req.headers.authorization, correlationId)
             .then(self._sendResponse)
-            .then(update) // update social procedure
+            .then(update(req.body)) // update social procedure
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
@@ -124,8 +124,6 @@ class SocialController {
     _setFilters(query) {
         // req.params
         let self = this;
-
-        logger.info(query);
 
         return new Promise((resolve, reject) => {
 
@@ -192,13 +190,13 @@ class SocialController {
      * @param config                {req: express request object, res: express response object}
      * @returns {*|Constructor|promise|e}
      */
-    create(config) {
+    create(data) {
         let self = this;
 
         return new Promise((resolve, reject) => {
 
-            self.createSocial(config) // create social item in mongodb
-                .then(self.updateHome) // update homepage
+            self.createSocial(data) // create social item in mongodb
+              //  .then(self.updateHome) // update homepage
                 .then(c => {
                     resolve(c)
                 }) // resolve promise
@@ -245,7 +243,6 @@ class SocialController {
         return new Promise((resolve, reject) => {
 
             res.json(items);
-           // config.res.json(config.response);
             resolve();
         });
     }
