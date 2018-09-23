@@ -9,7 +9,7 @@
     const Promise = require('bluebird');
     const uuidv4 = require('uuid/v4');
     const logger = require('../services/logger.service');
-    const SocialPersistence = require('../persistences/social.persistence');
+    const SocialPersistence = require('../persistence/social.persistence');
     const AuthService = require('../services/auth.service');
 
 
