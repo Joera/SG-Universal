@@ -4,6 +4,7 @@ const Promise = require('bluebird');
 const logger = require('../services/logger.service');
 const db = require('../connectors/mongodb.connector');
 const config = require('../config');
+const moment = require('moment');
 
 
 /**
@@ -67,7 +68,7 @@ class SocialPersistence {
             // data._id = String(data.id); // make sure id is a string
             // data.objectID = String(data.objectID); // make sure objectID is a string
 
-            data.date = Date.now(),
+            data.date = moment(tweet.created_at).format('YYYY-MM-DD HH:mm');
 
             db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.save(data); }) // execute save
