@@ -59,7 +59,7 @@ class SocialController {
         self.isAuthorized(req, res) // check if authorized to make call
            // .then(setFilters) // set filters for getting data from database
            // .then(getItems) // get social procedure
-            .then(logger.info('2'); self._sendResponse)
+            .then(self._sendResponse)
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
@@ -240,8 +240,12 @@ class SocialController {
      */
     _sendResponse(config) {
 
+        logger.info('2');
+
         let self = this;
         return new Promise((resolve, reject) => {
+
+            logger.info('3');
 
             config.res.json('hoi');
            // config.res.json(config.response);
