@@ -56,7 +56,7 @@ class SocialController {
 
         self.authService.isAuthorized(req.headers.authorization, correlationId)
             .then(setFilters(req.query))
-            .then((config) => { return getItems(config)}) 
+            .then((config) => { return getItems(config)})
             .then(self._sendResponse(res))
             .catch(error => {
                 logger.error(error);
@@ -169,6 +169,7 @@ class SocialController {
 
         return new Promise((resolve, reject) => {
 
+            logger.info(config);
 
             self.getSocial(config) // get social items in mongodb
                 .then(c => {
