@@ -146,9 +146,9 @@ class SocialController {
                 config.limit = parseInt(query.limit);
             }
             // set page and skip
-            if (req.query.page) {
-                config.skip = (parseInt(req.query.page) * parseInt(req.query.limit)) - parseInt(req.query.limit); // set number of records to skip to get the records for the requested page
-                config.page = parseInt(req.query.page); // set page number
+            if (query.page) {
+                config.skip = (parseInt(query.page) * parseInt(query.limit)) - parseInt(query.limit); // set number of records to skip to get the records for the requested page
+                config.page = parseInt(query.page); // set page number
             }
 
             // resolve promise
