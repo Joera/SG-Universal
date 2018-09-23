@@ -53,6 +53,9 @@ class SocialController {
         let getItems = self.getItems.bind(self), // bind social controller context to this of the update function
             setFilters = self._setFilters.bind(self);
 
+
+        logger.info('1');
+
         self.isAuthorized(req, res) // check if authorized to make call
            // .then(setFilters) // set filters for getting data from database
            // .then(getItems) // get social procedure
