@@ -54,8 +54,8 @@ class SocialController {
             setFilters = self._setFilters.bind(self);
 
         self.isAuthorized(req, res) // check if authorized to make call
-            .then(setFilters) // set filters for getting data from database
-            .then(getItems) // get social procedure
+           // .then(setFilters) // set filters for getting data from database
+           // .then(getItems) // get social procedure
             .then(self._sendResponse)
             .catch(error => {
                 logger.error(error);
@@ -240,7 +240,8 @@ class SocialController {
         let self = this;
         return new Promise((resolve, reject) => {
 
-            config.res.json(config.response);
+            config.res.json('hoi');
+           // config.res.json(config.response);
             resolve(config);
         });
     }
