@@ -61,7 +61,11 @@ class SocialController {
 
            // .then(setFilters) // set filters for getting data from database
            // .then(getItems) // get social procedure
-            .then(self._sendResponse)
+            .then(
+                c => {
+                    self._sendResponse(res);
+                }
+            )
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
@@ -240,7 +244,7 @@ class SocialController {
      * @returns {*|promise}
      * @private
      */
-    _sendResponse(config) {
+    _sendResponse(res) {
 
         logger.info('2');
 
@@ -249,7 +253,7 @@ class SocialController {
 
             logger.info('3');
 
-            config.res.json('hoi');
+            res.json('hoi');
            // config.res.json(config.response);
             resolve(config);
         });
