@@ -32,8 +32,7 @@ class SocialController {
         // this.updateHome = homeController.update.bind(homeController);
 
         // init authorization service
-        const authService = new AuthService();
-        this.isAuthorized = authService.isAuthorized.bind(authService);
+        this.authService = new AuthService();
     }
 
 
