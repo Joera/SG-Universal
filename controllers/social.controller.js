@@ -103,7 +103,7 @@ class SocialController {
         let update = self.update.bind(self); // bind social controller context to this of the update function
 
         self.authService.isAuthorized(req.headers.authorization, correlationId)
-            .then(self._sendResponse)
+            .then(self._sendResponse(res))
             .then(update(req.body)) // update social procedure
             .catch(error => {
                 logger.error(error);

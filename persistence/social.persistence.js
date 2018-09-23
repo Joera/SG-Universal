@@ -66,7 +66,7 @@ class SocialPersistence {
 
             logger.info(data);
 
-            data._id = String(data._id); // make sure id is a string
+            data._id = String(data.id); // make sure id is a string
             data.objectID = String(data.objectID); // make sure objectID is a string
 
             db.getSocialCollection() // get page collection
