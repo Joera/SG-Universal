@@ -54,9 +54,11 @@ class SocialController {
         let getItems = self.getItems.bind(self), // bind social controller context to this of the update function
             setFilters = self._setFilters.bind(self);
 
+        let query;
+
         self.authService.isAuthorized(req.headers.authorization, correlationId)
             .then(setFilters(req.query))
-            .then((config) => { return new Promise((resolve, reject) => { let query = config; resolve({}); }) })
+            .then((config) => { return new Promise((resolve, reject) => { query = config; resolve({}); }) })
             .then(() => { return getItems(query)})
             .then(self._sendResponse(res))
             .catch(error => {
@@ -167,14 +169,14 @@ class SocialController {
      * @param config                {req: express request object, res: express response object}
      * @returns {*|Constructor|promise|e}
      */
-    getItems(config) {
+    getItems(query) {
         let self = this;
 
         return new Promise((resolve, reject) => {
 
-            logger.info(config);
+            logger.info(query);
 
-            self.getSocial(config) // get social items in mongodb
+            self.getSocial(query) // get social items in mongodb
                 .then(c => {
                     resolve(c)
                 }) // resolve promise
