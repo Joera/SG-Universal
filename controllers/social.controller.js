@@ -154,6 +154,7 @@ class SocialController {
             }
 
             // resolve promise
+            logger.info(config);
             resolve(config);
 
         })
