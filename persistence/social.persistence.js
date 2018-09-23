@@ -68,7 +68,7 @@ class SocialPersistence {
             // data._id = String(data.id); // make sure id is a string
             // data.objectID = String(data.objectID); // make sure objectID is a string
 
-            data.date = moment(tweet.created_at).format('YYYY-MM-DD HH:mm');
+            data.date = moment(data.created_at).format('YYYY-MM-DD HH:mm');
 
             db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.save(data); }) // execute save
