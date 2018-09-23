@@ -56,7 +56,8 @@ class SocialController {
 
         logger.info('1');
 
-        self.isAuthorized(req, res) // check if authorized to make call
+        self.authService.isAuthorized(req.headers.authorization, correlationId, options)
+
            // .then(setFilters) // set filters for getting data from database
            // .then(getItems) // get social procedure
             .then(self._sendResponse)
