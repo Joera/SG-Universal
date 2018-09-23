@@ -249,7 +249,7 @@ class SocialController {
 
             res.json('hoi');
            // config.res.json(config.response);
-            resolve(config);
+            resolve();
         });
     }
 
