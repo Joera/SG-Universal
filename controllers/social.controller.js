@@ -59,7 +59,7 @@ class SocialController {
         self.isAuthorized(req, res) // check if authorized to make call
            // .then(setFilters) // set filters for getting data from database
            // .then(getItems) // get social procedure
-            .then(self._sendResponse)
+            .then(logger.info('2'); self._sendResponse)
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
