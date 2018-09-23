@@ -27,7 +27,7 @@ class SocialController {
         this.getSocial = socialPersistence.find.bind(socialPersistence);
         this.updateSocial = socialPersistence.save.bind(socialPersistence);
         this.createSocial = socialPersistence.save.bind(socialPersistence);
-        
+
         this.authService = new AuthService();
         this.renderProcessService = new RenderProcessService();
     }
@@ -236,8 +236,7 @@ class SocialController {
         return new Promise((resolve, reject) => {
 
             let data = {
-                'type':'page',
-                'slug':'homepage'
+                'type':'post'
             };
 
             self.renderProcessService.enqueueDependencies(data,correlationId) // add page dependencies to render queue
@@ -268,14 +267,6 @@ class SocialController {
             resolve();
         });
     }
-
-
-
-
 }
-
-
-
-
 
 module.exports = SocialController;
