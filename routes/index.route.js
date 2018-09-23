@@ -10,7 +10,7 @@ const router = express.Router();
 
 // mount routes
 router.use('/content', contentRoutes);
-router.use('/social', socialRoutes);
+router.use('/socials', socialRoutes);
 router.use('/rss', rssRoutes);
 router.use('/test', testRoutes);
 
