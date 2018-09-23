@@ -54,13 +54,13 @@ class SocialController {
         let getItems = self.getItems.bind(self), // bind social controller context to this of the update function
             setFilters = self._setFilters.bind(self);
 
-        let query;
+        let options;
 
         self.authService.isAuthorized(req.headers.authorization, correlationId)
             .then(() => { return setFilters(req.query) })
-            .then((config) => { return new Promise((resolve, reject) => { query = config; logger.info(query); resolve({}); }) })
-            .then(() => { return getItems(query)})
-            .then(self._sendResponse(res))
+            .then((config) => { return new Promise((resolve, reject) => { options = config; resolve({}); }) })
+            .then(() => { return getItems(options)})
+            .then((items) => { return self._sendResponse(res,items)})
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
@@ -169,21 +169,18 @@ class SocialController {
      * @param config                {req: express request object, res: express response object}
      * @returns {*|Constructor|promise|e}
      */
-    getItems(query) {
+    getItems(options) {
         let self = this;
 
         return new Promise((resolve, reject) => {
 
-            logger.info(query);
-
-            self.getSocial(query) // get social items in mongodb
+            self.getSocial(options) // get social items in mongodb
                 .then(c => {
                     resolve(c)
                 }) // resolve promise
                 .catch(error => {
                     reject(error);
                 });
-
         })
     }
 
@@ -243,11 +240,11 @@ class SocialController {
      * @returns {*|promise}
      * @private
      */
-    _sendResponse(res) {
+    _sendResponse(res,items) {
         let self = this;
         return new Promise((resolve, reject) => {
 
-            res.json('hoi');
+            res.json(items);
            // config.res.json(config.response);
             resolve();
         });

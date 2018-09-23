@@ -21,16 +21,14 @@ class SocialPersistence {
      * @param options
      * @param correlationId
      */
-    find(options, correlationId) {
+    find(options) {
         const self = this;
         if (typeof options.limit === "undefined") {
             options.limit = 0;
         };
         return new Promise((resolve, reject) => {
             db.getSocialCollection() // get page collection
-                .then((collection) => { return collection.find(options.query).sort(options.sort).limit(options.limit).toArray(); }) // execute find query
-
-                // .then((collection) => { return collection.find(options.query).limit(options.sort).sort(options.sort).toArray(); }) // execute find query
+                .then((collection) => { logger.info(options); return collection.find(options.query).sort(options.sort).limit(options.limit).toArray(); }) // execute find query
                 .then((result) => { resolve(result); }) // return results
         })
     }
