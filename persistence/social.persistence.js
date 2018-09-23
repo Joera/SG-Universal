@@ -67,7 +67,7 @@ class SocialPersistence {
             // data._id = String(data.id); // make sure id is a string
             // data.objectID = String(data.objectID); // make sure objectID is a string
 
-            data.date : Date.now(),
+            data.date = Date.now(),
 
             db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.save(data); }) // execute save
