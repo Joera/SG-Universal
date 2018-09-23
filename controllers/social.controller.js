@@ -54,13 +54,9 @@ class SocialController {
         let getItems = self.getItems.bind(self), // bind social controller context to this of the update function
             setFilters = self._setFilters.bind(self);
 
-
-        logger.info('1');
-
         self.authService.isAuthorized(req.headers.authorization, correlationId)
-
-           // .then(setFilters) // set filters for getting data from database
-           // .then(getItems) // get social procedure
+            .then(setFilters(req.query))
+            .then((config) => { return getItems(config)}) 
             .then(self._sendResponse(res))
             .catch(error => {
                 logger.error(error);
@@ -122,36 +118,37 @@ class SocialController {
      * @param config                {req: express request object, res: express response object}
      * @returns {*|Constructor|promise|e}
      */
-    _setFilters(config) {
+    _setFilters(query) {
         // req.params
         let self = this;
 
         return new Promise((resolve, reject) => {
 
             // set filters
+            config = {}
             config.filter = {};
-            if (config.req.query.source) {
-                config.filter.source = config.req.query.source;
+            if (query.source) {
+                config.filter.source = query.source;
             } // filter source property
-            if (config.req.query.published && config.req.query.published === 'true') {
+            if (query.published && query.published === 'true') {
                 config.filter.publishDate = {$ne: null};
             } // filter on only published items
-            if (config.req.query.published && config.req.query.published === 'false') {
+            if (query.published && query.published === 'false') {
                 config.filter.publishDate = null;
             } //  filter on not published items
             // if(config.req.query.q) { config.filter.$text = { $search : config.req.query.q }; } //
-            if (config.req.query.q) {
-                config.filter.text = {$regex: config.req.query.q, $options: "i"};
+            if (query.q) {
+                config.filter.text = {$regex: query.q, $options: "i"};
             } // search text
 
             // set limit
-            if (config.req.query.limit) {
-                config.limit = parseInt(config.req.query.limit);
+            if (query.limit) {
+                config.limit = parseInt(query.limit);
             }
             // set page and skip
-            if (config.req.query.page) {
-                config.skip = (parseInt(config.req.query.page) * parseInt(config.req.query.limit)) - parseInt(config.req.query.limit); // set number of records to skip to get the records for the requested page
-                config.page = parseInt(config.req.query.page); // set page number
+            if (req.query.page) {
+                config.skip = (parseInt(req.query.page) * parseInt(req.query.limit)) - parseInt(req.query.limit); // set number of records to skip to get the records for the requested page
+                config.page = parseInt(req.query.page); // set page number
             }
 
             // resolve promise
