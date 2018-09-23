@@ -69,6 +69,7 @@ class SocialPersistence {
             // data.objectID = String(data.objectID); // make sure objectID is a string
 
             data.date = moment(data.created_at).format('YYYY-MM-DD HH:mm');
+            logger.info(data);
 
             db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.save(data); }) // execute save
