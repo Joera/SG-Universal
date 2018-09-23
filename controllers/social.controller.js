@@ -125,7 +125,7 @@ class SocialController {
         return new Promise((resolve, reject) => {
 
             // set filters
-            config = {}
+            let config = {}
             config.filter = {};
             if (query.source) {
                 config.filter.source = query.source;
