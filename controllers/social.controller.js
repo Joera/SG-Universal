@@ -82,7 +82,7 @@ class SocialController {
 
         self.authService.isAuthorized(req.headers.authorization, correlationId)
             .then( () => { return self._sendResponse(res) })
-            .then(create(req.body)) // create social procedure
+            .then(create(req.body,correlationId)) // create social procedure
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
@@ -104,7 +104,7 @@ class SocialController {
 
         self.authService.isAuthorized(req.headers.authorization, correlationId)
             .then( () => { return self._sendResponse(res) })
-            .then(update(req.body)) // update social procedure
+            .then(update(req.body,correlationId)) // update social procedure
             .catch(error => {
                 logger.error(error);
                 res.status(error.status).send(error.message);
@@ -192,13 +192,13 @@ class SocialController {
      * @param config                {req: express request object, res: express response object}
      * @returns {*|Constructor|promise|e}
      */
-    create(data) {
+    create(data,correlationId) {
         let self = this;
 
         return new Promise((resolve, reject) => {
 
             self.createSocial(data) // create social item in mongodb
-              //  .then(self.updateHome) // update homepage
+                .then(self.updateHome(correlationId)) // update homepage
                 .then(c => {
                     resolve(c)
                 }) // resolve promise
@@ -216,19 +216,42 @@ class SocialController {
      * @param config                {req: express request object, res: express response object}
      * @returns {*|Constructor|promise|e}
      */
-    update(config) {
+    update(config,correlationId) {
         let self = this;
 
         return new Promise((resolve, reject) => {
 
             self.updateSocial(config) // update social item in mongodb
-            //  .then(self.updateHome) // update homepage
+                .then(self.updateHome(correlationId)) // update homepage
                 .then(c => {
                     resolve(c)
                 })
                 .catch(error => {
                     reject(error);
                 });
+        })
+    }
+
+    updateHome(correlationId) {
+
+        let self = this;
+
+        return new Promise((resolve, reject) => {
+
+            let data = {
+                'type':'page',
+                'slug':'homepage'
+            };
+
+            self.renderProcessService.enqueueDependencies(data,correlationId) // add page dependencies to render queue
+                .then(() => { return self.renderProcessService.render(correlationId)})
+                .then(c => {
+                    resolve(c)
+                })
+                .catch(error => {
+                    reject(error);
+                });
+
         })
     }
 

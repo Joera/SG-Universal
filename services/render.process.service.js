@@ -254,7 +254,7 @@ class RenderProcessService {
                         })
                 })})
 
-                // enqueue depenencies
+                // enqueue dependencies
                 .then((dependencies) => { return new Promise((res, rej) => {
                     // save promise group enqueueing templates
                     const promiseGroup = dependencies.map((d) => {
