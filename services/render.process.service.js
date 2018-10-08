@@ -234,12 +234,12 @@ class RenderProcessService {
             // get page dependencies
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId, options) // get template definitions
                 .then((definition) => { return definition.getDependencies(data, correlationId, options) }) // get dependencies
-                .then((dependencies) => { logger.info()dependencies; return dependencyValidator.validate(dependencies) }) // validate dependency array
+                .then((dependencies) => { logger.info(dependencies); return dependencyValidator.validate(dependencies) }) // validate dependency array
 
                 // set data objects for enqueueing templates
                 // make sure data object is in the right format so enqueue function can process request
                 .then((dependencies) => { return new Promise((res, rej) => {
-                    logger.info()dependencies;
+                    logger.info(dependencies);
                     // save promise group for setting data objects
                     const promiseGroup = dependencies.map((d) => {
                         return self._setDependencyDataObject(d.template, d.data, correlationId, options);
