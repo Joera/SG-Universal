@@ -74,7 +74,6 @@ class SearchService {
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
-                logger.info(data);
                 // save page to algolia
                 save(data, correlationId)
                     .then((d) => { logger.info('succes'); resolve(d) })

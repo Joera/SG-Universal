@@ -36,7 +36,6 @@ class TemplateDefinitionService {
 
                         resolve(definition);
                     } else { // no template definition found for data.type
-                        logger.info('no', correlationId);
                         const proxiedError = new Error();
                         proxiedError.correlationId = correlationId;
                         proxiedError.message = 'No templates definition found for page type: ' + templateName;

@@ -135,9 +135,6 @@ class CommentSearchService {
         if (data.threads && data.threads.length > 0) {
 
                 return Promise.all(data.threads.map(function (thread) {
-                    // save of update?
-                    logger.info('test');
-                    logger.info(thread);
 
                     return self.searchService.updateSearch(thread, false, correlationId);
 
