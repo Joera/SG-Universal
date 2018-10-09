@@ -85,16 +85,16 @@ class DocumentService {
                     logger.info(document);
 
                     var renderConfig = {
-                        title: document.file_name,
-                        content: document.file_description,
+                        title: document['file-name'],
+                        content: document['file-description'],
                         date: document.date,
-                        url: document.file_cdn_url,
+                        url: document['file-cdn-url'],
                         type: 'document',
-                        tags: document.file_tags,
+                        tags: document.['file-tags'],
                         post: document.post
                     };
                     document.type = 'document';
-                    document.objectID = document.file_id || 99999999; // keep algolia id consistent
+                    document.objectID = document['file-id'] || 99999999; // keep algolia id consistent
                     document.snippetData = renderConfig;
                     resolve(document);
                 });
