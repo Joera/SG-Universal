@@ -91,6 +91,7 @@ class DocumentService {
                         post: document.post
                     };
                     document.type = 'document';
+                    document.objectID = document.file_id || 99999999; // keep algolia id consistent
                     document.snippetData = renderConfig;
                     resolve(document);
                 });
