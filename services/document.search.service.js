@@ -90,7 +90,7 @@ class DocumentService {
                         date: document.date,
                         url: document['file-cdn-url'],
                         type: 'document',
-                        tags: document.['file-tags'],
+                        tags: document['file-tags'],
                         post: document.post
                     };
                     document.type = 'document';
