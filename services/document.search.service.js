@@ -81,6 +81,9 @@ class DocumentService {
 
                 return new Promise(function (resolve, reject) {
 
+                    logger.info('documentttt');
+                    logger.info(document);
+
                     var renderConfig = {
                         title: document.file_name,
                         content: document.file_description,
