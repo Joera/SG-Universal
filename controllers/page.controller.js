@@ -9,6 +9,7 @@ const RenderProcessService = require('../services/render.process.service');
 const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
 const DocumentService = require('../services/document.search.service');
+const DatasetService = require('../services/dataset.service');
 const CommentSearchService = require('../services/comment.search.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
@@ -29,6 +30,7 @@ class PageController {
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
         this.documentService = new DocumentService();
+        this.datasetService = new DatasetService();
         this.commentSearchService = new CommentSearchService();
         this.renderProcessService = new RenderProcessService();
         this.renderQueue = new RenderQueue();
@@ -216,6 +218,8 @@ class PageController {
             //
             let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
+            let persistent_path = null;
+
 
             // get template definitions
             // find the template that belongs to the data
@@ -228,14 +232,15 @@ class PageController {
 
                 // set url
                 .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
-                .then((path) => { return new Promise((res, rej) => { saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
+                .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // set search snippet
                 .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
                 .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
-                .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
+                .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
+                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
 
                 // update search
                 // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
