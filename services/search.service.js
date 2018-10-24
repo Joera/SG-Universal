@@ -33,14 +33,8 @@ class SearchService {
 
             if(templateDefinition.searchSnippetTemplate && templateDefinition.searchSnippetTemplate !== '') { // check if search snippet template is defined
 
-                logger.info('dit' + templateDefinition.searchSnippetTemplate);
-                // get search snippet template definition
-                let searchSnippetTemplateDefinition = null; // save empty template definition object for later re-use
-                self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId)
-                    .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
-
-                    // get search snippet
-                    .then(() => { return templateDefinition.getSearchSnippetData(data, correlationId) }) // get search snippet data
+            //    let searchSnippetTemplateDefinition = null; // save empty template definition object for later re-use
+                templateDefinition.getSearchSnippetData(data, correlationId) // get search snippet data
                     .then((templateData) => {
 
                         return self.templateService.render('search-snippet',  templateDefinition.searchSnippetTemplate + '.handlebars', templateData, correlationId) }) // render search snippet
