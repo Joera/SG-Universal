@@ -33,7 +33,6 @@ class SearchService {
 
             if(templateDefinition.searchSnippetTemplate && templateDefinition.searchSnippetTemplate !== '') { // check if search snippet template is defined
 
-            //    let searchSnippetTemplateDefinition = null; // save empty template definition object for later re-use
                 templateDefinition.getSearchSnippetData(data, correlationId) // get search snippet data
                     .then((templateData) => {
                         return self.templateService.render('search-snippet',  templateDefinition.searchSnippetTemplate + '.handlebars', templateData, correlationId) }) // render search snippet
@@ -63,6 +62,9 @@ class SearchService {
     updateSearch(data, isUpdate, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
+
+            logger.info(data);
+
             if(data.searchSnippet && data.searchSnippet !== '') {
                 // set algolia save function
                 let save;
