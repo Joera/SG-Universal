@@ -63,8 +63,6 @@ class SearchService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            logger.info(data);
-
             if(data.searchSnippet && data.searchSnippet !== '') {
                 // set algolia save function
                 let save;
@@ -104,7 +102,7 @@ class SearchService {
                 algoliaData.author = null;
 
                 save(algoliaData, correlationId)
-                    .then((d) => { resolve(data) })
+                    .then((d) => { logger.info('seeft'); resolve(data) })
                     .catch((error) => { reject(error) });
                 // save page to algolia
             } else {
