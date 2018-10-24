@@ -32,6 +32,8 @@ class SearchService {
         return new Promise((resolve, reject) => {
 
             if(templateDefinition.searchSnippetTemplate && templateDefinition.searchSnippetTemplate !== '') { // check if search snippet template is defined
+
+                logger.info('dit' + templateDefinition.searchSnippetTemplate);
                 // get search snippet template definition
                 let searchSnippetTemplateDefinition = null; // save empty template definition object for later re-use
                 self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId)
@@ -40,7 +42,7 @@ class SearchService {
                     // get search snippet
                     .then(() => { return templateDefinition.getSearchSnippetData(data, correlationId) }) // get search snippet data
                     .then((templateData) => {
-                        logger.info(templateDefinition.searchSnippetTemplate);
+
                         return self.templateService.render('search-snippet',  templateDefinition.searchSnippetTemplate + '.handlebars', templateData, correlationId) }) // render search snippet
                     // resolve rendered search snippet
                     .then((searchSnippetHtml) => {
