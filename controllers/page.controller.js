@@ -234,7 +234,7 @@ class PageController {
 
                 // set search snippet
                // .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
-                .//then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
+                //.then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
                 .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
