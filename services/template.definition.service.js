@@ -44,7 +44,6 @@ class TemplateDefinitionService {
         })
     }
 
-
     /**
      * Get the template definitions
      * Search the templates directory and assume all directories that do not start with _ are templates
