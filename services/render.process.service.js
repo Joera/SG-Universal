@@ -205,7 +205,7 @@ class RenderProcessService {
                 .then((queueItem) => { // add to render queue
                     // check if a handlebars template is available for template
                     // if not than do not add queueItem to render queue
-                    if(queueItem.template && queueItem.template !== null) {
+                    if(queueItem.path !== null && queueItem.template && queueItem.template !== null) {
                         return self.renderQueue.add(queueItem, correlationId);
                     } else {
                         // no handlebars template found, do not add queue item to render queue
