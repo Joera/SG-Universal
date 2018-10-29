@@ -102,7 +102,12 @@ class SearchService {
                 algoliaData.author = null;
 
                 save(algoliaData, correlationId)
-                    .then((d) => { resolve(data) })
+                    .then((d) => {
+
+                        logger.info('snippet uploaded to algolia');
+                        resolve(data)
+
+                    })
                     .catch((error) => { reject(error) });
                 // save page to algolia
             } else {
