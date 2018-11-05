@@ -103,6 +103,9 @@ class TemplateService {
             // set directory
             const dirname = config.root + '/pages/templates';
 
+            logger.info(templateName + '/' + templateFileName);
+
+
             // read template
             fs.readFile(dirname + '/' + templateName + '/' + templateFileName, 'utf-8', (error, source) => {
                 if (error) {
