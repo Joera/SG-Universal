@@ -39,7 +39,9 @@ class SearchService {
                     // get search snippet
                     .then(() => { return templateDefinition.getSearchSnippetData(data, correlationId) }) // get search snippet data
                     .then((templateData) => {
-                        return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateData, correlationId) }) // render search snippet
+                        return self.templateService.render('search-snippet', 'search-snippet.handlebars',templateData, correlationId) }) // render search snippet
+                                                                    // template name         // template file name
+
                     // resolve rendered search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
