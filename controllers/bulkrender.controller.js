@@ -42,13 +42,13 @@ class BulkRenderController {
 
                 // add pages to render queue
                 .then(() => {
-                    logger.info('Add pages to render queue', correlationId);
+                    //logger.info('Add pages to render queue', correlationId);
                     return self._enqueue(pages, correlationId);
                 })
 
                 // add pages dependencies to render queue
                 .then(() => {
-                    logger.info('Add pages dependencies to render queue', correlationId);
+                   // logger.info('Add pages dependencies to render queue', correlationId);
                     return self._enqueue(pages, correlationId, true);
                 })
 
@@ -141,8 +141,6 @@ class BulkRenderController {
             return self.renderProcessService.enqueueDependencies(page, correlationId); // add page to render queue
         }));
     }
-
-
 }
 
 module.exports = BulkRenderController;

@@ -69,20 +69,44 @@ class SearchService {
             if(data.searchSnippet && data.searchSnippet !== '') {
                 // set algolia save function
                 let save;
+
                 if(isUpdate) { // if update use the update call else use add
                     save = self.searchConnector.updatePage.bind(self.searchConnector);
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
-                logger.info(data);
-                // save page to algolia
-                save(data, correlationId)
+                let algoliaObject = self._trimData(data);
+                save(algoliaObject, correlationId)
                     .then((d) => { logger.info('succes'); resolve(d) })
                     .catch((error) => { reject(error) });
             } else {
                 resolve(data);
             }
         })
+    }
+
+    _trimData(data) {
+
+        // algolia has a max size for one record
+        let algoliaObject = Object.assign({}, data);
+
+        if (data.type === 'post') {
+
+            if (algoliaObject.sections) {
+                algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
+                    return v.type === 'paragraph';
+                });
+            }
+
+            algoliaObject.excerpt = null;
+            algoliaObject.main_image = null;
+            algoliaObject.author = null;
+            algoliaObject.comments = null;
+            algoliaObject.attachments = null;
+            algoliaObject.content = null;
+        }
+
+        return algoliaObject;
     }
 }
 

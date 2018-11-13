@@ -33,13 +33,13 @@ class SyncController {
 
             let cmsPages = null; // all pages received from cms
             let deletedPages = null; // pages that will deleted
+            let page = 0;
 
             const correlationId = uuidv4(); // set correlation id for debugging the process chain
             self.cmsConnector.getPages(correlationId)
                 .then((pages) => {
-                    return new Promise((res, rej) => { cmsPages = pages; res({}); })}) // save pages received from cms api for later use
-
-                // delete pages
+                    return new Promise((res, rej) => { cmsPages = pages; res({}); })
+                }) // save pages received from cms api for later use
                 .then(() => { return self.syncService.findDeletedPages(cmsPages, correlationId) }) // find the deleted pages
                 .then((pages) => { // delete pages from database and algolia
                     deletedPages = pages; // save deleted pages for later use
@@ -69,6 +69,7 @@ class SyncController {
                 });
         });
     }
+
 
 
     /**

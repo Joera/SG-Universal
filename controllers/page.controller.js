@@ -9,7 +9,9 @@ const RenderProcessService = require('../services/render.process.service');
 const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
 const DocumentService = require('../services/document.search.service');
-const CommentSearchService = require('../services/comment.search.service');
+const DatasetService = require('../services/dataset.service');
+const CommentSearchService = require('../services/search.comment.service');
+const ThreadSearchService = require('../services/search.thread.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
@@ -29,7 +31,9 @@ class PageController {
         this.pagePersistence = new PagePersistence();
         this.templateService = new TemplateService();
         this.documentService = new DocumentService();
+        this.datasetService = new DatasetService();
         this.commentSearchService = new CommentSearchService();
+        this.threadSearchService = new ThreadSearchService();
         this.renderProcessService = new RenderProcessService();
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
@@ -37,8 +41,6 @@ class PageController {
         this.searchConnector = new SearchConnector();
         this.fileSystemConnector = new FileSystemConnector();
     }
-
-
 
     /***********************************************************************************************
      * CRUD handlers
@@ -178,12 +180,14 @@ class PageController {
             // render template
             .then(() => { return templateDefinition.preRender(null, req.body, correlationId) }) // execute the pre render hook
             .then((templateData) => { return self.templateService.render(templateDefinition.name, templateDefinition.template, templateData, correlationId) }) // render template
-            .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
+            // .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
 
             // send response
             .then((html) => { // send response
+
                 return new Promise((resolve, reject) => {
-                    logger.info('Finished successfully, send response', correlationId);
+                    logger.info('Preview finished successfully, send response', correlationId);
+                    logger.info(html);
                     res.status(200); // set http status code for response
                     res.json({html: html}); // send response body
                     resolve({}); // resolve promise
@@ -196,9 +200,6 @@ class PageController {
                 res.json({message: error.message}); // send response body
             });
     }
-
-
-
 
     /***********************************************************************************************
      *
@@ -216,8 +217,7 @@ class PageController {
             //
             let templateDefinition = null; // save empty template definition object for later re-use
             let saveData = null; // data that will be saved. Object defined for later use
-
-            logger.info(data.title);
+            let persistent_path = null;
 
             // get template definitions
             // find the template that belongs to the data
@@ -230,7 +230,7 @@ class PageController {
 
                 // set url
                 .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
-                .then((path) => { return new Promise((res, rej) => { saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
+                .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // set search snippet
                 .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
@@ -238,17 +238,11 @@ class PageController {
 
                 // save page
                 .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
-
-                // update search
-                // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
+                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
+                // // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
                 .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
-
                 .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
-
                 .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
-
-                // .then(() => { return self.searchService.saveDocument(saveData, correlationId); })
-
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
 
@@ -299,8 +293,6 @@ class PageController {
 
         })
     }
-
-
 }
 
 module.exports = PageController;
