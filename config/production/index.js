@@ -1,13 +1,14 @@
 const devConfig = {
     env: 'production',
-    dist: '/var/www/html',
-    db: 'mongodb://localhost/eureka',
+    dist: 'dist',
+    projectfolder: 'pages',
+    db: 'mongodb://localhost/studioc',
     port: 8080,
-    wordpressUrl: 'http://wp.eurekarail.net',
-    algoliaIndexNamePrefix: 'eureka-staging_',
-    algoliaApplicationId: 'RLZJT7BFZT',
-    algoliaApiKey: 'f0dc506dd42b55db93e55d28c3e667b5',
-    baseUrl: 'http://eurekarail.net',
+    wordpressUrl: 'http://studiocarchitecten.nl',
+    algoliaIndexNamePrefix: 'Sensire_locaal_Joera',
+    algoliaApplicationId: '5INGTZ75VW',
+    algoliaApiKey: '831726149d43b0779373277356a18379',
+    baseUrl: 'http://studio-c.local',
     templateNameKey: 'type'
 };
 
