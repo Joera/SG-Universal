@@ -9,7 +9,7 @@ const SearchService = require('../services/search.service');
 /**
  * Service for getting documents from the post sections
  */
-class CommentSearchService {
+class SearchCommentService {
 
 
     constructor() {
@@ -149,4 +149,4 @@ class CommentSearchService {
     }
 }
 
-module.exports = CommentSearchService;
+module.exports = SearchCommentService;
