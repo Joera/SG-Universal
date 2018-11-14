@@ -3,10 +3,7 @@
 let express = require('express'),
     SocialCtrl = require('../controllers/social.controller');
 
-
-//
 const router = express.Router();
-
 
 // init social controller
 const socialCtrl = new SocialCtrl(); // create instance of social controller
@@ -25,7 +22,5 @@ router.route('/')
 
     // PUT /api/social - update social item
     .put(update);
-
-
 
 module.exports = router;
