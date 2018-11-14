@@ -20,16 +20,8 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-
-
-
-
 // validate template definition
 // templateDefinitionsValidator.validate(templateDefinitions);
-
-
-
-
 
 // module.parent check is required to support mocha watch
 // src: https://github.com/mochajs/mocha/issues/1912

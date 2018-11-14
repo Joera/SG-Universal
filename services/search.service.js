@@ -36,8 +36,7 @@ class SearchService {
                 self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId)
                     .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
-                    // get search snippet
-                    .then(() => { return templateDefinition.getSearchSnippetData(data, correlationId) }) // get search snippet data
+                templateDefinition.getSearchSnippetData(data, correlationId) // get search snippet data
                     .then((templateData) => {
                         return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateData, correlationId) }) // render search snippet
                     // resolve rendered search snippet
