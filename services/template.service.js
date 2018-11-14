@@ -1,7 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
-const fs = require('fs');
+const fs = require('graceful-fs');
 const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');
 const logger = require('../services/logger.service');
@@ -120,7 +120,7 @@ class TemplateService {
                 try {
                     const template = handlebars.compile(source);
                     const html = template(templateData);
-                    logger.info('Render template: ' + templateName, correlationId);
+                 //   logger.info('Render template: ' + templateName, correlationId);
                     resolve(html); // resolve promise
                 }
                 catch (error) { // error rendering template

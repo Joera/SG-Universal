@@ -2,13 +2,13 @@ const devConfig = {
     env: 'production',
     dist: 'dist',
     projectfolder: 'pages',
-    db: 'mongodb://localhost/studioc',
+    db: 'mongodb://localhost/blockdam',
     port: 8080,
-    wordpressUrl: 'http://studiocarchitecten.nl',
-    algoliaIndexNamePrefix: 'Sensire_locaal_Joera',
-    algoliaApplicationId: '5INGTZ75VW',
-    algoliaApiKey: '831726149d43b0779373277356a18379',
-    baseUrl: 'http://studio-c.local',
+    wordpressUrl: 'http://blockdam.local/wp',
+    algoliaIndexNamePrefix: 'blockdam',
+    algoliaApplicationId: 'RLZJT7BFZT',
+    algoliaApiKey: 'f0dc506dd42b55db93e55d28c3e667b5',
+    baseUrl: 'http://blockdam.local',
     templateNameKey: 'type'
 };
 

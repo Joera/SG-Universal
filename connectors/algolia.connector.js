@@ -16,7 +16,6 @@ class AlgoliaConnector {
         this.client = algoliasearch(config.algoliaApplicationId, config.algoliaApiKey);
     }
 
-
     /**
      * Add page to algolia search index
      * @param data                      data to store in search
@@ -34,7 +33,7 @@ class AlgoliaConnector {
                     error.correlationId = correlationId;
                     reject(error);
                 }
-                logger.info('Added page to Algolia search', correlationId);
+            //    logger.info('Added page to Algolia search', correlationId);
                 resolve(data); // resolve promise
             });
 
@@ -49,28 +48,17 @@ class AlgoliaConnector {
      */
     updatePage(data, correlationId) {
 
-		let algoliaObject = Object.assign({}, data);
-
-		if (algoliaObject.sections) {
-			algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
-				return v.type === 'paragraph';
-			});
-		}
-
-		algoliaObject.exerpt = null;
-		algoliaObject.main_image = null;
-		algoliaObject.author = null;
-
         const self = this;
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
+
         return new Promise((resolve, reject) => {
             // save record to Algolio Search
-            index.saveObject(algoliaObject, (error, content) => {
+            index.saveObject(data, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     reject(error);
                 }
-                logger.info('Updated page in Algolia search', correlationId);
+            //    logger.info('Updated page in Algolia search', correlationId);
                 resolve(data); // resolve promise
             });
 
@@ -94,14 +82,12 @@ class AlgoliaConnector {
                     error.correlationId = correlationId;
                     reject(error);
                 }
-                logger.info('Deleted page from Algolia search', correlationId);
+          //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(id); // resolve promise
             });
 
         })
     }
-
-
 }
 
 module.exports = AlgoliaConnector;

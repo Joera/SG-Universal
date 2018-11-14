@@ -84,15 +84,25 @@ class DocumentService {
                     var renderConfig = {
                         title: document.file_name,
                         content: document.file_description,
-                        date: document.post.date,
+                        date: data.date,
                         url: document.file_cdn_url,
-                        type: 'document',
                         tags: document.file_tags,
-                        post: document.post
+                        post_url : data.url,
+                        post_title : data.title,
 
                     }
+
                     document.type = 'document';
+                    document.objectID = document.file_id || 99999999; // keep algolia id consistent
+                    document.language = data.language;
                     document.snippetData = renderConfig;
+
+
+                    // for equitable search results
+
+                    document.title = document.file_name;
+                    document.content = document.file_description;
+
                     resolve(document);
                 });
             }))
@@ -109,13 +119,12 @@ class DocumentService {
         if(documents && documents.length > 0) {
 
             return Promise.all(documents.map(function (doc) {
-                return self.templateService.render('search-snippet','search-snippet.handlebars', doc.snippetData, correlationId);
+                return self.templateService.render('search-snippet','document-snippet.handlebars', doc.snippetData, correlationId);
             }))
 
         } else {
             documents = [];
         }
-
     }
 
     _uploadSnippets(data,correlationId){
@@ -136,6 +145,4 @@ class DocumentService {
     }
 
 }
-
-
 module.exports = DocumentService;
