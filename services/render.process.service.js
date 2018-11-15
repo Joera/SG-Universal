@@ -141,7 +141,7 @@ class RenderProcessService {
                 .then(() => { return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
                 .then((templateData) => { return self.templateService.render(name, template, templateData, correlationId) }) // render template
                 .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
-                .then(() => { return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
+                .then(() => { logger.info('ypyoyoyoyoyoyoyoyoyoy'); return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
 
                 // write template file
                 .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) }) // save template directory
