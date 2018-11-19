@@ -12,8 +12,6 @@ const clone = require('clone');
 
 class CalendarService {
 
-
-
     recurringEvents(data,correlationId) {
 
         let self = this;
@@ -26,7 +24,7 @@ class CalendarService {
 
             if (data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
 
-                self.createSnippets(data)
+                    return self.createSnippets(data)
                         .then((extraActivities) => {
 
                         //     return self.updateSearch(extraActivities, isUpdate, correlationId)
