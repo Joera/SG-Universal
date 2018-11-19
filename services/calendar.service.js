@@ -22,8 +22,6 @@ class CalendarService {
 
             let isUpdate =  true; // maakt dit wel uit?
 
-            resolve(data);
-
             if (data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
 
                     return self.createSnippets(data)
@@ -64,6 +62,8 @@ class CalendarService {
                 extraActivities.push(extraActivity);
                 promiseGroup.push(searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, extraActivity, correlationId))
             }
+
+            resolve(extraActivities);
 
 
             Promise.all(promiseGroup).then((snippets) => {
