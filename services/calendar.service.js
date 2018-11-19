@@ -26,10 +26,8 @@ class CalendarService {
 
                     return self.createSnippets(data)
                         .then((extraActivities) => {
-
-                        //     return self.updateSearch(extraActivities, isUpdate, correlationId)
-                        //
-                        // }).then(() => {
+                            return self.updateSearch(extraActivities, isUpdate, correlationId)
+                        }).then(() => {
 
                             resolve(data);
 
@@ -64,8 +62,8 @@ class CalendarService {
                 extraActivities.push(extraActivity);
             }
 
-            Promise.all(extraActivities.map(searchService.getSearchSnippet(extraActivity, {searchSnippetTemplate: 'activity-snippet'}, correlationId))).then((snippets) => {
-                
+            Promise.all(extraActivities.map(searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, correlationId))).then((snippets) => {
+
 
                 for (let i = 0; i < extraActivities - 1; i++) {
 
@@ -83,20 +81,11 @@ class CalendarService {
 
         return new Promise((resolve, reject) => {
 
-            let promiseGroup = [];
-
-            for (let i = 0; i < extraActivities.length - 1; i++) {
-
-                promiseGroup.push(searchService.updateSearch({searchSnippetTemplate: 'activity-snippet'}, extraActivities[i], correlationId))
-
-            }
-
-            Promise.all(promiseGroup).then((data) => {
+            Promise.all(extraActivities.map(searchService.updateSearch(isUpdate, correlationId))).then((data) => {
 
                 resolve(data);
 
             });
-
         });
     }
 
