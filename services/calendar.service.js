@@ -36,7 +36,7 @@ class CalendarService {
                     extraActivity = clone(data);
 
                     extraActivity.calendar.startDate = data.calendar.recurrentDates[i];
-                    extraActivity.ObjectID = data_id + '-' + i;
+                    extraActivity.ObjectID = data._id + '-' + i;
 
                     searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, extraActivity, correlationId)
 
