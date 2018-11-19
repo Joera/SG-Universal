@@ -15,7 +15,6 @@ class CalendarService {
     recurringEvents(data,correlationId) {
 
         let self = this;
-        const searchService = new SearchService();
         // const pagePersistence = new PagePersistence();
 
         return new Promise((resolve, reject) => {
@@ -47,6 +46,7 @@ class CalendarService {
         return new Promise((resolve, reject) => {
 
             let isUpdate = true; // maakt dit wel uit?
+            let searchService = new SearchService();
 
             // logger.info(data);
             let extraActivity,
@@ -82,6 +82,8 @@ class CalendarService {
     updateSearch(extraActivities,isUpdate, correlationId) {
 
         return new Promise((resolve, reject) => {
+
+            let searchService = new SearchService();
 
             Promise.all(extraActivities.map(searchService.updateSearch(isUpdate, correlationId))).then((data) => {
 
