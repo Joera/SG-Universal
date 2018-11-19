@@ -86,7 +86,7 @@ class SearchService {
                 // set algolia save function
                 let save;
                 if(isUpdate) { // if update use the update call else use add
-                    save = searchConnector.updatePage.bind(searchConnector);
+                    save = searchConnector.addPage.bind(searchConnector);
                 } else {
                     save = searchConnector.addPage.bind(searchConnector);
                 }
