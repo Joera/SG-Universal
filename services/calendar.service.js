@@ -19,7 +19,7 @@ class CalendarService {
 
     recurringEvents(data,correlationId) {
 
-        let self = this;
+        const self = this;
         // const pagePersistence = new PagePersistence();
 
         return new Promise((resolve, reject) => {
@@ -48,7 +48,7 @@ class CalendarService {
 
     createSnippets(data){
 
-        let self = this;
+        const self = this;
 
         return new Promise((resolve, reject) => {
 
@@ -90,7 +90,7 @@ class CalendarService {
 
     updateSearch(extraActivities,isUpdate, correlationId) {
 
-        let self = this;
+        const self = this;
 
         return new Promise((resolve, reject) => {
 
