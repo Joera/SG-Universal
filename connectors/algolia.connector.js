@@ -98,7 +98,7 @@ class AlgoliaConnector {
 
             let options = {
 
-                filters: 'parentID:11539'
+                filters: 'type:activity'
             };
 
             index.deleteBy(options, (error, content) => {
