@@ -62,7 +62,7 @@ class CalendarService {
                 extraActivity.calendar.startDate = data.calendar.recurrentDates[i];
                 extraActivity.ObjectID = data._id + '-' + i;
                 extraActivities.push(extraActivity);
-                promiseGroup.push(searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, extraActivity, correlationId))
+                promiseGroup.push(return searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, extraActivity, correlationId))
             }
 
 
@@ -90,7 +90,7 @@ class CalendarService {
 
             for (let i = 0; i < extraActivities.length - 1; i++) {
 
-                promiseGroup.push(searchService.updateSearch({searchSnippetTemplate: 'activity-snippet'}, extraActivities[i], correlationId))
+                promiseGroup.push(return searchService.updateSearch({searchSnippetTemplate: 'activity-snippet'}, extraActivities[i], correlationId))
 
             }
 
