@@ -69,13 +69,12 @@ class CalendarService {
                 extraActivity = clone(data);
 
                 extraActivity.calendar.startDate = data.calendar.recurrentDates[i]['date'];
-                logger.info(extraActivity.calendar.startDate);
                 extraActivity.calendar.unix_startDate = moment(extraActivity.calendar.startDate).unix();
                 extraActivity._id = data._id + '-' + i;
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivity.parentID = data._id;
-                extraActivity.calendar.month = moment(extraActivity.calendar.startDate).format('YYYY');
-                extraActivity.calendar.year = moment(extraActivity.calendar.startDate).format('MMMM');
+                extraActivity.calendar.month = moment(extraActivity.calendar.startDate).format('MMMM');
+                extraActivity.calendar.year = moment(extraActivity.calendar.startDate).format('YYYY');
                 extraActivities.push(extraActivity);
             }
 
