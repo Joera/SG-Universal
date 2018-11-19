@@ -51,7 +51,7 @@ class CalendarService {
             let extraActivity,
                 extraActivities = [],
                 promiseGroup = [];
-            
+
 
             for (let i = 0; i < data.calendar.recurrentDates.length - 1; i++) {
 
@@ -61,7 +61,7 @@ class CalendarService {
                 extraActivities.push(extraActivity);
             }
 
-            Promise.all(extraActivities.map(searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, correlationId))).then((snippets) => {
+            Promise.all(extraActivities.map(searchService.getSearchSnippet().then((snippets) => { //{searchSnippetTemplate: 'activity-snippet'}, correlationId))
 
                 logger.info('snippets');
                 logger.info(snippets);
@@ -73,7 +73,6 @@ class CalendarService {
                 }
 
                 resolve(extraActivities);
-
             });
         });
 
