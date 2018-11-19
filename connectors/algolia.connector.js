@@ -99,7 +99,7 @@ class AlgoliaConnector {
             index.deleteBy({ parentID : value }, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
-                    reject(error);
+                    resolve(error);
                 }
                 //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(); // resolve promise
