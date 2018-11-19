@@ -81,6 +81,8 @@ class CalendarService {
                 }
 
                 resolve(extraActivities);
+            }).catch( (error) {
+                reject(error);
             });
         });
 
@@ -96,7 +98,9 @@ class CalendarService {
 
                 resolve(data);
 
-            });
+            }).catch( (error) {
+                reject(error);
+            });;
         });
     }
 
