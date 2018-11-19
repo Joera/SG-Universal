@@ -91,6 +91,23 @@ class AlgoliaConnector {
         })
     }
 
+    deleteByKeyValue(key,value) {
+        const self = this;
+        const index = this.client.initIndex(config.algoliaIndexNamePrefix);
+        return new Promise((resolve, reject) => {
+
+            index.deleteBy({ key: value }, (error, content) => {
+                if (error) {
+                    error.correlationId = correlationId;
+                    reject(error);
+                }
+                //      logger.info('Deleted page from Algolia search', correlationId);
+                resolve(); // resolve promise
+            });
+
+        })
+    }
+
 
 }
 

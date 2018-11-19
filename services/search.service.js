@@ -134,6 +134,24 @@ class SearchService {
             }
         })
     }
+
+    deleteItems(key,value) {
+
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+            const searchConnector = new SearchConnector();
+
+            searchConnector.deleteByKeyValue(key,value).then( () => {
+
+                resolve();
+
+            }).catch( (error) => {
+
+                reject(error);
+            });
+        });
+    }
 }
 
 module.exports = SearchService;
