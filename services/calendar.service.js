@@ -32,7 +32,8 @@ class CalendarService {
                             resolve(data);
 
                         }).catch((error) => {
-                    })
+                            reject(error);
+                        })
 
             } else {
 
