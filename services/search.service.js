@@ -80,15 +80,15 @@ class SearchService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            self.searchConnector = new SearchConnector();
+            const searchConnector = new SearchConnector();
 
             if(data.searchSnippet && data.searchSnippet !== '') {
                 // set algolia save function
                 let save;
                 if(isUpdate) { // if update use the update call else use add
-                    save = self.searchConnector.updatePage.bind(self.searchConnector);
+                    save = searchConnector.updatePage.bind(searchConnector);
                 } else {
-                    save = self.searchConnector.addPage.bind(self.searchConnector);
+                    save = searchConnector.addPage.bind(searchConnector);
                 }
                 // logger.info(data);
 
