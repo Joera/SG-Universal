@@ -138,7 +138,7 @@ class RenderProcessService {
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // render template
-                .then(() => { return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
+                .then(() => { logger.info(templateDefinition.name); return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
                 .then((templateData) => { return self.templateService.render(name, template, templateData, correlationId) }) // render template
                 .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
                 .then(() => { logger.info(templateDefinition); return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
