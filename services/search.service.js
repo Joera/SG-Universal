@@ -124,7 +124,6 @@ class SearchService {
                     .then((d) => {
 
                         logger.info('snippet uploaded to algolia');
-                        logger.info(algoliaData);
                         resolve(data)
 
                     })

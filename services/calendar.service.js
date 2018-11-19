@@ -69,7 +69,7 @@ class CalendarService {
                 extraActivity = clone(data);
 
                 extraActivity.calendar.startDate = data.calendar.recurrentDates[i]['date'];
-
+                extraActivity.calendar.unix_startDate = moment(extraActivity.calendar.startDate['date']).unix();
                 extraActivity._id = data._id + '-' + i;
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivity.parentID = data._id;
@@ -84,7 +84,6 @@ class CalendarService {
 
                 for (let i = 0; i < extraActivities.length; i++) {
 
-                    logger.info(extraActivities[i].calendar.startDate);
                     extraActivities[i].searchSnippet = snippets[i];
                 }
 
