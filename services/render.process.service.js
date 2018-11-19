@@ -135,7 +135,7 @@ class RenderProcessService {
             }
             // get template definitions
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
-                .then((definition) => { return new Promise((res, rej) => { logger.info(definition.name); templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+                .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // render template
                 .then(() => {  return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
@@ -143,7 +143,7 @@ class RenderProcessService {
                 .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
                 .then(() => { logger.info(templateDefinition); return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
                 // write template file
-                .then(() => { logger.info('4'); return self.fileSystemConnector.createDirectory(path, correlationId) }) // save template directory
+                .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) }) // save template directory
                 .then(() => { return self.fileSystemConnector.writeTemplateFile(path, templateHtml, correlationId) }) // write template file
 
                 //

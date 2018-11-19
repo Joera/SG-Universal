@@ -15,6 +15,7 @@ const ThreadSearchService = require('../services/search.thread.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
+const CalendarService = require('../../services/calendar.service');
 const FileSystemConnector = require('../connectors/filesystem.connector');
 const config = require('../config');
 
@@ -38,6 +39,7 @@ class PageController {
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.searchService = new SearchService();
+        this.calendarService = new CalendarService();
         this.searchConnector = new SearchConnector();
         this.fileSystemConnector = new FileSystemConnector();
     }
@@ -243,6 +245,7 @@ class PageController {
                 .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
                 .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
                 .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
+                .then(() => { return self.calendarService.recurringEvents(saveData,correlationId,options); })
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
 
