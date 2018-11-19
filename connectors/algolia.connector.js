@@ -107,6 +107,7 @@ class AlgoliaConnector {
                     logger.info(error);
                     resolve();
                 }
+                logger.info('vlaflip');
                 logger.info(content);
                 //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(); // resolve promise
