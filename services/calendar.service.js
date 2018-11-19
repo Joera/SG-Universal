@@ -76,7 +76,7 @@ class CalendarService {
 
                 for (let i = 0; i < extraActivities; i++) {
 
-                    logger.info('yo');
+                    logger.info('yolo');
                     logger.info(extraActivities[i].calendar);
                     extraActivities[i].searchSnippet = snippets[i];
                 }
