@@ -65,7 +65,7 @@ class CalendarService {
 
                 extraActivity = clone(data);
                 logger.info(data.calendar.recurrentDates[i]);
-                extraActivity.calendar.startDate = data.calendar.recurrentDates[i].date;
+                extraActivity.calendar.startDate = data.calendar.recurrentDates[i];
                 extraActivity.ObjectID = data._id + '-' + i;
                 extraActivities.push(extraActivity);
             }
@@ -90,6 +90,8 @@ class CalendarService {
         const self = this;
 
         return new Promise((resolve, reject) => {
+
+            logger.info(extraActivities);
 
             Promise.all(extraActivities.map(self.searchService.updateSearch)).then((data) => {
 
