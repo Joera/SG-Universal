@@ -70,7 +70,7 @@ class CalendarService {
 
             Promise.all(promiseGroup).then((snippets) => {
 
-                for (let i = 0; i < extraActivities, i++) {
+                for (let i = 0; i < extraActivities; i++) {
 
                     extraActivities[i].searchSnippet = snippets[i];
                 }
