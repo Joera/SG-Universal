@@ -98,7 +98,7 @@ class AlgoliaConnector {
 
             let options = {
 
-                filters: 'parentID:' + '11539'
+                facetFilters: 'parentID:' + '11539'
             };
 
             index.deleteBy(options, (error, content) => {
@@ -107,6 +107,7 @@ class AlgoliaConnector {
                     logger.info(error);
                     resolve();
                 }
+                logger.info(content);
                 //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(); // resolve promise
             });
