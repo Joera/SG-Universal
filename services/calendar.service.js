@@ -61,7 +61,7 @@ class CalendarService {
                 promiseGroup = [];
 
 
-            for (let i = 0; i < data.calendar.recurrentDates.length - 1; i++) {
+            for (let i = 0; i < data.calendar.recurrentDates.length; i++) {
 
                 extraActivity = clone(data);
                 logger.info(data.calendar.recurrentDates[i]);
@@ -72,7 +72,7 @@ class CalendarService {
 
             Promise.all(extraActivities.map(self.searchService.getActivitySearchSnippet)).then((snippets) => { //))
 
-                for (let i = 0; i < extraActivities - 1; i++) {
+                for (let i = 0; i < extraActivities; i++) {
 
                     extraActivities[i].searchSnippet = snippets[i];
                 }
@@ -91,7 +91,7 @@ class CalendarService {
 
         return new Promise((resolve, reject) => {
 
-            logger.info(extraActivities);
+            // logger.info(extraActivities);
 
             Promise.all(extraActivities.map(self.searchService.updateSearch)).then((data) => {
 
