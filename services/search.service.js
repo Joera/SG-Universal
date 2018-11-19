@@ -27,7 +27,7 @@ class SearchService {
      * @param data                              page data
      * @param correlationId
      */
-    getSearchSnippet(templateDefinition, data, correlationId, options) {
+    getSearchSnippet(data, templateDefinition, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
 
