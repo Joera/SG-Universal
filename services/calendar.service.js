@@ -26,7 +26,6 @@ class CalendarService {
 
             if (data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
 
-
                 self.createSnippets(data)
                         .then((extraActivities) => {
 
@@ -70,7 +69,7 @@ class CalendarService {
 
             Promise.all(promiseGroup).then((snippets) => {
 
-                for (let i = 0; i < extraActivities; i++) {
+                for (let i = 0; i < extraActivities -1; i++) {
 
                     extraActivities[i].searchSnippet = snippets[i];
                 }
