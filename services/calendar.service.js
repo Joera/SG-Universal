@@ -67,12 +67,17 @@ class CalendarService {
 
                 extraActivity.calendar.startDate = data.calendar.recurrentDates[i]['date'];
 
-
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivities.push(extraActivity);
             }
 
+            logger.info('heeee?');
+
             Promise.all(extraActivities.map(self.searchService.getActivitySearchSnippet)).then((snippets) => { //))
+
+                logger.info('lengters');
+                logger.info(extraActivities);
+                logger.info(snippets);
 
                 for (let i = 0; i < extraActivities; i++) {
 
@@ -82,6 +87,7 @@ class CalendarService {
                 }
 
                 resolve(extraActivities);
+
             }).catch( (error) => {
                 reject(error);
             });
