@@ -116,8 +116,6 @@ class TemplateService {
                     wordpressUrl: config.wordpressUrl
                 };
 
-                logger.info(data);
-
                 // render the template
                 try {
                     const template = handlebars.compile(source);
@@ -172,6 +170,8 @@ class TemplateService {
      * @param correlationId             id for correlation through the process chain
      */
     render(name, template, data, correlationId) {
+
+        logger.info(data;)
         const self = this;
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions
