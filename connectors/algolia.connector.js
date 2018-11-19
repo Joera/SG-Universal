@@ -101,13 +101,14 @@ class AlgoliaConnector {
                 facetFilters: ['parentID:' + value]
             };
 
+            logger.info(options);
+
             index.deleteBy(options, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     logger.info(error);
                     resolve();
                 }
-                logger.info('vlaflip');
                 logger.info(content);
                 //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(); // resolve promise
