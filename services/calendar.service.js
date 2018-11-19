@@ -65,7 +65,8 @@ class CalendarService {
 
                 extraActivity = clone(data);
 
-                extraActivity.calendar.startDate = new Date(data.calendar.recurrentDates[i]['date']);
+                extraActivity.calendar.startDate = data.calendar.recurrentDates[i]['date'];
+                logger.info(extraActivity.calendar.startDate);
 
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivities.push(extraActivity);
