@@ -22,9 +22,16 @@ class CalendarService {
         const self = this;
         // const pagePersistence = new PagePersistence();
 
+        // how to know if there is a change in no of recurrentEvents
+
+        // delete all?
+        // main_objectID
+
         return new Promise((resolve, reject) => {
 
             let isUpdate =  true; // maakt dit wel uit?
+
+            // delete all snippets with parentID = data._id;
 
             if (data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
 
@@ -68,6 +75,7 @@ class CalendarService {
                 extraActivity.calendar.startDate = data.calendar.recurrentDates[i]['date'];
 
                 extraActivity.objectID = data._id + '-' + i;
+                extraActivity.parentID = data._id;
                 extraActivities.push(extraActivity);
             }
 
