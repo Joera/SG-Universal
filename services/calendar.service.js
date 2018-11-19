@@ -100,8 +100,9 @@ class CalendarService {
         return new Promise((resolve, reject) => {
 
             // logger.info(extraActivities);
+            const searchService = new SearchService();
 
-            Promise.all(extraActivities.map(self.searchService.updateSearch)).then((data) => {
+            Promise.all(extraActivities.map(searchService.updateSearch)).then((data) => {
 
                 resolve(data);
 
