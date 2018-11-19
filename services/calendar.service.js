@@ -64,10 +64,12 @@ class CalendarService {
             for (let i = 0; i < data.calendar.recurrentDates.length; i++) {
 
                 extraActivity = clone(data);
-                logger.info(data.calendar.recurrentDates[i]);
+
                 extraActivity.calendar.startDate = new Date(data.calendar.recurrentDates[i].date);
+
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivities.push(extraActivity);
+                logger.info(extraActivity.calendar.startDate);
             }
 
             Promise.all(extraActivities.map(self.searchService.getActivitySearchSnippet)).then((snippets) => { //))
