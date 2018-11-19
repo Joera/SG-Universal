@@ -135,7 +135,7 @@ class SearchService {
         })
     }
 
-    deleteItems(key,value) {
+    deleteByKeyValue(key,value) {
 
         const self = this;
         return new Promise((resolve, reject) => {
