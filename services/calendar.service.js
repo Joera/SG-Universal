@@ -76,8 +76,8 @@ class CalendarService {
             Promise.all(extraActivities.map(self.searchService.getActivitySearchSnippet)).then((snippets) => { //))
 
                 logger.info('lengters');
-                logger.info(extraActivities);
-                logger.info(snippets);
+                logger.info(extraActivities.length);
+                logger.info(snippets.length);
 
                 for (let i = 0; i < extraActivities; i++) {
 
