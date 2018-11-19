@@ -16,7 +16,7 @@ class CalendarService {
 
         let self = this;
         const searchService = new SearchService();
-        const pagePersistence = new PagePersistence();
+        // const pagePersistence = new PagePersistence();
 
         return new Promise((resolve, reject) => {
 
@@ -49,10 +49,12 @@ class CalendarService {
 
             let isUpdate = true; // maakt dit wel uit?
 
-            logger.info(data);
+            // logger.info(data);
             let extraActivity,
                 extraActivities = [],
                 promiseGroup = [];
+
+            resolve(extraActivities);
 
             for (let i = 0; i < data.calendar.recurrentDates.length - 1; i++) {
 
@@ -63,7 +65,7 @@ class CalendarService {
                 promiseGroup.push(searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, extraActivity, correlationId))
             }
 
-            resolve(extraActivities);
+
 
 
             Promise.all(promiseGroup).then((snippets) => {
