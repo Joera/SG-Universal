@@ -98,7 +98,7 @@ class AlgoliaConnector {
 
             let options = {
 
-                facetFilters: ['parentID:' + '11539']
+                facetFilters: ['parentID:11539']
             };
 
             index.deleteBy(options, (error, content) => {
