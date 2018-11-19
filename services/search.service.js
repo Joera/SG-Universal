@@ -16,7 +16,7 @@ class SearchService {
     constructor () {
         this.templateService = new TemplateService();
         this.templateDefinitionService = new TemplateDefinitionService();
-        this.searchConnector = new SearchConnector();
+
     }
 
 
@@ -79,6 +79,8 @@ class SearchService {
     updateSearch(data, isUpdate, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
+
+            self.searchConnector = new SearchConnector();
 
             if(data.searchSnippet && data.searchSnippet !== '') {
                 // set algolia save function
