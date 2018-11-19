@@ -14,7 +14,6 @@ const SearchConnector = require('../connectors/algolia.connector');
 class SearchService {
 
     constructor () {
-        logger.info('doe ik dit?');
         this.templateService = new TemplateService();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.searchConnector = new SearchConnector();
@@ -55,7 +54,9 @@ class SearchService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-                 self.templateService.render('search-snippet', 'activity-snippet.handlebars', data)  // render search snippet
+                const templateService = new TemplateService();
+
+                 templateService.render('search-snippet', 'activity-snippet.handlebars', data)  // render search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
                     })
