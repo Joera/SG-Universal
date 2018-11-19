@@ -66,7 +66,7 @@ class CalendarService {
                 extraActivity = clone(data);
 
                 extraActivity.calendar.startDate = data.calendar.recurrentDates[i]['date'];
-                logger.info(extraActivity.calendar.startDate);
+
 
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivities.push(extraActivity);
@@ -76,6 +76,7 @@ class CalendarService {
 
                 for (let i = 0; i < extraActivities; i++) {
 
+                    logger.info(extraActivities[i].calendar.startDate);
                     extraActivities[i].searchSnippet = snippets[i];
                 }
 

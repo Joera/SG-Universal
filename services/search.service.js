@@ -56,8 +56,6 @@ class SearchService {
 
                 const templateService = new TemplateService();
 
-                logger.info(data);
-
                  templateService.render('search-snippet', 'activity-snippet.handlebars', data)  // render search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
