@@ -12,6 +12,11 @@ const clone = require('clone');
 
 class CalendarService {
 
+    constructor () {
+
+        this.searchService = new SearchService();
+    }
+
     recurringEvents(data,correlationId) {
 
         let self = this;
@@ -43,10 +48,12 @@ class CalendarService {
 
     createSnippets(data){
 
+        let self = this;
+
         return new Promise((resolve, reject) => {
 
             let isUpdate = true; // maakt dit wel uit?
-            let searchService = new SearchService();
+
 
             // logger.info(data);
             let extraActivity,
@@ -62,7 +69,7 @@ class CalendarService {
                 extraActivities.push(extraActivity);
             }
 
-            Promise.all(extraActivities.map(searchService.getActivitySearchSnippet)).then((snippets) => { //))
+            Promise.all(extraActivities.map(self.searchService.getActivitySearchSnippet)).then((snippets) => { //))
 
                 logger.info('snippets');
                 logger.info(snippets);
@@ -81,11 +88,11 @@ class CalendarService {
 
     updateSearch(extraActivities,isUpdate, correlationId) {
 
+        let self = this;
+
         return new Promise((resolve, reject) => {
 
-            let searchService = new SearchService();
-
-            Promise.all(extraActivities.map(searchService.updateSearch)).then((data) => {
+            Promise.all(extraActivities.map(self.searchService.updateSearch)).then((data) => {
 
                 resolve(data);
 
