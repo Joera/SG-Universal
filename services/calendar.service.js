@@ -30,8 +30,8 @@ class CalendarService {
 
                     return self.createSnippets(data)
                         .then((extraActivities) => {
-                        //     return self.updateSearch(extraActivities, isUpdate, correlationId)
-                        // }).then(() => {
+                            return self.updateSearch(extraActivities, isUpdate, correlationId)
+                        }).then(() => {
 
                             resolve(data);
 
@@ -72,9 +72,6 @@ class CalendarService {
 
             Promise.all(extraActivities.map(self.searchService.getActivitySearchSnippet)).then((snippets) => { //))
 
-                logger.info(snippets);
-
-
                 for (let i = 0; i < extraActivities - 1; i++) {
 
                     extraActivities[i].searchSnippet = snippets[i];
@@ -100,7 +97,7 @@ class CalendarService {
 
             }).catch( (error) => {
                 reject(error);
-            });;
+            });
         });
     }
 
