@@ -55,7 +55,7 @@ class SearchService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-                 return self.templateService.render('search-snippet', 'activity-snippet.handlebars', data)  // render search snippet
+                 self.templateService.render('search-snippet', 'activity-snippet.handlebars', data)  // render search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
                     })
