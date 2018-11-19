@@ -91,7 +91,7 @@ class AlgoliaConnector {
         })
     }
 
-    deleteByKeyValue(key,value) {
+    deleteByKeyValue(key,value,correlationId) {
         const self = this;
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {

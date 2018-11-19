@@ -135,14 +135,14 @@ class SearchService {
         })
     }
 
-    deleteByKeyValue(key,value) {
+    deleteByKeyValue(key,value,correlationId) {
 
         const self = this;
         return new Promise((resolve, reject) => {
 
             const searchConnector = new SearchConnector();
 
-            searchConnector.deleteByKeyValue(key,value).then( () => {
+            searchConnector.deleteByKeyValue(key,value,correlationId).then( () => {
 
                 resolve();
 
