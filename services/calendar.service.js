@@ -9,6 +9,7 @@ const logger = require('./logger.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchService = require('./search.service');
 const clone = require('clone');
+const moment = require('moment');
 
 class CalendarService {
 
