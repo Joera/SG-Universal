@@ -135,10 +135,10 @@ class RenderProcessService {
             }
             // get template definitions
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId) // get template definition
-                .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
+                .then((definition) => { return new Promise((res, rej) => { logger.info(definition.name); templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 // render template
-                .then(() => { logger.info(templateDefinition.name); return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
+                .then(() => {  return templateDefinition.preRender(path, data, correlationId) }) // execute the pre render hook
                 .then((templateData) => { return self.templateService.render(name, template, templateData, correlationId) }) // render template
                 .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
                 .then(() => { logger.info(templateDefinition); return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
