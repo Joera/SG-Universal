@@ -29,9 +29,9 @@ class CalendarService {
                 self.createSnippets(data)
                         .then((extraActivities) => {
 
-                            return self.updateSearch(extraActivities, isUpdate, correlationId)
-
-                        }).then(() => {
+                        //     return self.updateSearch(extraActivities, isUpdate, correlationId)
+                        //
+                        // }).then(() => {
 
                             resolve(data);
 
