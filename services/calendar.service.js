@@ -61,7 +61,7 @@ class CalendarService {
                 extraActivities.push(extraActivity);
             }
 
-            Promise.all(extraActivities.map(searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, correlationId))).then((snippets) => { //))
+            Promise.all(extraActivities.map(searchService.getActivitySearchSnippet())).then((snippets) => { //))
 
                 logger.info('snippets');
                 logger.info(snippets);

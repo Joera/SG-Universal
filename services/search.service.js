@@ -50,6 +50,23 @@ class SearchService {
         })
     }
 
+    getActivitySearchSnippet(data) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+
+                    self.templateService.render('search-snippet', 'activity-snippet.handlebars', data, correlationId) }) // render search snippet
+                    // resolve rendered search snippet
+                    .then((searchSnippetHtml) => {
+                        resolve(searchSnippetHtml);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    })
+
+        })
+    }
+
 
     /**
      * Update algolia search
