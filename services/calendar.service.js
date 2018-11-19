@@ -25,7 +25,7 @@ class CalendarService {
 
             let isUpdate =  true; // maakt dit wel uit?
 
-            return self.deleteByKeyValue(data._id,'parentID').then( () => {
+            return self.searchService.deleteByKeyValue(data._id,'parentID').then( () => {
 
                 if (data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
 
