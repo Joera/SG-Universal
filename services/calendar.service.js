@@ -69,7 +69,6 @@ class CalendarService {
 
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivities.push(extraActivity);
-                logger.info(extraActivity.calendar.startDate);
             }
 
             Promise.all(extraActivities.map(self.searchService.getActivitySearchSnippet)).then((snippets) => { //))
