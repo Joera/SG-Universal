@@ -98,15 +98,16 @@ class AlgoliaConnector {
 
             let options = {
 
-                filters: 'type:activity'
+                facetFilters: ['parentID:' + value]
             };
 
-            index.deleteObjects(['11539-3','11539-2'], (error, content) => {
+            index.deleteBy(options, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     logger.info(error);
                     resolve();
                 }
+                logger.info('vlaflip');
                 logger.info(content);
                 //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(); // resolve promise
