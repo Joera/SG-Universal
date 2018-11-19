@@ -116,6 +116,8 @@ class TemplateService {
                     wordpressUrl: config.wordpressUrl
                 };
 
+                logger.info(data);
+
                 // render the template
                 try {
                     const template = handlebars.compile(source);
