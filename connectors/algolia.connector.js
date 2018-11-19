@@ -96,7 +96,12 @@ class AlgoliaConnector {
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {
 
-            index.deleteBy({ filters: 'parentID:11539'}, (error, content) => {
+            let options = {
+
+                filters: 'parentID:' + '11539'
+            };
+
+            index.deleteBy(options, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     logger.info(error);
