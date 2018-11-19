@@ -171,6 +171,8 @@ class TemplateService {
      */
     render(name, template, data, correlationId) {
 
+        logger.info(data);
+
         const self = this;
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions
