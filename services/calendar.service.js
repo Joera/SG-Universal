@@ -69,7 +69,9 @@ class CalendarService {
                 extraActivity = clone(data);
 
                 extraActivity.calendar.startDate = data.calendar.recurrentDates[i]['date'];
-                extraActivity.calendar.unix_startDate = moment(extraActivity.calendar.startDate).unix();
+                let f =  moment(extraActivity.calendar.startDate);
+                logger.info(f);
+                extraActivity.calendar.unix_startDate = f.unix();
                 extraActivity._id = data._id + '-' + i;
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivity.parentID = data._id;
