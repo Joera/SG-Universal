@@ -72,6 +72,8 @@ class CalendarService {
                 extraActivity._id = data._id + '-' + i;
                 extraActivity.objectID = data._id + '-' + i;
                 extraActivity.parentID = data._id;
+                extraActivity.calendar.month = moment(extraActivity.calendar.startDate).format('YYYY');
+                extraActivity.calendar.year = moment(extraActivity.calendar.startDate).format('MMMM');
                 extraActivities.push(extraActivity);
             }
 
