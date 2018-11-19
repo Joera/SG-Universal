@@ -12,10 +12,11 @@ const clone = require('clone');
 
 class CalendarService {
 
+
+
     recurringEvents(data,correlationId) {
 
         let self = this;
-
         const searchService = new SearchService();
         const pagePersistence = new PagePersistence();
 
@@ -23,33 +24,13 @@ class CalendarService {
 
             let isUpdate =  true; // maakt dit wel uit?
 
-            logger.info(data);
-
             if (data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
 
-                let extraActivity;
 
-                for (let i = 0; i < data.calendar.recurrentDates.length - 1; i++) {
+                self.createSnippets(data)
+                        .then((extraActivities) => {
 
-                    logger.info(data.calendar.recurrentDates[i]);
-
-                    extraActivity = clone(data);
-
-                    extraActivity.calendar.startDate = data.calendar.recurrentDates[i];
-                    extraActivity.ObjectID = data._id + '-' + i;
-
-                    searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, extraActivity, correlationId)
-
-                        .then((searchSnippetHtml) => {
-                            return new Promise((res, rej) => {
-                                extraActivity.searchSnippet = searchSnippetHtml;
-                                res({});
-                            })
-                        })
-
-                        .then(() => {
-
-                            return searchService.updateSearch(extraActivity, isUpdate, correlationId)
+                            return self.updateSearch(extraActivities, isUpdate, correlationId)
 
                         }).then(() => {
 
@@ -57,7 +38,6 @@ class CalendarService {
 
                         }).catch((error) => {
                     })
-                }
 
             } else {
 
@@ -65,6 +45,64 @@ class CalendarService {
             }
         });
     }
+
+    createSnippets(data){
+
+        return new Promise((resolve, reject) => {
+
+            let isUpdate = true; // maakt dit wel uit?
+
+            logger.info(data);
+
+            let extraActivity,
+                extraActivities = [],
+                promiseGroup = [];
+
+            for (let i = 0; i < data.calendar.recurrentDates.length - 1; i++) {
+
+                extraActivity = clone(data);
+                extraActivity.calendar.startDate = data.calendar.recurrentDates[i];
+                extraActivity.ObjectID = data._id + '-' + i;
+                extraActivities.push(extraActivity);
+                promiseGroup.push(searchService.getSearchSnippet({searchSnippetTemplate: 'activity-snippet'}, extraActivity, correlationId))
+            }
+
+
+            Promise.all(promiseGroup).then((snippets) => {
+
+                for (let i = 0; i < extraActivities, i++) {
+
+                    extraActivities[i].searchSnippet = snippets[i];
+                }
+
+                resolve(extraActivities);
+
+            });
+        });
+
+    }
+
+    updateSearch(extraActivities,isUpdate, correlationId) {
+
+        return new Promise((resolve, reject) => {
+
+            let promiseGroup = [];
+
+            for (let i = 0; i < extraActivities.length - 1; i++) {
+
+                promiseGroup.push(searchService.updateSearch({searchSnippetTemplate: 'activity-snippet'}, extraActivities[i], correlationId))
+
+            }
+
+            Promise.all(promiseGroup).then((data) => {
+
+                resolve(data);
+
+            });
+
+        });
+    }
+
 }
 
 
