@@ -14,6 +14,7 @@ const SearchConnector = require('../connectors/algolia.connector');
 class SearchService {
 
     constructor () {
+        logger.info('doe ik dit?');
         this.templateService = new TemplateService();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.searchConnector = new SearchConnector();
