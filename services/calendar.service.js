@@ -28,7 +28,7 @@ class CalendarService {
 
             return self.searchService.deleteByKeyValue('parentID',data._id,correlationId).then( () => {
 
-                if (data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
+                if (data.calendar && data.calendar.recurrentDates && data.calendar.recurrentDates.length > 0) {
 
                     return self.createSnippets(data)
                         .then((extraActivities) => {
