@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const fs = require('graceful-fs');
+const readdir = require('readdir-enhanced');
 const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');
 const logger = require('../services/logger.service');
@@ -50,10 +51,10 @@ class TemplateService {
         const self = this;
         return new Promise((resolve, reject) => {
             // set _partials directory
-            let dirname = config.root + '/pages/templates/_partials/*';
-            
+            let dirname = config.root + '/pages/templates/_partials';
+
             // read partial directory
-            fs.readdir(dirname, (error, filenames) => {
+            readdir(dirname, { deep : true }, (error, filenames) => {
                 if (error) {
                     reject(error);
                 }
