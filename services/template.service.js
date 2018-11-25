@@ -54,7 +54,7 @@ class TemplateService {
             let dirname = config.root + '/pages/templates/_partials';
 
             // read partial directory
-            readdir(dirname, { deep : true }, (error, filenames) => {
+            fs.readdir(dirname, (error, filenames) => {
                 if (error) {
                     reject(error);
                 }
