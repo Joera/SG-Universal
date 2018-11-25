@@ -50,8 +50,8 @@ class TemplateService {
         const self = this;
         return new Promise((resolve, reject) => {
             // set _partials directory
-            let dirname = config.root + '/pages/templates/_partials';
-
+            let dirname = config.root + '/pages/templates/_partials/*';
+            
             // read partial directory
             fs.readdir(dirname, (error, filenames) => {
                 if (error) {
