@@ -66,7 +66,6 @@ class TemplateService {
                             if (error) {
                                 reject(error);
                             }
-
                             // set partial name as filename without the .handlebars extention
                             let partialName = filename.split('.')[0];
 
