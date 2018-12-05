@@ -119,7 +119,7 @@ class SearchService {
                 algoliaData.exerpt = null;
                 algoliaData.main_image = null;
                 algoliaData.author = null;
-                logger.info(algoliaData);
+    
                 if (algoliaData.date) {
                     algoliaData.isoDate = new Date(algoliaData.date.replace('T', ' ')).toISOString();
                     logger.info(algoliaData.isoDate);
