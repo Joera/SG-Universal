@@ -123,6 +123,7 @@ class SearchService {
 
                 logger.info(algoliaData.isoDate);
 
+
                 save(algoliaData, correlationId)
                     .then((d) => {
 
@@ -131,7 +132,7 @@ class SearchService {
 
                     })
                     .catch((error) => { reject(error) });
-                // save page to algolia
+
             } else {
                 resolve(data);
             }
