@@ -119,6 +119,7 @@ class SearchService {
                 algoliaData.exerpt = null;
                 algoliaData.main_image = null;
                 algoliaData.author = null;
+                algoliaData.isoDate = new Date(algoliaData.date).toISOString();
 
                 save(algoliaData, correlationId)
                     .then((d) => {
