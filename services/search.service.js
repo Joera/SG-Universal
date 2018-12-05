@@ -121,6 +121,8 @@ class SearchService {
                 algoliaData.author = null;
                 algoliaData.isoDate = new Date(algoliaData.date).toISOString();
 
+                logger.info(algoliaData.isoDate);
+
                 save(algoliaData, correlationId)
                     .then((d) => {
 
