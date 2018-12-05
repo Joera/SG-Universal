@@ -121,8 +121,8 @@ class SearchService {
                 algoliaData.author = null;
 
                 if (algoliaData.date) {
-                    algoliaData.isoDate = new Date(algoliaData.date.replace('T', ' ')).getTime();
-                    logger.info(algoliaData.isoDate);
+                    // algolia prefers start tot time value for sorting // this happens after snippet has been generated.
+                    algoliaData.date = new Date(algoliaData.date.replace('T', ' ')).getTime();
                 }
 
 
