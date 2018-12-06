@@ -68,7 +68,7 @@ class SearchService {
         return new Promise((resolve, reject) => {
 
             if(data.searchSnippet && data.searchSnippet !== '') {
-                // set algolia save function
+
                 let save;
 
                 if(isUpdate) { // if update use the update call else use add
@@ -76,51 +76,11 @@ class SearchService {
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
-<<<<<<< HEAD
+
                 let algoliaObject = self._trimData(data);
                 save(algoliaObject, correlationId)
-                    .then((d) => { logger.info('succes'); resolve(d) })
-=======
-                // logger.info(data);
-
-                // trim comments
-                let algoliaData = JSON.parse(JSON.stringify(data));
-
-                // trim comments
-                if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
-                    algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
-                }
-
-                if (algoliaData.sections) {
-                    algoliaData.sections = _.pickBy(algoliaData.sections, (v, k) => {
-                        return v.type === 'paragraph';
-                    });
-                }
-
-                // trim documents
-                if(algoliaData.sections) {
-
-                    for (var i in algoliaData.sections) {
-                        if(algoliaData.sections[i].type == 'documents') {
-                            delete algoliaData.sections[i];
-                        }
-                    }
-                }
-
-                algoliaData.exerpt = null;
-                algoliaData.main_image = null;
-                algoliaData.author = null;
-
-                save(algoliaData, correlationId)
-                    .then((d) => {
-
-                        logger.info('snippet uploaded to algolia');
-                        resolve(data)
-
-                    })
->>>>>>> 8d7d24d3f5d938b838a64ad829b8273aa5a1d1d5
+                    .then((d) => { resolve(d) })
                     .catch((error) => { reject(error) });
-                // save page to algolia
             } else {
                 resolve(data);
             }
