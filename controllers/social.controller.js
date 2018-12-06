@@ -195,11 +195,7 @@ class SocialController {
                 .catch(error => {
                     reject(error);
                 });
-<<<<<<< HEAD
         })
-=======
-            })
->>>>>>> 8d7d24d3f5d938b838a64ad829b8273aa5a1d1d5
     }
 
 
