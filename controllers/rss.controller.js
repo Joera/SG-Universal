@@ -4,11 +4,6 @@ const logger = require('../services/logger.service');
 const RSSService = require('../services/rss.service');
 const xml = require('xml');
 
-
-let RSSService = require('../services/rss.service'),
-    xml = require('xml');
-
-
 /**
  * RSS controller
  *
