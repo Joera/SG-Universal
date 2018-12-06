@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const _ = require('lodash');
 const logger = require('./logger.service');
 const TemplateService = require('../services/template.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
@@ -32,17 +33,14 @@ class SearchService {
         return new Promise((resolve, reject) => {
 
             if(templateDefinition.searchSnippetTemplate && templateDefinition.searchSnippetTemplate !== '') { // check if search snippet template is defined
-                // get search snippet template definition
-                let searchSnippetTemplateDefinition = null; // save empty template definition object for later re-use
-                self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId)
-                    .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
                 templateDefinition.getSearchSnippetData(data, correlationId) // get search snippet data
                     .then((templateData) => {
 
+                        //   return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateData, correlationId) }) // render search snippet
+
                         return self.templateService.render('search-snippet',  templateDefinition.searchSnippetTemplate + '.handlebars', templateData, correlationId) }) // render search snippet
 
-              //   return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateData, correlationId) }) // render search snippet
                     // resolve rendered search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
@@ -69,6 +67,7 @@ class SearchService {
     updateSearch(data, isUpdate, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
+
             if(data.searchSnippet && data.searchSnippet !== '') {
                 // set algolia save function
                 let save;
@@ -78,10 +77,51 @@ class SearchService {
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
+<<<<<<< HEAD
                 let algoliaObject = self._trimData(data);
                 save(algoliaObject, correlationId)
                     .then((d) => { logger.info('succes'); resolve(d) })
+=======
+                // logger.info(data);
+
+                // trim comments
+                let algoliaData = JSON.parse(JSON.stringify(data));
+
+                // trim comments
+                if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
+                    algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
+                }
+
+                if (algoliaData.sections) {
+                    algoliaData.sections = _.pickBy(algoliaData.sections, (v, k) => {
+                        return v.type === 'paragraph';
+                    });
+                }
+
+                // trim documents
+                if(algoliaData.sections) {
+
+                    for (var i in algoliaData.sections) {
+                        if(algoliaData.sections[i].type == 'documents') {
+                            delete algoliaData.sections[i];
+                        }
+                    }
+                }
+
+                algoliaData.exerpt = null;
+                algoliaData.main_image = null;
+                algoliaData.author = null;
+
+                save(algoliaData, correlationId)
+                    .then((d) => {
+
+                        logger.info('snippet uploaded to algolia');
+                        resolve(data)
+
+                    })
+>>>>>>> 8d7d24d3f5d938b838a64ad829b8273aa5a1d1d5
                     .catch((error) => { reject(error) });
+                // save page to algolia
             } else {
                 resolve(data);
             }

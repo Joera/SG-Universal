@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const fs = require('graceful-fs');
+var path = require('path');
 const readdir = require('readdir-enhanced');
 const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');

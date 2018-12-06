@@ -190,8 +190,10 @@ class PageController {
 
             // send response
             .then((html) => { // send response
+
                 return new Promise((resolve, reject) => {
-                    logger.info('Finished successfully, send response', correlationId);
+                    logger.info('Preview finished successfully, send response', correlationId);
+                    logger.info(html);
                     res.status(200); // set http status code for response
                     res.json({html: html}); // send response body
                     resolve({}); // resolve promise

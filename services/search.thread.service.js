@@ -52,6 +52,7 @@ class ThreadSearchService {
 
             } else {
 
+
                 data.comments = [];
                 resolve(data);
             }
@@ -119,18 +120,17 @@ class ThreadSearchService {
 
         let self = this;
 
-
-
         if (data.interaction.comments && data.interaction.comments.length > 0) {
 
-            return Promise.all(data.interaction.comments.map(function (thread) {
-                // save of update?
-                // logger.info('test');
-                // logger.info(thread);
+                return Promise.all(data.interaction.comments.map(function (thread) {
+                    // save of update?
+                    // logger.info('test');
+                    // logger.info(thread);
 
-                return self.searchService.updateSearch(thread, false, correlationId);
+                    return self.searchService.updateSearch(thread, false, correlationId);
 
-            }));
+                }));
+
         } else {
 
             data.documents = [];

@@ -79,6 +79,9 @@ class DocumentService {
 
             return Promise.all(data.documents.map(function (document) {
 
+
+
+
                 return new Promise(function (resolve, reject) {
 
                     var renderConfig = {

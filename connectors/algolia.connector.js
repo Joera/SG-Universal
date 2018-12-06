@@ -48,6 +48,8 @@ class AlgoliaConnector {
      */
     updatePage(data, correlationId) {
 
+		let algoliaObject = Object.assign({}, data);
+
         const self = this;
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
 
