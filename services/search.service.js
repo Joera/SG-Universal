@@ -6,7 +6,6 @@ const logger = require('./logger.service');
 const TemplateService = require('../services/template.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const SearchConnector = require('../connectors/algolia.connector');
-const _ = require('lodash');
 
 
 /**
