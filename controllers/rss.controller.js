@@ -25,12 +25,9 @@ class RSSController {
             res.send(feed.rss2()); // send response body
         });
     }
-
 }
 
-
 module.exports = RSSController;
-
 
 /**
  * Start the sync process
