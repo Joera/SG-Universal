@@ -16,7 +16,7 @@
     "scripts": "cd pages && gulp js-compile",
     "copy-assets": "cd pages && gulp copy-assets",
     "watch-templates": "npm-watch bulkrender:dev",
-    "check-links": "NODE_ENV=production node tasks/checklinks.js"
+    "check-links": "NODE_ENV=production node tasks/checklinks.js",
     "copy-html": "cd pages && gulp copy-html",
     "watch-templates": "npm-watch bulkrender:dev"
   },
@@ -77,7 +77,6 @@
     "gulp-concat": "^2.6.1",
     "gulp-postcss": "^8.0.0",
     "gulp-imports": "0.0.3",
-    "gulp-postcss": "^6.3.0",
     "gulp-rename": "1.2.2",
     "gulp-sass": "^4.0.2",
     "gulp-sequence": "^0.4.6",
