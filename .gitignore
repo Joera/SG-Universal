@@ -11,4 +11,8 @@ config/production/*
 wp-content/plugins/headless/lib/cors.php
 config/production/index.js
 package-lock.json
+<<<<<<< HEAD
+pages
+=======
 
+>>>>>>> 8d7d24d3f5d938b838a64ad829b8273aa5a1d1d5

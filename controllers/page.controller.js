@@ -8,10 +8,10 @@ const TemplateService = require('../services/template.service');
 const RenderProcessService = require('../services/render.process.service');
 const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
-const DocumentService = require('../services/document.search.service');
-const DatasetService = require('../services/dataset.service');
 const CommentSearchService = require('../services/search.comment.service');
 const ThreadSearchService = require('../services/search.thread.service');
+const DocumentService = require('../services/search.document.service');
+const DatasetService = require('../services/dataset.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
@@ -173,6 +173,7 @@ class PageController {
         const self = this;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         let templateDefinition = null; // save empty template definition object for later re-use
+        let body;
         logger.info('Received preview call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             // get template definition
@@ -180,7 +181,12 @@ class PageController {
             .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
             // render template
-            .then(() => { return templateDefinition.preRender(null, req.body, correlationId) }) // execute the pre render hook
+            .then( () => {
+                body = req.body;
+                body.title = body.title.rendered;
+                body.content = body.content.rendered;
+            })
+            .then(() => { return templateDefinition.preRender(null, body, correlationId) }) // execute the pre render hook
             .then((templateData) => { return self.templateService.render(templateDefinition.name, templateDefinition.template, templateData, correlationId) }) // render template
             // .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
 

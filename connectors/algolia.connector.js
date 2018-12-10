@@ -16,7 +16,6 @@ class AlgoliaConnector {
         this.client = algoliasearch(config.algoliaApplicationId, config.algoliaApiKey);
     }
 
-
     /**
      * Add page to algolia search index
      * @param data                      data to store in search
@@ -53,9 +52,10 @@ class AlgoliaConnector {
 
         const self = this;
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
+
         return new Promise((resolve, reject) => {
             // save record to Algolio Search
-            index.saveObject(algoliaObject, (error, content) => {
+            index.saveObject(data, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     reject(error);
@@ -101,23 +101,18 @@ class AlgoliaConnector {
                 facetFilters: ['parentID:' + value]
             };
 
-            logger.info(options);
-
             index.deleteBy(options, (error, content) => {
                 if (error) {
                     error.correlationId = correlationId;
                     logger.info(error);
                     resolve();
                 }
-                logger.info(content);
                 //      logger.info('Deleted page from Algolia search', correlationId);
                 resolve(); // resolve promise
             });
 
         })
     }
-
-
 }
 
 module.exports = AlgoliaConnector;

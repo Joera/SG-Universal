@@ -35,7 +35,11 @@ class SearchService {
 
                 templateDefinition.getSearchSnippetData(data, correlationId) // get search snippet data
                     .then((templateData) => {
+
+                        //   return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateData, correlationId) }) // render search snippet
+
                         return self.templateService.render('search-snippet',  templateDefinition.searchSnippetTemplate + '.handlebars', templateData, correlationId) }) // render search snippet
+
                     // resolve rendered search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
@@ -83,62 +87,53 @@ class SearchService {
             const searchConnector = new SearchConnector();
 
             if(data.searchSnippet && data.searchSnippet !== '') {
-                // set algolia save function
+
                 let save;
+
                 if(isUpdate) { // if update use the update call else use add
                     save = searchConnector.addPage.bind(searchConnector);
                 } else {
                     save = searchConnector.addPage.bind(searchConnector);
                 }
-                // logger.info(data);
 
-                // trim comments
-                let algoliaData = JSON.parse(JSON.stringify(data));
+                let algoliaObject = self._trimData(data);
+                save(algoliaObject, correlationId)
+                    .then((d) => { resolve(d) })
+                    .catch((error) => { reject(error) });
+            } else {
+                resolve(data);
+            }
+        })
+    }
 
-                // trim comments
-                if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
-                    algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
-                }
+    _trimData(data) {
 
-                if (algoliaData.sections) {
-                    algoliaData.sections = _.pickBy(algoliaData.sections, (v, k) => {
-                        return v.type === 'paragraph';
-                    });
-                }
+        // algolia has a max size for one record
+        let algoliaObject = Object.assign({}, data);
 
-                // trim documents
-                if(algoliaData.sections) {
-
-                    for (var i in algoliaData.sections) {
-                        if(algoliaData.sections[i].type == 'documents') {
-                            delete algoliaData.sections[i];
-                        }
-                    }
-                }
-
-                algoliaData.exerpt = null;
-                algoliaData.main_image = null;
-                algoliaData.author = null;
+        if (data.type === 'post') {
 
                 if (algoliaData.date) {
                     // algolia prefers start tot time value for sorting // this happens after snippet has been generated.
                     algoliaData.date = new Date(algoliaData.date.replace('T', ' ')).getTime();
                 }
 
+                if (algoliaObject.sections) {
+                    algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
+                        return v.type === 'paragraph';
+                    });
+                }
 
-                save(algoliaData, correlationId)
-                    .then((d) => {
+              //   algoliaObject.excerpt = null;
+                algoliaObject.main_image = null;
+                algoliaObject.author = null;
+                algoliaObject.comments = null;
+                algoliaObject.attachments = null;
+               //  algoliaObject.content = null;
 
-                        logger.info('snippet uploaded to algolia');
-                        resolve(data)
+                return algoliaObject;
 
-                    })
-                    .catch((error) => { reject(error) });
-
-            } else {
-                resolve(data);
-            }
-        })
+        }
     }
 
     deleteByKeyValue(key,value,correlationId) {
