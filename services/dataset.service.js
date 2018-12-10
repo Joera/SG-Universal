@@ -81,11 +81,7 @@ class DatasetService {
             self.getDataset(data, path)
                 .then( data => {
                     if(data.datasets) {
-<<<<<<< HEAD
-                        self.writeJsonFile(data.datasets, '/' + path, 'dataset.json');
-=======
                         self.writeJsonFile(data.datasets, path, 'dataset.json');
->>>>>>> a9a23e32e38aa861bcb9ad7a6120be84774d8483
                     } else {
                         resolve(data);
                     }
