@@ -10,10 +10,12 @@ const RenderQueue = require('../services/render.queue.service');
 const SearchService = require('../services/search.service');
 const DocumentService = require('../services/document.search.service');
 const DatasetService = require('../services/dataset.service');
-const CommentSearchService = require('../services/comment.search.service');
+const CommentSearchService = require('../services/search.comment.service');
+const ThreadSearchService = require('../services/search.thread.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const PagePersistence = require('../persistence/page.persistence');
 const SearchConnector = require('../connectors/algolia.connector');
+const CalendarService = require('../services/calendar.service');
 const FileSystemConnector = require('../connectors/filesystem.connector');
 const config = require('../config');
 
@@ -32,15 +34,15 @@ class PageController {
         this.documentService = new DocumentService();
         this.datasetService = new DatasetService();
         this.commentSearchService = new CommentSearchService();
+        this.threadSearchService = new ThreadSearchService();
         this.renderProcessService = new RenderProcessService();
         this.renderQueue = new RenderQueue();
         this.templateDefinitionService = new TemplateDefinitionService();
         this.searchService = new SearchService();
+        this.calendarService = new CalendarService();
         this.searchConnector = new SearchConnector();
         this.fileSystemConnector = new FileSystemConnector();
     }
-
-
 
     /***********************************************************************************************
      * CRUD handlers
@@ -171,6 +173,7 @@ class PageController {
         const self = this;
         const correlationId = uuidv4(); // set correlation id for debugging the process chain
         let templateDefinition = null; // save empty template definition object for later re-use
+        let body;
         logger.info('Received preview call', correlationId);
         self.authService.isAuthorized(req.headers.authorization, correlationId) // check if authorized to make call
             // get template definition
@@ -178,14 +181,21 @@ class PageController {
             .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
             // render template
-            .then(() => { return templateDefinition.preRender(null, req.body, correlationId) }) // execute the pre render hook
+            .then( () => {
+                body = req.body;
+                body.title = body.title.rendered;
+                body.content = body.content.rendered;
+            })
+            .then(() => { return templateDefinition.preRender(null, body, correlationId) }) // execute the pre render hook
             .then((templateData) => { return self.templateService.render(templateDefinition.name, templateDefinition.template, templateData, correlationId) }) // render template
-            .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
+            // .then((html) => { return templateDefinition.postRender(html, null, req.body, correlationId) }) // execute the post render hook
 
             // send response
             .then((html) => { // send response
+
                 return new Promise((resolve, reject) => {
-                    logger.info('Finished successfully, send response', correlationId);
+                    logger.info('Preview finished successfully, send response', correlationId);
+                    logger.info(html);
                     res.status(200); // set http status code for response
                     res.json({html: html}); // send response body
                     resolve({}); // resolve promise
@@ -198,9 +208,6 @@ class PageController {
                 res.json({message: error.message}); // send response body
             });
     }
-
-
-
 
     /***********************************************************************************************
      *
@@ -220,8 +227,6 @@ class PageController {
             let saveData = null; // data that will be saved. Object defined for later use
             let persistent_path = null;
 
-
-            // get template definitions
             // find the template that belongs to the data
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId, options) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
@@ -232,25 +237,89 @@ class PageController {
 
                 // set url
                 .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
+
                 .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
-                // set search snippet
-                .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
-                .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
+                .then((path) => { return new Promise((res, rej) => {
+                        persistent_path = path; // store path of original object
+                        saveData.url = config.baseUrl + '/' + path; // set url on data object that will be saved
+                        res({});
+                    })
+                })
 
-                // save page
-                .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
-                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
+                // create search snippet
+                .then(() => {
+                    if (config.renderTasks.indexOf('searchPosts') > -1) {
+                        return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options)
+                    } else {
+                        return;
+                    }
+                })
+                .then((searchSnippetHtml) => {
+                    if (config.renderTasks.indexOf('searchPosts') > -1) {
+                        return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); })
+                    } else {
+                        return;
+                    }
+                })
 
-                // update search
-                // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
-                .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
+                // save page to database
+                .then(() => { return self.pagePersistence.save(saveData, correlationId, options) })
 
-                .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
+                // create and store datasets
+                .then(() => {
+                    if (config.renderTasks.indexOf('dataset') > -1) {
+                        return self.datasetService.saveDataset(saveData, persistent_path)
+                    } else {
+                        return;
+                    }
+                })
 
-                .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
+                // send search snippets to algolia
+                .then(() => {
+                    if (config.renderTasks.indexOf('searchPosts') > -1) {
+                        return self.searchService.updateSearch(saveData, isUpdate, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
 
-                // .then(() => { return self.searchService.saveDocument(saveData, correlationId); })
+                // create and send document search snippets to algolia
+                .then(() => {
+
+                    if (config.renderTasks.indexOf('searchDocuments') > -1) {
+                        return self.documentService.documentsToSearch(saveData, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
+
+                .then(() => {
+                    if (config.renderTasks.indexOf('searchComments') > -1) {
+                        return self.commentSearchService.commentsToSearch(saveData, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
+
+                .then(() => {
+
+                    if (config.renderTasks.indexOf('searchThreads') > -1) {
+                        return self.threadSearchService.toSearch(saveData, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
+
+               .then(() => {
+
+                   if (config.renderTasks.indexOf('calendarFunctions') > -1) {
+                       return self.calendarService.recurringEvents(saveData, correlationId, options);
+                   } else {
+                       return;
+                   }
+
+               })
 
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
@@ -302,8 +371,6 @@ class PageController {
 
         })
     }
-
-
 }
 
 module.exports = PageController;

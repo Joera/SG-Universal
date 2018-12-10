@@ -79,9 +79,13 @@ class DocumentService {
 
             return Promise.all(data.documents.map(function (document) {
 
+
+
+
                 return new Promise(function (resolve, reject) {
 
                     var renderConfig = {
+
                         title: document['file-name'],
                         content: document['file-description'],
                         date: document.date,
@@ -93,6 +97,13 @@ class DocumentService {
                     document.type = 'document';
                     document.objectID = document['file-id'] || 99999999; // keep algolia id consistent
                     document.snippetData = renderConfig;
+
+
+                    // for equitable search results
+
+                    document.title = document.file_name;
+                    document.content = document.file_description;
+
                     resolve(document);
                 });
             }))
@@ -115,7 +126,6 @@ class DocumentService {
         } else {
             documents = [];
         }
-
     }
 
     _uploadSnippets(data,correlationId){
@@ -136,6 +146,4 @@ class DocumentService {
     }
 
 }
-
-
 module.exports = DocumentService;
