@@ -85,7 +85,7 @@ class SearchService {
                 let save;
 
                 if(isUpdate) { // if update use the update call else use add
-                    save = searchConnector.updatePage.bind(self.searchConnector);
+                    save = self.searchConnector.updatePage.bind(self.searchConnector);
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
@@ -145,9 +145,7 @@ class SearchService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            const searchConnector = new SearchConnector();
-
-            searchConnector.deleteByKeyValue(key,value,correlationId).then( () => {
+            self.searchConnector.deleteByKeyValue(key,value,correlationId).then( () => {
 
                 resolve();
 
