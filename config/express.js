@@ -24,7 +24,7 @@ app.use(function (error, req, res, next) { // catch bodyParser syntax error and 
 // add headers
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'https://eurekarail.net');
+    res.setHeader('Access-Control-Allow-Origin', 'https://wp.eurekarail.net');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
