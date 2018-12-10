@@ -36,32 +36,20 @@ class SearchCommentService {
             if(data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
                 self._createSnippetData(data,correlationId)
-                    .then((threads) => {
-
-                        data.threads = [];
+                    .then((comments) => {
 
                         return new Promise((res, rej) => {
-                            for (let i = 0; i < threads.length; i++) {
-                                let threadObject = {};
-
-                                if (threads[i] !== null) {
-                                    threadObject.objectID = threads[i].id;
-                                    threadObject.date = threads[i].date;
-                                    threadObject.type = 'comments';
-                                    threadObject.snippetData = threads[i];
-                                    threadObject.comments = threads[i].comments;
-                                    data.threads.push(threadObject);
-                                }
-                                
-                            }
+                            data.comments = comments;
                             res(data);
                         });
+
                     })
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
                             return new Promise((res, rej) => {
-                                for (let i = 0; i < data.threads.length; i++) {
-                                    data.threads[i].searchSnippet = snippets[i];
+
+                                for (let i = 0; i < data.comments.length; i++) {
+                                    data.comments[i].searchSnippet = snippets[i];
                                 }
                                 res(data);
                             });
@@ -84,45 +72,93 @@ class SearchCommentService {
 
     _createSnippetData(data,correlationId) {
 
-        if(data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
+
+        return new Promise((res, rej) => {
+
+            let comments,comment;
 
 
-            return Promise.all(data.interaction.nested_comments.map(function (thread) {
+            if (data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
-                return new Promise(function (resolve, reject) {
+                // alle comments los .. maar thread insluiten
 
-                    if(thread && thread[0] && thread[0] !== null) {
+                comments = [];
+
+                data.interaction.nested_comments.forEach((thread) => {
+
+                    thread.forEach((c) => {
+
+                        comment = {};
+
+                        // logger.info(thread);
 
                         var renderConfig = {
-                            id: thread[0].id,
-                            author: thread[0].name,
-                            content: thread[0].content,
-                            date: thread[0].date,
-                            comments: thread,
-                            reply_count: thread.length - 1,
-                            url: data.url + '#dialoog'
+                            id: c.id,
+                            author: c.name,
+                            content: c.content,
+                            date: c.date,
+                            thread: thread.filter( t => { t.id != c.id }),
+                            reply_count: thread.filter( t => { t.id != c.id }).length,
+                            url: data.url + '#comment-id-' + c.id,
+                            post_title: data.title.rendered || data.title
 
-                        }
-
-                        thread = renderConfig;
                     }
 
-                    resolve(thread);
+                        comment.objectID = c.id;
+                        comment.type = 'comment';
+                        comment.language = data.language;
+                        comment.snippetData = renderConfig;
+                        comment.title = c.content.slice(0,120).replace(/<(?:.|\n)*?>/gm, '');
+                        comment.content = c.content.replace(/<(?:.|\n)*?>/gm, '');
+                        comment.author = c.author;
+                        comment.comments = thread.filter( t => { t.id != c.id });
+                        comments.push(comment);
+                    })
                 });
-            }))
 
         } else {
-            data.interaction.nested_comments = null;
+                comments = false;
         }
+
+            res(comments);
+
+        });
+
+
+            // return Promise.all(data.interaction.nested_comments.map(function (thread) {
+            //
+            //     return new Promise(function (resolve, reject) {
+            //
+            //         if(thread && thread[0] && thread[0] !== null) {
+            //
+            //             var renderConfig = {
+            //                 id: thread[0].id,
+            //                 author: thread[0].name,
+            //                 content: thread[0].content,
+            //                 date: thread[0].date,
+            //                 comments: thread,
+            //                 reply_count: thread.length - 1,
+            //                 url: data.url + '#dialoog'
+            //
+            //             }
+            //
+            //             thread = renderConfig;
+            //         }
+            //
+            //         resolve(thread);
+            //     });
+            // }))
+
+
     }
 
     _renderSnippets(data,correlationId) {
 
         let self = this;
 
-        if(data.threads && data.threads.length > 0) {
-            return Promise.all(data.threads.map(function (thread) {
-                return self.templateService.render('search-snippet','thread-snippet.handlebars', thread.snippetData, correlationId);
+        if(data.comments && data.comments.length > 0) {
+            return Promise.all(data.comments.map(function (comment) {
+                return self.templateService.render('search-snippet','comment-snippet.handlebars', comment.snippetData, correlationId);
             }))
         }
 
@@ -132,14 +168,12 @@ class SearchCommentService {
 
         let self = this;
 
-        if (data.threads && data.threads.length > 0) {
+        // logger.info(data.comments);
 
-                return Promise.all(data.threads.map(function (thread) {
-                    // save of update?
-                    // logger.info('test');
-                    // logger.info(thread);
+        if (data.comments && data.comments.length > 0) {
 
-                    return self.searchService.updateSearch(thread, false, correlationId);
+                return Promise.all(data.comments.map(function (comment) {
+                    return self.searchService.updateSearch(comment, false, correlationId);
 
                 }));
         } else {
@@ -149,4 +183,4 @@ class SearchCommentService {
     }
 }
 
-module.exports = SearchCommentService;
+module.exports = CommentSearchService;
