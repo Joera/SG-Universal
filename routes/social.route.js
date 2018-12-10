@@ -15,7 +15,11 @@ let get = socialCtrl.handleGetCall.bind(socialCtrl), // bind social controller c
 // CRUD routes
 router.route('/')
 
+<<<<<<< HEAD
 // GET /api/social - get list of social items
+=======
+    // GET /api/social - get list of social items
+>>>>>>> master
     .get(get)
 
     // POST /api/social - create social item

@@ -121,11 +121,19 @@ class ThreadSearchService {
 
         if (data.interaction.comments && data.interaction.comments.length > 0) {
 
+<<<<<<< HEAD
             return Promise.all(data.interaction.comments.map(function (thread) {
 
                 return self.searchService.updateSearch(thread, false, correlationId);
 
             }));
+=======
+                return Promise.all(data.interaction.comments.map(function (thread) {
+
+                    return self.searchService.updateSearch(thread, false, correlationId);
+
+                }));
+>>>>>>> master
         }
     }
 }

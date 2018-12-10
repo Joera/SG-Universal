@@ -242,7 +242,6 @@ class PageController {
 
                 .then((path) => { return new Promise((res, rej) => {
                         persistent_path = path; // store path of original object
-                        saveData.url = config.baseUrl + '/' + path; // set url on data object that will be saved
                         res({});
                     })
                 })

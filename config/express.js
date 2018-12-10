@@ -16,7 +16,11 @@ app.use(function (error, req, res, next) { // catch bodyParser syntax error and 
         logger.info("received invalid json");
         logger.error("received invalid json");
     } else {
+<<<<<<< HEAD
     next();
+=======
+        next();
+>>>>>>> master
     }
 });
 

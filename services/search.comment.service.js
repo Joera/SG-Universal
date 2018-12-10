@@ -31,7 +31,11 @@ class CommentSearchService {
 
         return new Promise((resolve, reject) => {
 
+<<<<<<< HEAD
             // init template service
+=======
+                // init template service
+>>>>>>> master
 
             if(data.interaction && data.interaction.nested_comments && data.interaction.nested_comments.length > 0) {
 
@@ -46,6 +50,7 @@ class CommentSearchService {
                     })
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
+<<<<<<< HEAD
                         return new Promise((res, rej) => {
 
                             for (let i = 0; i < data.comments.length; i++) {
@@ -53,6 +58,15 @@ class CommentSearchService {
                             }
                             res(data);
                         });
+=======
+                            return new Promise((res, rej) => {
+
+                                for (let i = 0; i < data.comments.length; i++) {
+                                    data.comments[i].searchSnippet = snippets[i];
+                                }
+                                res(data);
+                            });
+>>>>>>> master
                     })
                     .then((data) => { return self._uploadSnippets(data,correlationId); })
                     .then((data) => {
@@ -64,9 +78,15 @@ class CommentSearchService {
 
             } else {
 
+<<<<<<< HEAD
                 data.comments = [];
                 resolve(data);
             }
+=======
+                    data.comments = [];
+                    resolve(data);
+             }
+>>>>>>> master
         })
     }
 
@@ -102,7 +122,11 @@ class CommentSearchService {
                             url: data.url + '#comment-id-' + c.id,
                             post_title: data.title.rendered || data.title
 
+<<<<<<< HEAD
                         }
+=======
+                    }
+>>>>>>> master
 
                         comment.objectID = c.id;
                         comment.type = 'comment';
@@ -116,15 +140,22 @@ class CommentSearchService {
                     })
                 });
 
+<<<<<<< HEAD
             } else {
                 comments = false;
             }
+=======
+        } else {
+                comments = false;
+        }
+>>>>>>> master
 
             res(comments);
 
         });
 
 
+<<<<<<< HEAD
         // return Promise.all(data.interaction.nested_comments.map(function (thread) {
         //
         //     return new Promise(function (resolve, reject) {
@@ -148,6 +179,31 @@ class CommentSearchService {
         //         resolve(thread);
         //     });
         // }))
+=======
+            // return Promise.all(data.interaction.nested_comments.map(function (thread) {
+            //
+            //     return new Promise(function (resolve, reject) {
+            //
+            //         if(thread && thread[0] && thread[0] !== null) {
+            //
+            //             var renderConfig = {
+            //                 id: thread[0].id,
+            //                 author: thread[0].name,
+            //                 content: thread[0].content,
+            //                 date: thread[0].date,
+            //                 comments: thread,
+            //                 reply_count: thread.length - 1,
+            //                 url: data.url + '#dialoog'
+            //
+            //             }
+            //
+            //             thread = renderConfig;
+            //         }
+            //
+            //         resolve(thread);
+            //     });
+            // }))
+>>>>>>> master
 
 
     }
@@ -172,10 +228,17 @@ class CommentSearchService {
 
         if (data.comments && data.comments.length > 0) {
 
+<<<<<<< HEAD
             return Promise.all(data.comments.map(function (comment) {
                 return self.searchService.updateSearch(comment, false, correlationId);
 
             }));
+=======
+                return Promise.all(data.comments.map(function (comment) {
+                    return self.searchService.updateSearch(comment, false, correlationId);
+
+                }));
+>>>>>>> master
         } else {
 
             data.documents = [];
