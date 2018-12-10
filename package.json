@@ -65,9 +65,5 @@
     "uuid": "^3.1.0",
     "winston": "^2.3.1",
     "winston-daily-rotate-file": "^1.4.4"
-  },
-  "devDependencies": {
-    "babelify": "^8.0.0",
-    "concurrently": "^3.5.0",
   }
 }
