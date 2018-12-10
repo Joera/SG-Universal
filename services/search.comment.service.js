@@ -9,7 +9,7 @@ const SearchService = require('../services/search.service');
 /**
  * Service for getting documents from the post sections
  */
-class SearchCommentService {
+class CommentSearchService {
 
 
     constructor() {

@@ -240,12 +240,11 @@ class PageController {
                 .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
                 // set search snippet
-                .then(() => { return self.searchService.getSearchSnippet(saveData, templateDefinition, correlationId, options) }) // get search snippet
+                .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
                 .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
 
                 // save page
                 .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
-
                 .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
                 // // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
                 .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })

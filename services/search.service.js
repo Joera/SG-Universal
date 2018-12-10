@@ -85,9 +85,18 @@ class SearchService {
                 let save;
 
                 if(isUpdate) { // if update use the update call else use add
-                    save = searchConnector.updatePage.bind(searchConnector);
+                    save = searchConnector.updatePage.bind(self.searchConnector);
                 } else {
-                    save = searchConnector.addPage.bind(searchConnector);
+                    save = self.searchConnector.addPage.bind(self.searchConnector);
+                }
+                // logger.info(data);
+
+                // trim comments
+                let algoliaData = JSON.parse(JSON.stringify(data));
+
+                // trim comments
+                if(algoliaData.interaction && algoliaData.interaction.comments && algoliaData.interaction.comments.length > 0) {
+                    algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
                 }
 
                 let algoliaObject = self._trimData(data);

@@ -1,6 +1,5 @@
 'use strict';
 
-
 const fs = require('graceful-fs');
 const Promise = require('bluebird');
 const logger = require('./logger.service');
