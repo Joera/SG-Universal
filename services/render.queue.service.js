@@ -57,7 +57,8 @@ class RenderQueueService {
                                 } else {
                                     // template already in queue
                                     const proxiedError = new TypeError();
-                                    proxiedError.message = 'Skipping';
+                                    // proxiedError.message = 'Skipping';
+
                                     rej(proxiedError.message)
                                     // rej(proxiedError)
                                 }

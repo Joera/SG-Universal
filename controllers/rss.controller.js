@@ -1,16 +1,14 @@
 'use strict';
 
 const logger = require('../services/logger.service');
-
-let RSSService = require('../services/rss.service'),
-    xml = require('xml');
+const RSSService = require('../services/rss.service');
+const xml = require('xml');
 
 /**
  * RSS controller
  *
  */
 class RSSController {
-
 
     constructor () {
 
@@ -27,12 +25,6 @@ class RSSController {
             res.send(feed.rss2()); // send response body
         });
     }
-
 }
 
 module.exports = RSSController;
-
-
-/**
- * Start the sync process
- */

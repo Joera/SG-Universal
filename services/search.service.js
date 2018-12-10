@@ -50,6 +50,23 @@ class SearchService {
         })
     }
 
+    getActivitySearchSnippet(data) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+                const templateService = new TemplateService();
+
+                 templateService.render('search-snippet', 'activity-snippet.handlebars', data)  // render search snippet
+                    .then((searchSnippetHtml) => {
+                        resolve(searchSnippetHtml);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    })
+
+        })
+    }
+
 
     /**
      * Update algolia search
@@ -64,10 +81,11 @@ class SearchService {
         return new Promise((resolve, reject) => {
 
             if(data.searchSnippet && data.searchSnippet !== '') {
-                // set algolia save function
+
                 let save;
+
                 if(isUpdate) { // if update use the update call else use add
-                    save = self.searchConnector.updatePage.bind(self.searchConnector);
+                    save = searchConnector.updatePage.bind(self.searchConnector);
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
@@ -81,39 +99,62 @@ class SearchService {
                     algoliaData.interaction.comments = algoliaData.interaction.comments.slice(0,1);
                 }
 
-                if (algoliaData.sections) {
-                    algoliaData.sections = _.pickBy(algoliaData.sections, (v, k) => {
-                        return v.type === 'paragraph';
-                    });
-                }
-
-                // trim documents
-                if(algoliaData.sections) {
-
-                    for (var i in algoliaData.sections) {
-                        if(algoliaData.sections[i].type == 'documents') {
-                            delete algoliaData.sections[i];
-                        }
-                    }
-                }
-
-                algoliaData.exerpt = null;
-                algoliaData.main_image = null;
-                algoliaData.author = null;
-
-                save(algoliaData, correlationId)
-                    .then((d) => {
-
-                        logger.info('snippet uploaded to algolia');
-                        resolve(data)
-
-                    })
+                let algoliaObject = self._trimData(data);
+                save(algoliaObject, correlationId)
+                    .then((d) => { resolve(d) })
                     .catch((error) => { reject(error) });
-                // save page to algolia
             } else {
                 resolve(data);
             }
         })
+    }
+
+    _trimData(data) {
+
+        // algolia has a max size for one record
+        let algoliaObject = Object.assign({}, data);
+
+        if (data.type === 'post') {
+
+                if (algoliaData.date) {
+                    // algolia prefers start tot time value for sorting // this happens after snippet has been generated.
+                    algoliaData.date = new Date(algoliaData.date.replace('T', ' ')).getTime();
+                }
+
+                if (algoliaObject.sections) {
+                    algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
+                        return v.type === 'paragraph';
+                    });
+                }
+
+              //   algoliaObject.excerpt = null;
+                algoliaObject.main_image = null;
+                algoliaObject.author = null;
+                algoliaObject.comments = null;
+                algoliaObject.attachments = null;
+               //  algoliaObject.content = null;
+
+                return algoliaObject;
+
+        }
+    }
+
+    deleteByKeyValue(key,value,correlationId) {
+
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+            const searchConnector = new SearchConnector();
+
+            searchConnector.deleteByKeyValue(key,value,correlationId).then( () => {
+
+                resolve();
+
+            }).catch( (error) => {
+
+                reject(error);
+            });
+        });
     }
 }
 

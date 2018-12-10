@@ -2,6 +2,8 @@
 
 const Promise = require('bluebird');
 const fs = require('graceful-fs');
+var path = require('path');
+const readdir = require('readdir-enhanced');
 const minify = require('html-minifier').minify;
 const handlebars = require('handlebars');
 const logger = require('../services/logger.service');
@@ -65,7 +67,6 @@ class TemplateService {
                             if (error) {
                                 reject(error);
                             }
-
                             // set partial name as filename without the .handlebars extention
                             let partialName = filename.split('.')[0];
 
@@ -170,6 +171,7 @@ class TemplateService {
      * @param correlationId             id for correlation through the process chain
      */
     render(name, template, data, correlationId) {
+
         const self = this;
         return new Promise((resolve, reject) => {
             self._registerHelpers(correlationId) // register helper functions
