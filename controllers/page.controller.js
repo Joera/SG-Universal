@@ -237,21 +237,88 @@ class PageController {
 
                 // set url
                 .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
-                .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
 
-                // set search snippet
-                .then(() => { return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options) }) // get search snippet
-                .then((searchSnippetHtml) => { return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); }) }) // set search snippet on data object that will be saved
+                .then((path) => { return new Promise((res, rej) => {
+                        persistent_path = path; // store path of original object
+                        saveData.url = config.baseUrl + '/' + path; // set url on data object that will be saved
+                        res({});
+                    })
+                })
 
-                // save page
-                .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
-                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
-                // // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
-                .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
-                .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
-                .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
+                // create search snippet
+                .then(() => {
+                    if (config.renderTasks.indexOf('searchPosts') > -1) {
+                        return self.searchService.getSearchSnippet(templateDefinition, saveData, correlationId, options)
+                    } else {
+                        return;
+                    }
+                })
+                .then((searchSnippetHtml) => {
+                    if (config.renderTasks.indexOf('searchPosts') > -1) {
+                        return new Promise((res, rej) => { saveData.searchSnippet = searchSnippetHtml; res({}); })
+                    } else {
+                        return;
+                    }
+                })
 
-               // .then(() => { return self.calendarService.recurringEvents(saveData,correlationId,options); })
+                // save page to database
+                .then(() => { return self.pagePersistence.save(saveData, correlationId, options) })
+
+                // create and store datasets
+                .then(() => {
+                    if (config.renderTasks.indexOf('dataset') > -1) {
+                        return self.datasetService.saveDataset(saveData, persistent_path)
+                    } else {
+                        return;
+                    }
+                })
+
+                // send search snippets to algolia
+                .then(() => {
+                    if (config.renderTasks.indexOf('searchPosts') > -1) {
+                        return self.searchService.updateSearch(saveData, isUpdate, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
+
+                // create and send document search snippets to algolia
+                .then(() => {
+
+                    if (config.renderTasks.indexOf('searchDocuments') > -1) {
+                        return self.documentService.documentsToSearch(saveData, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
+
+                .then(() => {
+
+                    if (config.renderTasks.indexOf('searchComments') > -1) {
+                        return self.commentSearchService.commentsToSearch(saveData, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
+
+                .then(() => {
+
+                    if (config.renderTasks.indexOf('searchThreads') > -1) {
+                        return self.threadSearchService.toSearch(saveData, correlationId, options);
+                    } else {
+                        return;
+                    }
+                })
+
+               .then(() => {
+
+                   if (config.renderTasks.indexOf('calendarFunctions') > -1) {
+                       return self.calendarService.recurringEvents(saveData, correlationId, options);
+                   } else {
+                       return;
+                   }
+
+               })
 
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise

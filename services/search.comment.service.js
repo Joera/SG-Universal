@@ -43,23 +43,6 @@ class CommentSearchService {
                             res(data);
                         });
 
-                        // return new Promise((res, rej) => {
-                        //     for (let i = 0; i < comments.length; i++) {
-                        //         let threadObject = {};
-                        //
-                        //         if (threads[i] !== null) {
-                        //             threadObject.objectID = threads[i].id;
-                        //             threadObject.date = threads[i].date;
-                        //             threadObject.type = 'comments';
-                        //             threadObject.snippetData = threads[i];
-                        //             threadObject.comments = threads[i].comments;
-                        //             data.threads.push(threadObject);
-                        //         }
-                        //
-                        //     }
-                        //     res(data);
-                        // });
-
                     })
                     .then((data) => { return self._renderSnippets(data,correlationId); })
                     .then((snippets) => {
@@ -119,7 +102,7 @@ class CommentSearchService {
                             url: data.url + '#comment-id-' + c.id,
                             post_title: data.title.rendered || data.title
 
-                        }
+                    }
 
                         comment.objectID = c.id;
                         comment.type = 'comment';
@@ -133,9 +116,9 @@ class CommentSearchService {
                     })
                 });
 
-            } else {
+        } else {
                 comments = false;
-            }
+        }
 
             res(comments);
 

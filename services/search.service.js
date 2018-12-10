@@ -116,9 +116,10 @@ class SearchService {
 
         if (data.type === 'post') {
 
-                if (algoliaData.date) {
+
+                if (algoliaObject.date) {
                     // algolia prefers start tot time value for sorting // this happens after snippet has been generated.
-                    algoliaData.date = new Date(algoliaData.date.replace('T', ' ')).getTime();
+                    algoliaObject.date = new Date(algoliaObject.date.replace('T', ' ')).getTime();
                 }
 
                 if (algoliaObject.sections) {

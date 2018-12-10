@@ -35,12 +35,12 @@ class ThreadSearchService {
 
                 self._renderSnippets(data,correlationId)
                     .then((snippets) => {
-                            return new Promise((res, rej) => {
-                                for (let i = 0; i < data.interaction.comments.length; i++) {
-                                    data.interaction.comments[i].searchSnippet = snippets[i];
-                                }
-                                res(data);
-                            });
+                        return new Promise((res, rej) => {
+                            for (let i = 0; i < data.interaction.comments.length; i++) {
+                                data.interaction.comments[i].searchSnippet = snippets[i];
+                            }
+                            res(data);
+                        });
                     })
                     .then((data) => { return self._uploadSnippets(data,correlationId); })
                     .then((data) => {
@@ -52,9 +52,9 @@ class ThreadSearchService {
 
             } else {
 
-                    data.comments = [];
-                    resolve(data);
-             }
+                data.comments = [];
+                resolve(data);
+            }
         })
     }
 

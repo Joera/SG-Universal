@@ -1,11 +1,11 @@
 'use strict';
 
-    const Promise = require('bluebird');
-    const uuidv4 = require('uuid/v4');
-    const logger = require('../services/logger.service');
-    const SocialPersistence = require('../persistence/social.persistence');
-    const AuthService = require('../services/auth.service');
-    const RenderProcessService = require('../services/render.process.service');
+const Promise = require('bluebird');
+const uuidv4 = require('uuid/v4');
+const logger = require('../services/logger.service');
+const SocialPersistence = require('../persistence/social.persistence');
+const AuthService = require('../services/auth.service');
+const RenderProcessService = require('../services/render.process.service');
 
 
 /**
@@ -195,7 +195,7 @@ class SocialController {
                 .catch(error => {
                     reject(error);
                 });
-            })
+        })
     }
 
 
