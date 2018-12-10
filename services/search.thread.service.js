@@ -120,7 +120,7 @@ class ThreadSearchService {
         let self = this;
 
         if (data.interaction.comments && data.interaction.comments.length > 0) {
-            
+
             return Promise.all(data.interaction.comments.map(function (thread) {
 
                 return self.searchService.updateSearch(thread, false, correlationId);
