@@ -183,8 +183,8 @@ class PageController {
             // render template
             .then( () => {
                 body = req.body;
-                body.title = body.title.rendered;
-                body.content = body.content.rendered;
+                // body.title = body.title.rendered;
+                // body.content = body.content.rendered;
             })
             .then(() => { return templateDefinition.preRender(null, body, correlationId) }) // execute the pre render hook
             .then((templateData) => { return self.templateService.render(templateDefinition.name, templateDefinition.template, templateData, correlationId) }) // render template
