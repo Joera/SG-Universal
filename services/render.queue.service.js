@@ -57,8 +57,10 @@ class RenderQueueService {
                                 } else {
                                     // template already in queue
                                     const proxiedError = new TypeError();
-                                    proxiedError.message = 'Could not add template to render queue because it already is in the render queue';
-                                    rej(proxiedError)
+                                    // proxiedError.message = 'Skipping';
+
+                                    rej(proxiedError.message)
+                                    // rej(proxiedError)
                                 }
                             })
                     })
@@ -71,7 +73,7 @@ class RenderQueueService {
 
                 //
                 .then((d) => {
-                    logger.info('Added template to render queue: ' + queueItem.path, correlationId);
+                //    logger.info('Added template to render queue: ' + queueItem.path, correlationId);
                     resolve(queueItem);
                 })
                 .catch((error) => {

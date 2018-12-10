@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const _ = require('lodash');
 const logger = require('./logger.service');
 const TemplateService = require('../services/template.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
@@ -31,17 +32,11 @@ class SearchService {
         return new Promise((resolve, reject) => {
 
             if(templateDefinition.searchSnippetTemplate && templateDefinition.searchSnippetTemplate !== '') { // check if search snippet template is defined
-                // get search snippet template definition
-                let searchSnippetTemplateDefinition = null; // save empty template definition object for later re-use
-                self.templateDefinitionService.getDefinition(templateDefinition.searchSnippetTemplate, correlationId)
-                    .then((definition) => { return new Promise((res, rej) => { searchSnippetTemplateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
 
-                    // get search snippet
-                    .then(() => { return templateDefinition.getSearchSnippetData(data, correlationId) }) // get search snippet data
+                templateDefinition.getSearchSnippetData(data, correlationId) // get search snippet data
                     .then((templateData) => {
-                        return self.templateService.render('search-snippet', 'search-snippet.handlebars',templateData, correlationId) }) // render search snippet
-                                                                    // template name         // template file name
-
+                        return self.templateService.render('search-snippet', 'search-snippet.handlebars',templateData, correlationId)
+                    })
                     // resolve rendered search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
@@ -52,6 +47,23 @@ class SearchService {
             } else { // no search snippet template is defined
                 resolve('');
             }
+
+        })
+    }
+
+    getActivitySearchSnippet(data) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+                const templateService = new TemplateService();
+
+                 templateService.render('search-snippet', 'activity-snippet.handlebars', data)  // render search snippet
+                    .then((searchSnippetHtml) => {
+                        resolve(searchSnippetHtml);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    })
 
         })
     }
@@ -68,22 +80,79 @@ class SearchService {
     updateSearch(data, isUpdate, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
+
             if(data.searchSnippet && data.searchSnippet !== '') {
-                // set algolia save function
+
                 let save;
+
                 if(isUpdate) { // if update use the update call else use add
                     save = self.searchConnector.updatePage.bind(self.searchConnector);
                 } else {
                     save = self.searchConnector.addPage.bind(self.searchConnector);
                 }
+
                 // save page to algolia
                 save(data, correlationId)
-                    .then((d) => { logger.info('succes'); resolve(d) })
+                    .then((d) => { resolve(d) })
+
+                let algoliaObject = self._trimData(data);
+
+                save(algoliaObject, correlationId)
+                    .then((d) => {
+                        resolve(d)
+                    })
                     .catch((error) => { reject(error) });
             } else {
                 resolve(data);
             }
         })
+    }
+
+    _trimData(data) {
+
+        // algolia has a max size for one record
+        let algoliaObject = Object.assign({}, data);
+
+        if (data.type === 'post') {
+
+
+                if (algoliaObject.date) {
+                    // algolia prefers start tot time value for sorting // this happens after snippet has been generated.
+                    algoliaObject.date = new Date(algoliaObject.date.replace('T', ' ')).getTime();
+                }
+
+                if (algoliaObject.sections) {
+                    algoliaObject.sections = _.pickBy(algoliaObject.sections, (v, k) => {
+                        return v.type === 'paragraph';
+                    });
+                }
+
+              //   algoliaObject.excerpt = null;
+                algoliaObject.main_image = null;
+                algoliaObject.author = null;
+                algoliaObject.comments = null;
+                algoliaObject.attachments = null;
+               //  algoliaObject.content = null;
+
+                return algoliaObject;
+
+        }
+    }
+
+    deleteByKeyValue(key,value,correlationId) {
+
+        const self = this;
+        return new Promise((resolve, reject) => {
+
+            self.searchConnector.deleteByKeyValue(key,value,correlationId).then( () => {
+
+                resolve();
+
+            }).catch( (error) => {
+
+                reject(error);
+            });
+        });
     }
 }
 

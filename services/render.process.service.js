@@ -142,7 +142,6 @@ class RenderProcessService {
                 .then((templateData) => { return self.templateService.render(name, template, templateData, correlationId) }) // render template
                 .then((html) => { return new Promise((res, rej) => { templateHtml = html; res({}); }) }) // set html for later use
                 .then(() => { return templateDefinition.postRender(templateHtml, path, data, correlationId) }) // execute the post render hook
-
                 // write template file
                 .then(() => { return self.fileSystemConnector.createDirectory(path, correlationId) }) // save template directory
                 .then(() => { return self.fileSystemConnector.writeTemplateFile(path, templateHtml, correlationId) }) // write template file
@@ -205,7 +204,7 @@ class RenderProcessService {
                 .then((queueItem) => { // add to render queue
                     // check if a handlebars template is available for template
                     // if not than do not add queueItem to render queue
-                    if(queueItem.template && queueItem.template !== null) {
+                    if(queueItem.path !== null && queueItem.template && queueItem.template !== null) {
                         return self.renderQueue.add(queueItem, correlationId);
                     } else {
                         // no handlebars template found, do not add queue item to render queue
@@ -254,7 +253,7 @@ class RenderProcessService {
                         })
                 })})
 
-                // enqueue depenencies
+                // enqueue dependencies
                 .then((dependencies) => { return new Promise((res, rej) => {
                     // save promise group enqueueing templates
                     const promiseGroup = dependencies.map((d) => {
@@ -290,7 +289,7 @@ class RenderProcessService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            logger.info('Start rendering queue', correlationId);
+         //   logger.info('Start rendering queue', correlationId);
 
             self.renderQueue.getCount({}) // get the number of items in the render queue
                 .then((count) => {
@@ -301,7 +300,7 @@ class RenderProcessService {
                     // loop the cunks
                     Promise.each(chunks, (chunk, i) => { return self._renderQueueChunk(chunkSize, (i + 1), numberOfChunks, correlationId, options); })
                         .then(() => {
-                            logger.info('Rendered all templates in render queue', correlationId);
+                     //       logger.info('Rendered all templates in render queue', correlationId);
                             resolve({});
                         })
                         .catch(error => {

@@ -4,12 +4,13 @@ const Promise = require('bluebird');
 const logger = require('../services/logger.service');
 const db = require('../connectors/mongodb.connector');
 const config = require('../config');
+const moment = require('moment');
 
 
 /**
  * Class takes care of all database operations for the page
  */
-class PagePersistence {
+class SocialPersistence {
 
     constructor() {
 
@@ -21,17 +22,21 @@ class PagePersistence {
      * @param options
      * @param correlationId
      */
-    find(options, correlationId) {
+    find(options) {
         const self = this;
         if (typeof options.limit === "undefined") {
             options.limit = 0;
         };
         return new Promise((resolve, reject) => {
-            db.getPageCollection() // get page collection
-                .then((collection) => { return collection.find(options.query).sort(options.sort).limit(options.limit).toArray(); }) // execute find query
+            db.getSocialCollection() // get page collection
+                .then((collection) => { return collection.find(options.query).sort({'created_at' : -1}).limit(options.limit).toArray(); }) // execute find query
+                .then((result) => {
+                    result.forEach( i => {
+                        i.id = i._id;
+                    });
+                    resolve(result);
 
-                // .then((collection) => { return collection.find(options.query).limit(options.sort).sort(options.sort).toArray(); }) // execute find query
-                .then((result) => { resolve(result); }) // return results
+                }) // return results
         })
     }
 
@@ -44,7 +49,7 @@ class PagePersistence {
     findOne(options, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            db.getPageCollection() // get page collection
+            db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.findOne(options.query); }) // execute find query
                 .then((result) => { resolve(result); }) // return results
         })
@@ -59,13 +64,16 @@ class PagePersistence {
     save(data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
-            data._id = String(data._id); // make sure id is a string
-            data.objectID = String(data.objectID); // make sure objectID is a string
 
-            db.getPageCollection() // get page collection
+            // data._id = String(data.id); // make sure id is a string
+            // data.objectID = String(data.objectID); // make sure objectID is a string
+
+            data.date = moment(data.created_at).format('YYYY-MM-DD HH:mm:ss');
+
+            db.getSocialCollection() // get page collection
                 .then((collection) => { return collection.save(data); }) // execute save
                 .then((d) => {
-              //      logger.info('Saved page to database', correlationId);
+                    logger.info('Saved social to database', correlationId);
                     resolve(data);
                 })
                 .catch((error) => {
@@ -84,15 +92,10 @@ class PagePersistence {
     delete(id, correlationId) {
         const self = this;
         return new Promise((resolve, reject) => {
-            db.getPageCollection() // get page collection
-                .then((collection) => {
-
-                    id = id.toString();
-                    return collection.remove({"_id": id});
-
-                }) // execute delete
+            db.getSocialCollection() // get page collection
+                .then((collection) => { return collection.remove({"_id": id}); }) // execute delete
                 .then((d) => {
-               //     logger.info('Deleted page from database', correlationId);
+                    logger.info('Deleted social from database', correlationId);
                     resolve(id);
                 })
                 .catch((error) => {
@@ -103,4 +106,4 @@ class PagePersistence {
     }
 }
 
-module.exports = PagePersistence;
+module.exports = SocialPersistence;
