@@ -17,8 +17,7 @@
     "copy-assets": "cd pages && gulp copy-assets",
     "watch-templates": "npm-watch bulkrender:dev",
     "check-links": "NODE_ENV=production node tasks/checklinks.js",
-    "copy-html": "cd pages && gulp copy-html",
-    "watch-templates": "npm-watch bulkrender:dev"
+    "copy-html": "cd pages && gulp copy-html"
   },
   "watch": {
     "bulkrender:dev": {
