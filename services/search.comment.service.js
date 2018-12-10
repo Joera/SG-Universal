@@ -122,7 +122,7 @@ class SearchCommentService {
 
         if(data.threads && data.threads.length > 0) {
             return Promise.all(data.threads.map(function (thread) {
-                return self.templateService.render('search-snippet','thread-search-snippet.handlebars', thread.snippetData, correlationId);
+                return self.templateService.render('search-snippet','thread-snippet.handlebars', thread.snippetData, correlationId);
             }))
         }
 

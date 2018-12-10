@@ -238,7 +238,6 @@ class RenderProcessService {
                 // set data objects for enqueueing templates
                 // make sure data object is in the right format so enqueue function can process request
                 .then((dependencies) => { return new Promise((res, rej) => {
-
                     // save promise group for setting data objects
                     const promiseGroup = dependencies.map((d) => {
                         return self._setDependencyDataObject(d.template, d.data, correlationId, options);
@@ -256,7 +255,6 @@ class RenderProcessService {
 
                 // enqueue dependencies
                 .then((dependencies) => { return new Promise((res, rej) => {
-
                     // save promise group enqueueing templates
                     const promiseGroup = dependencies.map((d) => {
                         return self.enqueue(d, correlationId, options);

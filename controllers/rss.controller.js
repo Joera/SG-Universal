@@ -28,7 +28,3 @@ class RSSController {
 }
 
 module.exports = RSSController;
-
-/**
- * Start the sync process
- */

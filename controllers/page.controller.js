@@ -227,7 +227,6 @@ class PageController {
             let saveData = null; // data that will be saved. Object defined for later use
             let persistent_path = null;
 
-            // get template definitions
             // find the template that belongs to the data
             self.templateDefinitionService.getDefinition(data[config.templateNameKey], correlationId, options) // get template definition
                 .then((definition) => { return new Promise((res, rej) => { templateDefinition = definition; res({}); }) }) // set templateDefinition object for later use
@@ -246,12 +245,15 @@ class PageController {
 
                 // save page
                 .then(() => { return self.pagePersistence.save(saveData, correlationId, options) }) // save page to database
-                .then(() => { logger.info('persistent path: ' + persistent_path); return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
+
+                .then(() => { return self.datasetService.saveDataset(saveData,persistent_path) }) // save page to database
                 // // only update search if search snippet is rendered. if searchSnippet property on data object is undefined or an empty string search will NOT be updated
                 .then(() => { return self.searchService.updateSearch(saveData, isUpdate, correlationId, options); })
                 .then(() => { return self.documentService.documentsToSearch(saveData, correlationId, options); })
                 .then(() => { return self.commentSearchService.commentsToSearch(saveData, correlationId, options); })
-                .then(() => { return self.calendarService.recurringEvents(saveData,correlationId,options); })
+
+               // .then(() => { return self.calendarService.recurringEvents(saveData,correlationId,options); })
+
                 // resolve promise
                 .then(() => { resolve(saveData) }) // resolve promise
 

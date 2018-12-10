@@ -16,7 +16,7 @@ class SearchService {
     constructor () {
         this.templateService = new TemplateService();
         this.templateDefinitionService = new TemplateDefinitionService();
-
+        this.searchConnector = new SearchConnector();
     }
 
 
@@ -27,7 +27,7 @@ class SearchService {
      * @param data                              page data
      * @param correlationId
      */
-    getSearchSnippet(data, templateDefinition, correlationId, options) {
+    getSearchSnippet(templateDefinition, data, correlationId, options) {
         const self = this;
         return new Promise((resolve, reject) => {
 
@@ -35,11 +35,7 @@ class SearchService {
 
                 templateDefinition.getSearchSnippetData(data, correlationId) // get search snippet data
                     .then((templateData) => {
-
-                        //   return self.templateService.render(searchSnippetTemplateDefinition.name, searchSnippetTemplateDefinition.template, templateData, correlationId) }) // render search snippet
-
                         return self.templateService.render('search-snippet',  templateDefinition.searchSnippetTemplate + '.handlebars', templateData, correlationId) }) // render search snippet
-
                     // resolve rendered search snippet
                     .then((searchSnippetHtml) => {
                         resolve(searchSnippetHtml);
@@ -84,14 +80,12 @@ class SearchService {
         const self = this;
         return new Promise((resolve, reject) => {
 
-            const searchConnector = new SearchConnector();
-
             if(data.searchSnippet && data.searchSnippet !== '') {
 
                 let save;
 
                 if(isUpdate) { // if update use the update call else use add
-                    save = searchConnector.addPage.bind(searchConnector);
+                    save = searchConnector.updatePage.bind(searchConnector);
                 } else {
                     save = searchConnector.addPage.bind(searchConnector);
                 }
