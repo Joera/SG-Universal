@@ -65,8 +65,8 @@ class PageController {
             .then(() => { return self.templateDefinitionService.getDefinition(req.body[config.templateNameKey], correlationId, options) }) // get template definition
             .then((definition) => { return definition.getPath(req.body, correlationId, options) }) // get path of the template that will be rendered
             .then((path) => { return new Promise((res, rej) => {
-
-                url = config.baseUrl + '/' + path; res({}); })
+                url = config.baseUrl + '/' + path;
+                res({}); })
             }) // set url for response
             .then(() => { return self.renderQueue.clear(correlationId, options) }) // clear the render queue, delete all remaining queue items
             .then(() => { return self.save(req.body, correlationId, options, false) }) // save page
@@ -241,13 +241,15 @@ class PageController {
                 // set url
                 .then(() => { return templateDefinition.getPath(saveData, correlationId, options) }) // get path of the template that will be rendered
 
-                .then((path) => { return new Promise((res, rej) => { persistent_path = path; saveData.url = config.baseUrl + '/' + path; res({}); }) }) // set url on data object that will be saved
+                .then((path) => {
 
-                .then((path) => { return new Promise((res, rej) => {
-                        persistent_path = path; // store path of original object
+                    return new Promise((res, rej) => {
+
+                        persistent_path = path;
+                        saveData.url = config.baseUrl + '/' + path;
                         res({});
                     })
-                })
+                }) // set url on data object that will be saved
 
                 // create search snippet
                 .then(() => {
