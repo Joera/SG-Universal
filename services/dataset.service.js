@@ -55,7 +55,7 @@ class DatasetService {
             if (path && path !== null && data) {
                 logger.info({message: 'write json file', path: path});
 
-                fs.writeFile(config.dist + path + '/' + filename, JSON.stringify(data), function (error) {
+                fs.writeFile(config.dist + '/' + path + '/' + filename, JSON.stringify(data), function (error) {
                     if (error) {
                         logger.error(error);
                         reject({status: 500, message: 'error writing json file'});
