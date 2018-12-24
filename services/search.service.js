@@ -133,10 +133,9 @@ class SearchService {
                 algoliaObject.comments = null;
                 algoliaObject.attachments = null;
                //  algoliaObject.content = null;
-
-                return algoliaObject;
-
         }
+
+        return algoliaObject;
     }
 
     deleteByKeyValue(key,value,correlationId) {
