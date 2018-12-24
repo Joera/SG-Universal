@@ -79,9 +79,6 @@ class DocumentService {
 
             return Promise.all(data.documents.map(function (document) {
 
-
-
-
                 return new Promise(function (resolve, reject) {
 
                     var renderConfig = {
@@ -94,10 +91,10 @@ class DocumentService {
                         tags: document['file-tags'],
                         post: document.post
                     };
+                    document._id = document.id;
                     document.type = 'document';
                     document.objectID = document['file-id'] || 99999999; // keep algolia id consistent
                     document.snippetData = renderConfig;
-
 
                     // for equitable search results
 

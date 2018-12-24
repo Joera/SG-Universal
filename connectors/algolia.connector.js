@@ -27,20 +27,17 @@ class AlgoliaConnector {
         const index = this.client.initIndex(config.algoliaIndexNamePrefix);
         return new Promise((resolve, reject) => {
 
-            logger.info(data);
+            // logger.info(data);
 
             // save record to Algolio Search
-            // index.addObject(data, data._id, (error, content) => {
-            //     if (error) {
-            //         error.correlationId = correlationId;
-            //         reject(error);
-            //     }
-            // //    logger.info('Added page to Algolia search', correlationId);
-            //     resolve(data); // resolve promise
-            // });
-
-            resolve(data)
-
+            index.addObject(data, data._id, (error, content) => {
+                if (error) {
+                    error.correlationId = correlationId;
+                    reject(error);
+                }
+            //    logger.info('Added page to Algolia search', correlationId);
+                resolve(data); // resolve promise
+            });
         })
     }
 
