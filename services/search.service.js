@@ -113,7 +113,7 @@ class SearchService {
         // algolia has a max size for one record
         let algoliaObject = Object.assign({}, data);
 
-        if (data.type === 'post') {
+        if (data.type === 'post' || data.type === 'page' ) {
 
 
                 if (algoliaObject.date) {
