@@ -8,6 +8,12 @@ const logger = {
         console.info('------------------------------------------------------------------------------------');
     },
 
+    debug: function(msg, correlationId) {
+        console.info(msg);
+        if(correlationId) console.info(correlationId);
+        console.info('------------------------------------------------------------------------------------');
+    },
+
     warn: function(msg, correlationId) {
         console.warn(msg);
         if(correlationId) console.info(correlationId);
