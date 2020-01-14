@@ -135,6 +135,8 @@ class SearchService {
                //  algoliaObject.content = null;
         }
 
+        logger.debug(algoliaObject);
+
         return algoliaObject;
     }
 
