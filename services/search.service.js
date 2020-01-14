@@ -132,6 +132,7 @@ class SearchService {
                 algoliaObject.author = null;
                 algoliaObject.comments = null;
                 algoliaObject.attachments = null;
+                algoliaObject.datasets = null;
                //  algoliaObject.content = null;
         }
 
