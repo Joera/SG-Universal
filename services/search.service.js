@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const logger = require('./logger.service');
+const stripHtml = require("string-strip-html");
 const TemplateService = require('../services/template.service');
 const TemplateDefinitionService = require('../services/template.definition.service');
 const SearchConnector = require('../connectors/algolia.connector');
@@ -127,13 +128,13 @@ class SearchService {
                     });
                 }
 
-                algoliaObject.sections = algoliaObject.sections.slice(0,5);
+                // algoliaObject.sections = algoliaObject.sections.slice(0,5);
 
                 if(algoliaObject.sections) {
 
                     for (let section of Object.values(algoliaObject.sections)) {
 
-                        section.text = stripHtml(section.text).substring(0, 1200);
+                        section.text = stripHtml(section.text).substring(0, 800);
                     }
                     // algoliaObject.sections = Object.entries(algoliaObject.sections).slice(0,2).map(entry => entry[1]);
                 }
