@@ -132,10 +132,10 @@ class SearchService {
 
                 if(algoliaObject.sections) {
 
-                    for (let section of Object.values(algoliaObject.sections)) {
-
-                        section.text = stripHtml(section.text).substring(0, 800);
-                    }
+                    // for (let section of Object.values(algoliaObject.sections)) {
+                    //
+                    //     section.text = stripHtml(section.text).substring(0, 800);
+                    // }
                     // algoliaObject.sections = Object.entries(algoliaObject.sections).slice(0,2).map(entry => entry[1]);
                 }
 
