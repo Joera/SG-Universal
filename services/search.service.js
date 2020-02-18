@@ -139,7 +139,7 @@ class SearchService {
                      algoliaObject.sections = Object.entries(algoliaObject.sections).slice(0,3).map(entry => entry[1]);
                 }
 
-            algoliaObject.sections = null;
+            // algoliaObject.sections = null;
 
               //   algoliaObject.excerpt = null;
                 algoliaObject.main_image = null;
