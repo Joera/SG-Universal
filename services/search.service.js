@@ -136,7 +136,7 @@ class SearchService {
                     //
                     //     section.text = stripHtml(section.text).substring(0, 800);
                     // }
-                    // algoliaObject.sections = Object.entries(algoliaObject.sections).slice(0,2).map(entry => entry[1]);
+                     algoliaObject.sections = Object.entries(algoliaObject.sections).slice(0,3).map(entry => entry[1]);
                 }
 
             algoliaObject.sections = null;
