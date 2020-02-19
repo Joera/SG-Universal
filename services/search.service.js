@@ -129,15 +129,15 @@ class SearchService {
                 }
 
 
-                if(algoliaObject.sections) {
-
-                    for (let section of Object.values(algoliaObject.sections)) {
-
-                        section.text = stripHtml(section.text).substring(0, 1200);
-                    }
-                    // algoliaObject.sections = Object.entries(algoliaObject.sections).slice(0,2).map(entry => entry[1]);
-                }
-
+                // if(algoliaObject.sections) {
+                //
+                //     for (let section of Object.values(algoliaObject.sections)) {
+                //
+                //         section.text = stripHtml(section.text).substring(0, 1200);
+                //     }
+                //     // algoliaObject.sections = Object.entries(algoliaObject.sections).slice(0,2).map(entry => entry[1]);
+                // }
+                //
                 algoliaObject.sections = null;
 
               //   algoliaObject.excerpt = null;
