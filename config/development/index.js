@@ -4,7 +4,7 @@ const devConfig = {
     db: 'mongodb://shared_mongo',
     port: 3713,
     wordpressUrl: 'https://eureka-wp.publikaan.nl',
-    wordpressApiPath: 'wp-json/wp/v2/posts',
+    wordpressApiPath: 'wp-json/wp/v2/all',
     algoliaIndexNamePrefix: 'eureka-staging_',
     algoliaApplicationId: 'RLZJT7BFZT',
     algoliaApiKey: 'f0dc506dd42b55db93e55d28c3e667b5',
