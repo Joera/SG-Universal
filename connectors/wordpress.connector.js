@@ -18,8 +18,7 @@ class WordpressConnector {
 
         // this.concatenatedResponse = [];
         // this.page = 0;
-        this.results = []
-<<<<<<< HEAD
+        this.results = [];
     }
 
     getPage(url,correlationId) {
@@ -65,7 +64,7 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-                self.getPage(config.baseUrl + '/' +  config.wordpressApiPath + '?page=0',correlationId)
+            self.getPage(config.baseUrl + '/' +  config.wordpressApiPath + '?page=0',correlationId)
             .then(results => {
                 resolve(results)
             }).catch(error => {
@@ -74,62 +73,6 @@ class WordpressConnector {
                 });
         });
     }
-=======
-    }
-
-    getPage(url,correlationId) {
-
-        const self = this;
-
-        function loop(url,resolve,reject) {
-
-            requestify.get(url, {redirect: true, timeout: 120000}) // ;
-
-            .then(response => {
-
-                    let r = response.getBody();
-                    self.results = self.results.concat(_.values(r));
-
-                    if (r["_links"] && r["_links"]["next"]) {
-                            loop(r["_links"]["next"][0]["href"],resolve, reject);
-                    } else {
-                        // Done looping
-                        resolve(self.results.filter( (r) => {
-                            return r.title !== undefined;
-                        }));
-                    }
-                }).catch(error => {
-                    logger.error(error, correlationId);
-                    reject(error);
-                });
-        }
-
-        return new Promise((resolve, reject) => {
-            return loop(url,resolve, reject)
-        });
-    }
-
-
-        /**
-     * Get pages from wordpress api
-     * @param correlationId
-     */
-    getPages(correlationId) {
-
-        const self = this;
-
-        return new Promise((resolve, reject) => {
-
-                self.getPage(config.baseUrl + '/' +  config.wordpressApiPath + '?page=0',correlationId)
-            .then(results => {
-                resolve(results)
-            }).catch(error => {
-                logger.error(error, correlationId);
-                reject(error);
-            });
-        });
-    }
->>>>>>> master
 }
 
 module.exports = WordpressConnector;
