@@ -7,7 +7,5 @@ dist
 !dist/assets/
 dist/assets/css/main.css
 npm-debug.log
-config/development/*
-config/production/*
 package-lock.json
 
