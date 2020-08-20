@@ -66,7 +66,7 @@ class WordpressConnector {
 
          //   logger.info(config.wordpressUrl + '/' +  config.wordpressApiPath + '?page=0');
 
-            self.getPage(config.wordpressUrl + '/' +  config.wordpressApiPath + '?page=0',correlationId)
+            self.getPage(config.wordpressUrl + '/' +  config.wordpressApiPath, correlationId) //  + '?page=0'
             .then(results => {
                 resolve(results)
             }).catch(error => {
