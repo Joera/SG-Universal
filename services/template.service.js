@@ -71,10 +71,13 @@ class TemplateService {
                             let partialName = filename.split('.')[0];
 
                             // register _partials
+                            // dit is een fout ... moet een Promise.all zijn 
                             try {
                                 handlebars.registerPartial(partialName, source); //
                                 // logger.info('Registered _partials', correlationId);
-                                resolve({}); // resolve promise
+                                setTimeout( () => {
+                                    resolve({});
+                                },1000) // resolve promise
                             }
                             catch (error) {
                                 reject(error);
