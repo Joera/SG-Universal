@@ -69,8 +69,7 @@ class WordpressConnector {
 
             self.getPage(config.wordpressUrl + '/' +  config.wordpressApiPath, correlationId) //  + '?page=0'
             .then(results => {
-                let json = JSON.parse(results);
-                resolve(json.posts);
+                resolve(rawJson.posts);
             }).catch(error => {
                 logger.error(error, correlationId);
                     reject(error);
