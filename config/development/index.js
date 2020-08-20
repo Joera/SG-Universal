@@ -1,7 +1,7 @@
 const devConfig = {
     env: 'development',
     dist: '/var/www/html',
-    db: 'mongodb://shared_mongo',
+    db: 'mongodb://shared_mongo/eurekarail',
     port: 3713,
     wordpressUrl: 'https://eureka-wp.publikaan.nl',
     wordpressApiPath: 'wp-json/wp/v2/all',
