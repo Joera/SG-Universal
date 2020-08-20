@@ -120,7 +120,7 @@ class PathService {
      * @param correlationId             id for correlation through the process chain
      * @returns {string}
      */
-    cleanString(str, correlationId) {
+    cleanString(str || '', correlationId) {
         const self = this;
         if(str && str !== null) {
             let clean = self._removeDiacritics(str) // replace accented characters
