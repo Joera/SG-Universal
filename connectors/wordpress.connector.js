@@ -64,7 +64,7 @@ class WordpressConnector {
 
         return new Promise((resolve, reject) => {
 
-            logger.info(config.wordpressUrl + '/' +  config.wordpressApiPath + '?page=0');
+         //   logger.info(config.wordpressUrl + '/' +  config.wordpressApiPath + '?page=0');
 
             self.getPage(config.wordpressUrl + '/' +  config.wordpressApiPath + '?page=0',correlationId)
             .then(results => {
