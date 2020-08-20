@@ -71,7 +71,7 @@ class TemplateService {
                             let partialName = filename.split('.')[0];
 
                             // register _partials
-                            // dit is een fout ... moet een Promise.all zijn 
+                            // dit is een fout ... moet een Promise.all zijn
                             try {
                                 handlebars.registerPartial(partialName, source); //
                                 // logger.info('Registered _partials', correlationId);
@@ -107,7 +107,7 @@ class TemplateService {
             // set directory
             const dirname = config.root + '/pages/templates';
 
-            logger.info(templateName + '/' + templateFileName);
+       //     logger.info(templateName + '/' + templateFileName);
 
 
             // read template
