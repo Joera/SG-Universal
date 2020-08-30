@@ -1,7 +1,7 @@
 const devConfig = {
     env: 'production',
     dist: '/var/www/html',
-    db: 'mongodb://shared_mongo/admin',
+    db: 'mongodb://shared_mongo/eureka',
     port: 3713,
     wordpressUrl: 'https://wp.eurekarail.net',
     wordpressApiPath: 'api/get_posts',
