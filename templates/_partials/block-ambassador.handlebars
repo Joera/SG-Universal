@@ -1,0 +1,12 @@
+<a class="ambassador block" href="{{item.url}}">
+
+        {{> responsive-image format='square' size='third' title=item.mainImage.alttext external_id=item.mainImage.external_id filename=item.mainImage.filename }}
+
+    <div class="gradient"></div>
+    <div class="overlay">
+
+        <h2>{{{item.quote}}}</h2>
+        <span class="ambassador_quote">{{item.title}} {{> icon-chevron }}</span>
+
+    </div>
+</a>

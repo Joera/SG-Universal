@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{> head }}
+</head>
+
+<body class="home werkenbij">
+
+	{{> header-wb }}
+
+    <style>
+
+        .clipped_bovenzijde {
+            -webkit-clip-path: url(#bovenzijde);
+            clip-path: url(#bovenzijde);
+        }
+
+        .clipped_onderzijde {
+            -webkit-clip-path: url(#onderzijde);
+            clip-path: url(#onderzijde);
+        }
+
+        .clipped_footer {
+            -webkit-clip-path: url(#footer);
+            clip-path: url(#footer);
+        }
+    </style>
+
+	<div class="home_block">
+
+        <div class="home_grid">
+
+            <div id="hero-background"></div>
+
+            <div id="hero-video" class="clipped_onderzijde">
+
+                <video width="100%" muted autoplay loop preload playsinline>
+                    <source src="https://wijnemenjemee.nl/assets/img/videoloop-mobile.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="vacancies">
+
+                <div class="punch">
+                    <h1>Samen houden we de Vervoerregio bereikbaar</h1>
+                </div>
+
+                {{#each (limit body.vacancies 3) as |item|}}
+
+                    <a href="{{item.url}}" class="block vacature">
+
+                        <svg class="clipped" width="1" height="1" viewBox="0 0 1 1" preserveAspectRatio="none" >
+                            <defs>
+                                <clipPath id="onderzijde" clipPathUnits="objectBoundingBox">
+                                    <path d="M0,0 L0,0.921 C0.281,0.921 0.43433,0.921 0.461,0.921 C0.501,0.921 0.501,1 0.541,1 C0.567666667,1 0.721,1 1,1 L1,0 L0,0 Z" id="Line" fill="#D8D8D8"></path>
+                                </clipPath>
+                            </defs>
+
+                            <rect x="0" y="0" width="1" height="1" clip-path="url('#onderzijde')"></rect>
+                        </svg>
+
+                        <div>
+                            <h3>{{{item.title}}}</h3>
+                            {{{item.vacatureTeksten.summary}}}
+                        </div>
+
+                        {{> vacature-parameters vacature=item}}
+
+                        <div class="more-link">
+                            {{> icon-chevron }}
+                            {{> icon-chevron }}
+                            {{> icon-chevron }}
+                        </div>
+                    </a>
+
+                {{/each}}
+
+            </div>
+
+            <a id="more-vacancies-link" href="{{baseUrl}}/vacatures" >{{> icon-close }}<span>meer vacatures</span></a>
+
+            <a href="{{body.organisation.url}}" class="organisation large-block clipped_bovenzijde">
+
+                {{> responsive-image format='camera' size='half' title=body.organisation.mainImage.alttext external_id=body.organisation.mainImage.external_id filename=body.organisation.mainImage.filename }}
+
+                <div class="gradient"></div>
+                <div class="overlay">
+
+                    <h2>{{body.organisation.title}}</h2>
+                    <span>{{body.organisation.subtitle}} {{> icon-chevron }}</span>
+
+                </div>
+
+            </a>
+
+            <a href="{{body.ambassadors.[0].url}}" class="block ambassador first">
+
+                <!--<img src="https://ucarecdn.com/ac07487a-06f7-4bb1-a988-3617fac43c35/Amstelveenlijn190820PortretKathleenClows01.jpg">-->
+
+                {{> responsive-image format='square' size='third' title=body.ambassadors.[0].mainImage.alttext external_id=body.ambassadors.[0].mainImage.external_id filename=body.ambassadors.[0].mainImage.filename }}
+
+
+                <div class="gradient"></div>
+                <div class="overlay">
+
+                    <h2>{{ stripHTML body.ambassadors.[0].quote }}</h2>
+                    <span class="ambassador_quote">{{body.ambassadors.[0].title}} {{> icon-chevron }}</span>
+
+                </div>
+
+            </a>
+
+            <a href="{{body.starters.url}}" class="starters large-block">
+
+                {{> responsive-image format='camera' size='half' title=body.starters.mainImage.alttext external_id=body.starters.mainImage.external_id filename=body.starters.mainImage.filename }}
+
+                <div class="gradient"></div>
+                <div class="overlay">
+
+                    <h2>{{body.starters.title}}</h2>
+                    <span>{{body.starters.subtitle}} {{> icon-chevron }}</span>
+
+                </div>
+
+            </a>
+
+            <a href="{{body.ambassadors.[1].url}}" class="block ambassador second">
+
+                {{> responsive-image format='square' size='third' title=body.ambassadors.[1].mainImage.alttext external_id=body.ambassadors.[1].mainImage.external_id filename=body.ambassadors.[1].mainImage.filename }}
+
+
+                <div class="gradient"></div>
+                <div class="overlay">
+
+                    <h2>{{ stripHTML body.ambassadors.[1].quote }}</h2>
+                    <span class="ambassador_quote">{{body.ambassadors.[1].title}} {{> icon-chevron }}</span>
+
+                </div>
+
+            </a>
+
+            <a href="{{body.conditions.url}}" class="conditions large-block clipped_bovenzijde">
+
+                {{> responsive-image format='camera' size='half' title=body.conditions.mainImage.alttext external_id=body.conditions.mainImage.external_id filename=body.conditions.mainImage.filename }}
+
+                <div class="gradient"></div>
+                <div class="overlay">
+
+                    <h2>{{body.conditions.title}}</h2>
+                    <span>{{{body.conditions.subtitle}}} {{> icon-chevron }}</span>
+
+                </div>
+
+            </a>
+
+
+            <a href="{{body.ambassadors.[2].url}}" class="block ambassador third">
+
+                {{> responsive-image format='square' size='third' title=body.ambassadors.[2].mainImage.alttext external_id=body.ambassadors.[2].mainImage.external_id filename=body.ambassadors.[2].mainImage.filename }}
+
+                <div class="gradient"></div>
+                <div class="overlay">
+
+                    <h2>{{ stripHTML body.ambassadors.[2].quote }}</h2>
+                    <span class="ambassador_quote">{{body.ambassadors.[2].title}} {{> icon-chevron }}</span>
+
+                </div>
+
+            </a>
+
+        </div>
+    </div>
+
+
+    {{> footer-wb }}
+
+    {{> clip-paths }}
+
+</body>
+
+{{> footer-scripts}}
+
+</html>

@@ -1,0 +1,34 @@
+<a href="{{body.url}}" class="block vacature">
+
+    <svg class="clipped" width="1" height="1" viewBox="0 0 1 1" preserveAspectRatio="none" >
+        <defs>
+            <clipPath id="onderzijde" clipPathUnits="objectBoundingBox">
+                <path d="M0,0 L0,0.921 C0.281,0.921 0.43433,0.921 0.461,0.921 C0.501,0.921 0.501,1 0.541,1 C0.567666667,1 0.721,1 1,1 L1,0 L0,0 Z" id="Line" fill="#D8D8D8"></path>
+            </clipPath>
+        </defs>
+
+        <rect x="0" y="0" width="1" height="1" clip-path="url('#onderzijde')"></rect>
+    </svg>
+
+    <div>
+        <h3>{{{body.title}}}</h3>
+        {{{body.vacature_teksten.summary}}}
+    </div>
+
+    <ul class="vacature_parameters">
+
+        <li>{{> icon-calendar }}{{body.vacature_parameters.aantal_uren}} uur per week</li>
+
+        <li>{{> icon-education}}{{body.vacature_parameters.opleidingsniveau}}</li>
+
+        <li>{{> icon-salary }}{{currency body.vacature_parameters.min_salaris}} tot {{currency body.vacature_parameters.max_salaris}}</li>
+
+    </ul>
+
+
+    <div class="more-link">
+        {{> icon-chevron }}
+        {{> icon-chevron }}
+        {{> icon-chevron }}
+    </div>
+</a>

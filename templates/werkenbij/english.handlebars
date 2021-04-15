@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{> head }}
+
+    <script src="{{baseUrl}}/assets/vendorjs/anime.min.js" charset="utf-8"></script>
+</head>
+
+<body id="over-het-project" class="uithoornlijn">
+
+{{> header }}
+{{> grid }}
+
+<main id="page">
+
+    <div id="cover_container">
+        <img id="cover" src="{{body.cover.url}}" onload="fadeInImage(this)"/>
+    </div>
+
+    <div id="intro" class="container">
+        <svg width="1" height="1" viewBox="0 0 1 1" preserveAspectRatio="none">
+            <defs>
+                <clipPath id="intro-clip-path" clipPathUnits="objectBoundingBox">
+                    <polygon points=".5 0, 1 .03, 1 1, 0 1, 0 0"></polygon>
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="1" height="1" clip-path="url(/{{body.slug}}/#intro-clip-path)"></rect>
+        </svg>
+        <h1>{{body.title}}</h1>
+
+        <div class="text">{{{body.content}}}</div>
+
+    </div>
+
+
+    <div id="sections" class="container">
+        {{>sections sections=body.sections }}
+    </div>
+
+    <section id="related-posts">
+
+        {{#if body.related_posts}}
+            <div class="container">
+                <h2>Related posts</h2>
+
+                {{#each body.related_posts as |post|}}
+                    {{>block item=post}}
+                {{/each}}
+            </div>
+        {{/if}}
+
+    </section>
+
+
+</main>
+{{> footer }}
+<!--<script src='{{baseUrl}}/assets/scripts/pages/planning.js'></script>-->
+</bodyid>
+</html>

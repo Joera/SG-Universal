@@ -1,0 +1,70 @@
+<div class="form" id="bestellen">
+
+        <h3>Bestellen</h3>
+
+        <p>Onderstaand formulier kan worden ingevuld om een thuisversie van de voelbare kaart Noord/Zuidlijn te bestellen.</p>
+
+
+        <form id="sectionform" onsubmit="sectionForm.submit(this)">
+
+            <div class="field-wrapper full">
+                <label for="name">Uw naam <strong aria-hidden="true">*</strong></label>
+                <input type="text" id="name" name="name" required="" aria-required="true">
+            </div>
+
+            <div class="field-wrapper full">
+                <label for="organisation">Organisatie</label>
+                <input type="text" id="organisation" name="organisation">
+            </div>
+
+            <div class="field-wrapper half">
+                <label for="street">Straat <strong aria-hidden="true">*</strong></label>
+                <input type="text" id="street" name="street" required="" aria-required="true">
+            </div>
+
+            <div class="field-wrapper half">
+                <label for="number">Huisnummer <strong aria-hidden="true">*</strong></label>
+                <input type="text" id="number" name="number" required="" aria-required="true">
+            </div>
+
+            <div class="field-wrapper half">
+                <label for="postcode">Postcode <strong aria-hidden="true">*</strong></label>
+                <input type="text" id="postcode" name="postcode" required="" aria-required="true">
+            </div>
+
+            <div class="field-wrapper half">
+                <label for="city">Woonplaats <strong aria-hidden="true">*</strong></label>
+                <input type="text" id="city" name="city" required="" aria-required="true">
+            </div>
+
+            <div class="field-wrapper full">
+                <label for="question">Gewenst aantal exemplaren van de kaart <strong aria-hidden="true">*</strong></label>
+                <input type="number" id="amount" value="1" step="1" required="" aria-required="true">
+            </div>
+
+            <div class="field-wrapper full">
+                <label for="question">Extra vraag of opmerking</label>
+                <textarea rows="4" id="question" name="question"></textarea>
+            </div>
+
+            <div class="field-wrapper half">
+                <label for="email">Email <strong aria-hidden="true">*</strong></label>
+                <input type="email" id="email" name="email" required="" aria-required="true">
+            </div>
+
+            <div class="field-wrapper half">
+                <label for="phone">Telefoon</label>
+                <input type="text" id="phone" name="phone">
+            </div>
+
+            <p>De voelbare kaart wordt na ontvangst van de aanvraag zo snel mogelijk verstuurd. Er worden geen kosten in rekening gebracht, de voelbare kaart wordt u aangeboden door Vervoerregio Amsterdam.</p>
+
+            <div id="error" aria-live="assertive" role="alert"></div>
+
+            <input class="button" type="submit" value="Verzenden">
+
+        </form>
+
+    </div>
+
+</div>

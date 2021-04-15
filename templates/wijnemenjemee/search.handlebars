@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{> head }}
+</head>
+<body id="search" class="wijnemenjemee">
+
+{{> header }}
+
+<main>
+
+    <div id="search-form-container">
+
+    </div>
+
+
+    <div id="search-form">
+        <input id="archive-search-box"  placeholder="uw zoekterm ..." />
+        <button onclick="search()"><svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Group-4" stroke="#000000" fill="transparent" stroke-width="2"><circle id="Oval" cx="7" cy="7" r="6"></circle><path d="M11.5,11.5 L17.1568542,17.1568542" id="Line" stroke-linecap="square"></path></g></svg></button>
+
+    </div>
+
+    <div id="result-count-container" style="display:none">
+        <span></span> resultaten gevonden
+    </div>
+
+    <div id="center-column">
+        <ul class="pagination"></ul>
+            <div id="search-content-container"></div>
+        <ul class="pagination"></ul>
+    </div>
+
+    <div id="right-bar">
+
+        <div class="filters">
+        </div>
+
+    </div>
+
+
+
+</main>
+
+{{> clip-paths }}
+
+</body>
+
+{{> footer }}
+
+{{> footer-scripts}}
+
+</html>

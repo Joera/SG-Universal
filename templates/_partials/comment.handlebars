@@ -1,0 +1,10 @@
+<div class="comment {{sluggify comment.name}}" data-thread-id='{{threadID}}'>
+
+        <div class="header">
+            <span class="datetime smallerfont">{{formatDate comment.date 'comment'}}</span>
+            <h4 class="{{#ifEquals comment.is_editor '1'}}editorial{{/ifEquals}}">{{comment.name}}</h4>
+        </div>
+
+        {{{comment.content}}}
+
+</div> 

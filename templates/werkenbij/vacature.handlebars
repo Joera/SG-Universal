@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<title>{{renderEnv}} - {{body.title}}</title>
+		{{> head }}
+
+        <style>
+
+            .clipped_bovenzijde {
+                -webkit-clip-path: url(#bovenzijde);
+                clip-path: url(#bovenzijde);
+            }
+
+            .clipped_onderzijde {
+                -webkit-clip-path: url(#onderzijde);
+                clip-path: url(#onderzijde);
+            }
+
+            .clipped_footer {
+                -webkit-clip-path: url(#footer);
+                clip-path: url(#footer);
+            }
+        </style>
+	</head>
+	<body class="vacature werkenbij">
+
+    {{> header-wb }}
+
+    <article>
+
+        <div id="cover_container" class="clipped_onderzijde">
+            {{> responsive-image format='camera' size='full' title=body.mainImage.alttext external_id=body.mainImage.external_id filename=body.mainImage.filename }}
+
+        </div>
+
+        <div id="post_intro">
+
+            <h1>{{{body.title}}}</h1>
+
+            {{> vacature-parameters vacature=body}}
+
+        </div>
+
+
+        <section>
+
+            {{{body.content}}}
+
+        </section>
+
+        <section class="team">
+
+            <div class="team_contact contact">
+
+                <!--<span class="contact_header">Heb je vragen over de functie, neem dan contact op met de teammanager</span>-->
+
+                {{#each body.vacatureContact as |contact|}}
+
+                    {{#ifEquals contact.functie 'team'}}
+
+                        {{> responsive-image format='square' size='fourth' title=contact.naam external_id=contact.image.external_id filename=contact.image.filename }}
+
+                        <span class="contact_name">{{contact.naam}}</span>
+
+                        {{#if contact.tel }}
+                            <span class="contact_phone">{{contact.tel}}</span>
+                        {{/if}}
+                        {{#if contact.email}}
+                            <span class="contact_email">{{contact.email}}</span>
+                        {{/if}}
+
+                    {{/ifEquals}}
+
+                {{/each}}
+            </div>
+
+            {{> icon-text-balloon }}
+
+            <div class="team_text">
+                {{{body.vacatureTeksten.team}}}
+            </div>
+
+        </section>
+
+        <section class="">
+
+            <h2>Wat ga je doen?</h2>
+
+            {{{body.vacatureTeksten.wat_ga_je_doen}}}
+
+        </section>
+
+        <section class="">
+
+            <h2>Wat breng je mee?</h2>
+
+            {{{body.vacatureTeksten.wat_breng_je_mee}}}
+
+        </section>
+
+        <section class="">
+
+            <h2>Wat bieden wij jou?</h2>
+
+            {{{body.vacatureTeksten.wat_bieden_wij_jou}}}
+
+        </section>
+
+        <section class="hrm">
+
+            <div class="hrm_contact contact">
+
+                {{#each body.vacatureContact as |contact|}}
+
+                    {{#ifEquals contact.functie 'hrm'}}
+
+                        {{> responsive-image format='square' size='fourth' title=contact.naam external_id=contact.image.external_id filename=contact.image.filename }}
+
+                        <span class="contact_name">{{contact.naam}}</span>
+
+                        {{#if contact.tel }}
+                            <span class="contact_phone">{{contact.tel}}</span>
+                        {{/if}}
+                        {{#if contact.email}}
+                            <span class="contact_email">{{contact.email}}</span>
+                        {{/if}}
+
+                    {{/ifEquals}}
+
+                {{/each}}
+            </div>
+
+            {{> icon-text-balloon }}
+
+            <div class="hrm_text">
+
+                {{{body.vacatureTeksten.hoe_nu_verder}}}
+            </div>
+
+            <h2>Hoe nu verder?</h2>
+
+        </section>
+
+        <div class="timeline">
+
+            {{#ifEquals body.vacatureTijdlijn.doorlopend '0'}}
+            <div class="timeline-container">
+                <ul class="timeline-data">
+                    <li data-label="plaatsingsdatum" data-start-date="{{../body.vacatureTijdlijn.plaatsingsdatum}}" data-end-date="{{../body.vacatureTijdlijn.plaatsingsdatum}}"></li>
+                    <li data-label="sluitingsdatum" data-start-date="{{../body.vacatureTijdlijn.sluitingsdatum}}" data-end-date="{{../body.vacatureTijdlijn.sluitingsdatum}}"></li>
+                    <li data-label="cv-selectie" data-start-date="{{../body.vacatureTijdlijn.cv-selectie}}" data-end-date="{{../body.vacatureTijdlijn.cv-selectie}}"></li>
+
+                    {{#each ../ body.vacatureTijdlijn.gesprekken as |gesprek|}}
+                        <li data-label="{{gesprek.label}}" data-start-date="{{gesprek.start_date}}" data-end-date="{{gesprek.end_date}}"></li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/ifEquals}}
+        </div>
+
+    </article>
+
+    <section class="more-vacancies">
+        <a id="more-vacancies-link" href="https://werkenbij.vervoerregio.nl/vacatures">alle vacatures</a>
+    </section>
+
+    <section class="related">
+
+        <h2>Ook iets voor jou?</h2>
+
+        {{> block-ambassador item=body.ambassadors.[0] baseUrl=../baseUrl}}
+
+        {{> block-vacature item=body.related_vacancies.[0] baseUrl=../baseUrl}}
+
+        {{> block-ambassador item=body.ambassadors.[1] baseUrl=../baseUrl}}
+
+        {{> block-vacature item=body.related_vacancies.[1] baseUrl=../baseUrl}}
+
+        {{> block-ambassador item=body.ambassadors.[2] baseUrl=../baseUrl}}
+
+        {{> block-vacature item=body.related_vacancies.[2] baseUrl=../baseUrl}}
+
+
+    </section>
+
+
+
+    {{> footer-wb }}
+
+    {{> clip-paths }}
+
+	</body>
+
+    {{> footer-scripts}}
+</html>

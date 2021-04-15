@@ -1,6 +1,7 @@
 import errorHandler from "errorhandler";
-
 import app from "./app";
+import logger from "./util/logger";
+import {APPLICATION_NAME, ENV} from "./util/config";
 
 /**
  * Error Handler. Provides full stack - remove for production
@@ -11,12 +12,9 @@ app.use(errorHandler());
  * Start Express server.
  */
 const server = app.listen(app.get("port"), () => {
-    console.log(
-        "  App is running at http://localhost:%d in %s mode",
-        app.get("port"),
-        app.get("env")
+    logger.info(
+        APPLICATION_NAME + " is running at http://localhost:" + app.get("port") + " in " + ENV + " mode"
     );
-    console.log("  Press CTRL-C to stop\n");
 });
 
-export default server;
+export { server };

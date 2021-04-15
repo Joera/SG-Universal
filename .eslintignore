@@ -1,6 +1,7 @@
 # /node_modules/* in the project root is ignored by default
 # build artefacts
-dist/*
+app/*
+test/*
 coverage/*
 # data definition files
 **/*.d.ts

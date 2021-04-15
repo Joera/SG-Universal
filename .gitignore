@@ -3,9 +3,9 @@
 node_modules
 logs
 pages
-dist
-!dist/assets/
-dist/assets/css/main.css
+app
+!app/assets/
+app/assets/css/main.css
 npm-debug.log
 package-lock.json
 
@@ -35,6 +35,6 @@ coverage
 .DS_Store
 Thumbs.db
 # Ignore built ts files
-dist/**/*
+app/**/*
 # ignore yarn.lock
 yarn.lock

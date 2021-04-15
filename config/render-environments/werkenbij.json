@@ -1,0 +1,227 @@
+{
+  "RENDER_ENVIRONMENT": "werkenbij",
+  "BASE_URL": "https://wijnemenjemee.nl/staging/werkenbij/",
+  "ASSETS_URL": "https://wijnemenjemee.nl/staging/wijnemenjemee/assets/",
+  "REMOTE_HOST": "vra",
+  "REMOTE_PATH": "/var/www/vhosts/wijnemenjemee.nl/httpdocs/staging/werkenbij",
+  "RENDER_TASKS": [],
+  "RENDER_TYPES": ["homepage","page","vacature","ambassador","vacatures"],
+  "ALGOLIA_INDEX_NAME_PREFIX": "WERKENBIJ-ts",
+  "ALGOLIA_APP_ID": "RLZJT7BFZT",
+  "ALGOLIA_API_KEY": "f0dc506dd42b55db93e55d28c3e667b5",
+  "TEMPLATE_DATA": [
+    {
+      "template": "homepage",
+      "properties": [
+        {
+          "key": "organisation",
+          "query": [
+            { "_id": "51868" }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 1
+        },
+        {
+          "key": "starters",
+          "query": [
+            { "_id": "52027" }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 1
+        },
+        {
+          "key": "conditions",
+          "query": [
+            { "_id": "52028" }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 1
+        },
+        {
+          "key": "vacancies",
+          "query": [
+            { "type": "vacature" }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 3
+        },
+        {
+          "key": "ambassadors",
+          "query": [
+            { "type": "ambassador" },
+            { "status" :  "publish" }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 3
+        }
+      ]
+    },
+    {
+      "template": "vacature",
+      "properties": [
+        {
+          "key": "related_vacancies",
+          "query": [
+            {
+              "type": "vacature"
+            },
+            {
+              "slug": {
+                "operator": "$ne",
+                "property": "slug"
+              }
+            }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 10,
+          "post": "shuffle.service"
+        },
+        {
+          "key": "ambassadors",
+          "query": [
+            {
+              "type": "ambassador"
+            }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 10,
+          "post": "shuffle.service"
+        }
+      ]
+    },
+    {
+      "template": "ambassador",
+      "properties": [
+        {
+          "key": "related_vacancies",
+          "query": [
+            {
+              "type": "vacature"
+            }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 10,
+          "post": "shuffle.service"
+        },
+        {
+          "key": "ambassadors",
+          "query": [
+            {
+              "type": "ambassador"
+            },
+            {
+              "slug": {
+                "operator": "$ne",
+                "property": "slug"
+              }
+            }
+          ],
+          "sort": {
+            "date": -1
+          },
+          "limit": 10,
+          "post": "shuffle.service"
+        }
+      ]
+    },
+    {
+      "template": "page",
+      "properties": [
+        {
+          "key": "related",
+          "query": [
+            {
+              "_id": {
+                "operator": "$in",
+                "value": ["51868","52027","52028","52208"]
+              }
+            },
+            {
+              "slug": {
+                "operator": "$ne",
+                "property": "slug"
+              }
+            }
+          ],
+          "sort": {},
+          "limit": 4
+        }
+      ]
+    }
+  ],
+  "CUSTOM_PATHS": [
+    {
+      "type": "homepage",
+      "path" : "/"
+    },
+    {
+      "type": "vacatures",
+      "path" : "/vacatures/"
+    }
+  ],
+  "RIPPLES": [
+    {
+      "types" : ["page","ambassador","vacature"],
+      "condition" : false,
+      "objects" : [
+        {
+        "type": "homepage",
+        "slug": "home",
+        "path": "/"
+        }
+      ]
+    },
+    {
+      "types" : ["vacature"],
+      "condition" : false,
+      "query" : {
+        "query": [{
+            "type": "vacature"
+        }],
+        "sort": {"date": -1 },
+        "limit": 6
+      }
+    },
+    {
+      "types" : ["vacatures","page"],
+      "condition" : false,
+      "query" : {
+        "query": [{
+          "type": "page"
+        }],
+        "sort": {"date": -1 },
+        "limit": 6
+      }
+    },
+    {
+      "types" : ["ambassador"],
+      "condition" : false,
+      "query" : {
+        "query": [{
+          "type": {
+            "operator" : "$in",
+            "value" : ["ambassador","vacature"]
+          }
+        }],
+        "sort": {"date": -1 },
+        "limit": 20
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+<a href="{{ item.url}}" class="block">
+
+    {{#if item.mainImage}}
+
+        {{> responsive-image format='square' size='third' title=item.mainImage.alttext external_id=item.mainImage.external_id filename=item.mainImage.filename }}
+
+    {{/if}}
+
+    <div class="overlay">
+
+        <h3>{{{item.title}}}</h3>
+
+        <span class="author hide-on-mobile">
+            <span>{{item.author.first_name}}</span>
+            <span>{{item.author.last_name}}</span>
+            <!--<span>: Vervoerregio Amsterdam</span>-->
+        </span>
+
+        <span class="date">{{formatDate item.date 'DD MMMM YYYY'}}</span>
+
+
+        <!--{{#each item.taxonomies.tags as |tag|}}-->
+
+            <!--<span class="tags hide-on-mobile">-->
+                <!--<span class="separator">|</span>-->
+                <!--{{tag.name}}-->
+            <!--</span>-->
+
+
+        <!--{{/each}}-->
+
+        {{> icon-chevron }}
+
+    </div>
+
+</a>

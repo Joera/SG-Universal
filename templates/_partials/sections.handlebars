@@ -1,0 +1,154 @@
+
+{{#each sections as |section|}}
+    <section class="section {{wijnemenjemee__containerClass section.type section.images section.orientation section.format}} {{section.type}} {{section.image.type}} {{section.formation}} {{section.orientation}} {{section.background}}">
+
+        {{#ifEquals section.type 'paragraph'}}
+            <div class="text">{{{section.text}}}</div>
+        {{/ifEquals}}
+
+        {{#ifEquals section.type 'streamer'}}
+            <h2>{{{section.text}}}</h2>
+        {{/ifEquals}}
+
+        {{#ifEquals section.type 'chapter'}}
+            <a class="anchor" id="{{section.slug}}"></a>
+            <div class="container">
+                <h2>{{section.title}}</h2>
+            </div>
+        {{/ifEquals}}
+
+        {{#ifEquals section.type 'images'}}
+
+            {{#each section.images as |image|}}
+
+                <div class="images-image">
+                    {{> responsive-image image=image title=image.alttext alt=image.alttext format=(wijnemenjemee__imageFormat @index section.formation section.orientation) }}
+                </div>
+                {{#if image.caption}}
+                    <div class="images-caption">
+                        <div class="caption">
+                            <span>{{{image.caption}}}{{#if image.credits}}<span class="credits">Foto: {{image.credits}}</span>{{/if}}</span>
+                        </div>
+                    </div>
+                {{/if}}
+
+            {{/each}}
+
+        {{/ifEquals}}
+
+
+        {{#ifEquals section.type 'video'}}
+
+            <div class="wrapper-wrapper">
+
+            {{#if section.youtube_id }}
+
+
+                <div class="video-wrapper">
+                    <iframe width="560" height="349" src="https://www.youtube.com/embed/{{section.youtube_id}}" frameborder="0" allowfullscreen></iframe>
+                    <img class="still-image" src="https://i1.ytimg.com/vi/{{section.youtube_id}}/sddefault.jpg" />
+                    <div class="play-knop" onclick="video.play(this)">
+                        <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M896 128q209 0 385.5 103t279.5 279.5 103 385.5-103 385.5-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103zm384 823q32-18 32-55t-32-55l-544-320q-31-19-64-1-32 19-32 56v640q0 37 32 56 16 8 32 8 17 0 32-9z"/></svg>
+                    </div>
+                </div>
+
+
+            {{/if}}
+
+            {{#if section.vimeo }}
+
+                <div class="video-wrapper">
+                    <iframe width="500" height="281" src="{{section.vimeo}}" frameborder="0" allowfullscreen webkitallowfullscreen allowfullscreen></iframe>
+                    <img class="still-image" src="{{section.vimeo_meta.[0].thumbnail_large}}" />
+
+                    <div class="play-knop" onclick="video.play(this)">
+                        <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M896 128q209 0 385.5 103t279.5 279.5 103 385.5-103 385.5-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103zm384 823q32-18 32-55t-32-55l-544-320q-31-19-64-1-32 19-32 56v640q0 37 32 56 16 8 32 8 17 0 32-9z"/></svg>
+                    </div>
+                </div>
+
+            {{/if}}
+
+            {{#if section.iframe }}
+                <div class="iframe">{{{section.iframe}}}</div>
+            {{/if}}
+
+            </div>
+
+
+        {{/ifEquals}}
+        {{#ifEquals section.type 'quote'}}
+            <div class="quote_text">{{section.text}}</div>
+
+            <div class="quote_author">
+                {{#unless section.thumb.external_id '0'}}
+                    <div class="author_thumbnail">
+                        {{> responsive-image format='square' size='fourth' title=section.name external_id=section.thumb.external_id filename=section.thumb.filename }}
+                    </div>
+                {{/unless}}
+                 <span class="">{{section.name}}{{#if section.organisation}}<br/>{{section.organisation}}{{/if}}</span>
+            </div>
+        {{/ifEquals}}
+        {{#ifEquals section.type 'documents'}}
+            <div class="sectioncontainer container {{section.view}}">
+                <h2>{{#if section.alternative_title}}{{section.alternative_title}}{{else}}Documenten{{/if}}</h2>
+                <ul class="{{section.view}}">
+
+                    {{#each section.documents as |doc| }}
+                        <a href="{{doc.file_cdn_url}}" target="_blank">
+                            <li>
+                                <div class="small-block-header">
+                                    <div class="shape">
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+                                            <path fill="#000000" d="M14.5 18h-10c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5h10c0.276 0 0.5 0.224 0.5 0.5s-0.224 0.5-0.5 0.5z"></path>
+                                            <path fill="#000000" d="M16.5 3c-0.276 0-0.5 0.224-0.5 0.5v15c0 0.276-0.224 0.5-0.5 0.5h-11c-0.827 0-1.5-0.673-1.5-1.5s0.673-1.5 1.5-1.5h9c0.827 0 1.5-0.673 1.5-1.5v-12c0-0.827-0.673-1.5-1.5-1.5h-10c-0.827 0-1.5 0.673-1.5 1.5v15c0 1.378 1.122 2.5 2.5 2.5h11c0.827 0 1.5-0.673 1.5-1.5v-15c0-0.276-0.224-0.5-0.5-0.5zM3.5 2h10c0.276 0 0.5 0.224 0.5 0.5v12c0 0.276-0.224 0.5-0.5 0.5h-9c-0.562 0-1.082 0.187-1.5 0.501v-13.001c0-0.276 0.224-0.5 0.5-0.5z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="text-block">
+
+
+                                        <h3>{{{doc.file_name}}}</h3>
+                                        <span>{{doc.file_description}}</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </a>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/ifEquals}}
+
+        {{#ifEquals section.type 'datavisplanning'}}
+
+            <div>
+                {{#if section.optional_title}}
+                    <h3>{{section.optional_title}}</h3>
+                {{/if}}
+
+                <div id="datavis-planning-{{@index}}" class="datavis-planning"></div>
+                <div id="planning_wrapper">
+                    <div id="planning_header"></div>
+                </div>
+            </div>
+
+        {{/ifEquals}}
+
+        {{#ifEquals section.type 'work_card'}}
+            <div class="large-container">
+
+                <h3>{{section.work.title}}</h3>
+
+            </div>
+        {{/ifEquals}}
+
+        {{#ifEquals section.type 'form'}}
+
+            {{#ifEquals section.form 'voelkaarten'}}
+                {{> form-voelkaarten}}
+            {{/ifEquals}}
+
+
+
+
+        {{/ifEquals}}
+    </section>
+{{/each}}

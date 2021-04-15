@@ -1,0 +1,21 @@
+<a href="{{item.url}}" class="block page">
+
+    {{#if item.mainImage}}
+
+        {{> responsive-image format='square' size='third' title=item.mainImage.alttext external_id=item.mainImage.external_id filename=item.mainImage.filename }}
+
+    {{/if}}
+
+    <div class="gradient"></div>
+
+    <div class="overlay">
+
+        <h3>{{{item.title}}}</h3>
+
+        <span>{{item.subtitle}}</span>
+
+        {{> icon-chevron }}
+
+    </div>
+
+</a>

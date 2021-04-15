@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{> head }}
+</head>
+
+<body class="post wijnemenjemee">
+
+{{> header }}
+
+{{> menu }}
+
+<article>
+
+    <div id="cover_container" class="{{body.mainImage.valign}}">   <!-- clipped_onderzijde -->
+        {{> responsive-image format='camera' size='full' title=body.mainImage.alttext external_id=body.mainImage.external_id filename=body.mainImage.filename }}
+    </div>
+
+    <div id="post_info">
+
+        <span class="date">{{formatDate body.date 'long'}}</span>
+        <h1>{{{body.title}}}</h1>
+        <div class="authors">
+
+            {{body.author.first_name}} {{body.author.last_name}} {{#if body.author.organisation}} | {{body.author.organisation}}{{/if}}</span>
+
+            <div id="author_thumbnail">
+                {{> responsive-image format='square' size='fourth' title=body.author.first_nam external_id=body.author.thumbnail.external_id filename=body.author.thumbnail.filename }}
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <section id="post_intro">
+
+        {{#each body.updates as |update| }}
+
+            <div class="update">
+                <span class="datum">{{formatDate update.date 'long'}}</span>
+                <h3>{{{update.title}}}</h3>
+                {{{update.content}}}
+            </div>
+
+        {{/each}}
+
+        <div class="text">{{{body.content}}}</div>
+    </section>
+
+    {{>sections sections=body.sections }}
+
+</article>
+
+{{> comment-section comments=body.interaction.nested_comments}}
+
+<section class="related_posts">
+
+    <h2>Gerelateerde berichten</h2>
+
+    {{#each (limit (concatArrays body.relatedPosts body.Allposts)  6) as |item|}}
+        {{> block-camera item=item baseUrl=../baseUrl}}
+    {{/each}}
+
+</section>
+
+{{> clip-paths }}
+
+</body>
+
+{{> footer }}
+
+{{> footer-scripts}}
+
+</html>

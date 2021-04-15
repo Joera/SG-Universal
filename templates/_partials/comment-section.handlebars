@@ -1,0 +1,33 @@
+<section class="comment-section">
+
+
+        <main>
+
+            <h2>Heeft u vragen? Stel ze hier.</h2>
+
+            <div id="respondcontainer">
+
+                {{>respond-form }}
+
+            </div>
+
+            <div id="comments-wrapper">
+
+                {{#each comments as |thread|}}
+                    <div class='thread' data-thread-id='{{thread.[0].id}}'>
+                        {{#each thread as |comment|}}
+                            {{> comment threadID=thread.[0].id comment=comment}}
+                        {{/each}}
+                    </div>
+                {{/each}}
+            </div>
+
+        </main>
+        <aside>
+
+            {{> social-buttons }}
+
+
+        </aside>
+
+</section>

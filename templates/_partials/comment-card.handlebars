@@ -1,0 +1,51 @@
+<div id="comment_{{comment.id}}" class="comment {{sluggify comment.name}}" data-thread-id='{{comment.thread.id}}' data-post-id='{{comment.post.id}}'>
+
+    <div class="comment-wrapper">
+
+        <div class="header">
+            <span class="datetime smallerfont">{{formatDate comment.date 'comment'}}</span>
+            <h4 class="{{#if comment.isEditor}}editorial{{/if}} {{renderEnv}}">{{comment.name}}</h4>
+        </div>
+
+        {{{comment.content}}}
+
+    </div>
+
+    <div class="comment-relations">
+
+        {{#ifMoreThan comment.prev_count 0 }}
+
+            <a data-link="{{../comment.prev}}" class="comment-relations_circle comment-relations_thread comment-relations_prev">
+
+                <div>
+                    <span class="number">{{../comment.prev_count}}</span>
+                    {{> icon-chevron }}
+                </div>
+            </a>
+
+        {{/ifMoreThan}}
+
+        {{#ifMoreThan comment.next_count 0 }}
+
+            <a data-link="{{../comment.next}}" class="comment-relations_circle comment-relations_thread comment-relations_next">
+
+                <div>
+                    <span class="number">{{../comment.next_count}}</span>
+                    {{> icon-chevron }}
+                </div>
+            </a>
+
+        {{/ifMoreThan}}
+
+        <a href="{{comment.post.url}}" class="comment-relations_circle comment-relations_post smallerfont">
+
+            <div>
+                <span class="number">{{comment.post.count}}</span>
+                {{> icon-chevron }}
+            </div>
+            ({{shortenPostTitle comment.post.title}})
+        </a>
+
+
+    </div>
+</div>

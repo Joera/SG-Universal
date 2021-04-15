@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{> head }}
+
+</head>
+
+<body class="wijnemenjemee">
+
+	{{> header }}
+
+    {{> menu }}
+
+        <main class="home_grid">
+
+                {{> banner-homepage }}
+
+                <section id="home-nav">
+                    <ul>
+                        <li>
+                            <a href="/projecten">
+                                {{> icon-chevron }}
+                                naar de projecten
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/het-openbaar-vervoer">
+                                {{> icon-chevron }}
+                                in het OV
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/de-toekomst">
+                                {{> icon-chevron }}
+                                naar de toekomst
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/de-nieuwe-metros-bussen-en-trams">
+                                {{> icon-chevron }}
+                                in het nieuwe materieel
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/de-fiets">
+                                {{> icon-chevron }}
+                                op de fiets
+                            </a>
+                        </li>
+                        <li>
+
+                            <input id="search-input" type="text" onkeyup="menu.onEnterSearch(event)" placeholder="Zoeken">
+                            <button onclick="menu.search()">
+                            {{> icon-search }}
+                            </button>
+
+                        </li>
+                    </ul>
+                </section>
+
+
+                    {{> block-large item=body.posts.[0] baseUrl=../baseUrl }}
+                    {{> block-large item=body.posts.[1] baseUrl=../baseUrl }}
+
+                    {{> block-camera item=body.posts.[2] baseUrl=../baseUrl  class="clipped_bovenzijde"}}
+                    {{> block-camera item=body.posts.[3] baseUrl=../baseUrl }}
+                    {{> block-camera item=body.posts.[4] baseUrl=../baseUrl }}
+                    {{> block-camera item=body.posts.[5] baseUrl=../baseUrl class="clipped_onderzijde"}}
+                    {{> block-camera item=body.posts.[6] baseUrl=../baseUrl }}
+                    {{> block-camera item=body.posts.[7] baseUrl=../baseUrl }}
+
+                    <a class="featured_theme" href="https://wijnemenjemee.nl/{{body.theme.slug}}">
+                        <div class="clipped_bovenzijde">
+                            {{> responsive-image format='camera' size='full' title=body.theme.mainImage.alttext external_id=body.theme.mainImage.external_id filename=body.theme.mainImage.filename }}
+                            <div class="gradient"></div>
+                        </div>
+                    </a>
+
+                    <a class="featured_theme_h2" href="https://wijnemenjemee.nl/{{body.theme.slug}}">
+                        <h2>{{> icon-chevron }} Uitgelicht thema</h2>
+                    </a>
+
+                    <a class="featured_theme_h3" href="https://wijnemenjemee.nl/{{body.theme.slug}}">
+                        <h3>{{body.theme.title}}</h3>
+                    </a>
+
+                    {{> block-camera item=body.posts.[8] baseUrl=../baseUrl class="clipped_bovenzijde" }}
+                    {{> block-camera item=body.posts.[9] baseUrl=../baseUrl }}
+
+                    {{> block-camera item=body.posts.[10] baseUrl=../baseUrl class="clipped_onderzijde" }}
+                    {{> block-camera item=body.posts.[11] baseUrl=../baseUrl }}
+
+                    <a class="more-link" href="/zoeken/?filter[type]=post&page=1">
+                        {{> icon-plus }} <span>meer nieuwsberichten</span>
+                    </a>
+
+
+            <aside id="dashboard">
+
+                    <ul id="dashboard-menu">
+                    <li class="{{renderEnv}} active" data-option="comments">{{> icon-comments }}<span>reacties</span></li>
+                    <li class="{{renderEnv}}" data-option="tweets">{{> icon-tweets }}<span>twitter</span></li>
+                    <li class="{{renderEnv}}" data-option="youtube">{{> icon-youtube }}<span>youtube</span></li>
+                    <li class="{{renderEnv}}" data-option="instagram">{{> icon-instagram }}<span>instagram</span></li>
+                    </ul>
+
+                    <div id="comments_wrapper" class="aside_wrapper comments" data-option="comments">
+
+                        {{#each (limit body.comments 16) as |comment|}}
+                            {{> comment-card comment=comment renderEnv=../renderEnv}}
+                        {{/each}}
+
+                    </div>
+
+                    <div id="tweet_wrapper" class="aside_wrapper twitter" data-option="tweets">
+                        <!-- wordt gevuld door twitter/contact.js -->
+                    </div>
+
+                    <div id="youtube_wrapper" class="aside_wrapper youtube" data-option="youtube">
+                        <!-- wordt gevuld door twitter/contact.js -->
+                    </div>
+
+                    <div id="instagram_wrapper" class="aside_wrapper instagram" data-option="instagram">
+                        <!-- wordt gevuld door twitter/contact.js -->
+                    </div>
+
+                    <a class="more-link comments" href="/zoeken/?filter[type]=comment&page=1" data-link="comments">
+                        {{> icon-plus }} <span>Meer reacties</span>
+                    </a>
+
+                    <a class="more-link twitter" href="https://twitter.com/vervoerregio" target="_blank" data-link="tweets">
+                        {{> icon-plus }} <span>Meer tweets</span>
+                    </a>
+
+                    <a class="more-link youtube" href="https://www.youtube.com/user/NoordZuidlijn" target="_blank" data-link="youtube">
+                        {{> icon-plus }} <span>Meer video's</span>
+                    </a>
+
+                    <a class="more-link instagram" href="https://www.instagram.com/vervoerregio/" target="_blank" data-link="instagram">
+                        {{> icon-plus }} <span>Meer foto's</span>
+                    </a>
+            </aside>
+
+    </main>
+
+    {{> clip-paths }}
+
+</body>
+
+
+{{> footer }}
+
+{{> footer-scripts}}
+
+</html>

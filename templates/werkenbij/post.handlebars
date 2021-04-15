@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<title>{{renderEnv}} - {{body.title}}</title>
+		{{> head }}
+	</head>
+	<body class="werkenbij">
+
+	{{> header }}
+		<div id="story">
+
+            <div id="cover_container">
+                {{> responsive-image format='camera' size='full' title=body.mainImage.alttext external_id=body.mainImage.external_id filename=body.mainImage.filename }}
+            </div>
+
+            <div id="intro" class="large-container">
+
+                {{> cutout-intro }}
+
+                <div class="small-container">
+                    <h1>{{{body.title}}}</h1>
+                    <div class="authors">
+
+                        {{body.author.first_name}} {{body.author.last_name}} | <span class="datum">{{formatDate body.date 'long'}}</span>
+
+                        <div id="author_thumbnail">
+                            {{> responsive-image format='square' size='fourth' title=body.author.first_name external_id=body.author.thumbnail.external_id filename=body.author.thumbnail.filename }}
+                        </div>
+
+                    </div>
+
+                    {{#each body.updates as |update| }}
+
+                        <div class="update">
+                            <span class="datum">{{formatDate update.date 'long'}}</span>
+                            <h3>{{{update.title}}}</h3>
+                            {{{update.content}}}
+                        </div>
+
+                    {{/each}}
+
+                    <div class="text">{{{body.content}}}</div>
+                </div>
+            </div>
+
+            {{>sections sections=body.sections }}
+
+            <div class="container">
+
+                {{> blog-rating }}
+
+            </div>
+
+
+            {{> comment-section comments=body.interaction.nested_comments}}
+
+		</div>
+
+		<section id="related-posts">
+
+			<div class="large-container">
+				<h2>Gerelateerde berichten</h2>
+
+                <div>
+
+				{{#each body.related_posts as |post| }}
+					{{>block item=post body=../body}}
+				{{/each}}
+
+                </div>
+			</div>
+
+		</section>
+
+        {{> footer-wb }}
+
+	</body>
+</html>
