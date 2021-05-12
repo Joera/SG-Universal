@@ -16,6 +16,7 @@
       }
     ],
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/interface-name-prefix": "warn"
+    "@typescript-eslint/interface-name-prefix": "warn",
+    "@typescript-eslint/ban-ts-ignore": "off"
   }
 }

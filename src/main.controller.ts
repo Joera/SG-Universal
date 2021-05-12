@@ -12,9 +12,9 @@ import { FileSystemConnector } from "./connectors/filesystem.connector";
 import { DatasetController } from "./datasets/dataset.controller";
 import { SearchController } from "./search/search.controller";
 import { TemplateController } from "./html-template/template.controller";
-import {QueueItem} from "renderer";
-import { configService } from "./util/config.service"
-import {ContentOwner, RenderEnv} from "config";
+import { QueueItem } from "renderer";
+import { configService } from "./util/config.service";
+import { ContentOwner, RenderEnv } from "config";
 
 const queue = new QueueController();
 const renderer = new RenderController();
@@ -28,20 +28,17 @@ export const create = async (req: Request, res: Response) => {
 
     const url: any = null;
     const actions: any[] = [];
-
     const report: IReport = new Report(req.body.id);
-    const { contentOwner, renderEnvironments } : any = await configService(req, res);
+    const { contentOwner, renderEnvironments }: any = await configService(req, res, report);
     const dataObject: DataObject  = new CustomContentModel(req.body, contentOwner, report);
 
     await mongoStoreController.save(dataObject, contentOwner.MONGODB_DB, report);
 
     // differentiate for render environments
 
-    for (let envName of dataObject.renderEnvironments) {
+    for (const envName of dataObject.renderEnvironments) {
 
-
-
-        let renderEnv = renderEnvironments.find( (env: RenderEnv) => env.RENDER_ENVIRONMENT === envName)
+        const renderEnv = renderEnvironments.find( (env: RenderEnv) => env.RENDER_ENVIRONMENT === envName);
 
         await queue.primaries(dataObject, contentOwner, renderEnv, report);
         await queue.ripples(dataObject, contentOwner, renderEnv, report);
@@ -57,23 +54,21 @@ export const create = async (req: Request, res: Response) => {
 
     actions.push(await renderer.renderQueue(report, renderEnvironments));
 
+    logger.info( { payload : JSON.stringify(report), processId : report.processId });
 
     if(actions.length > 0) {
 
         Promise.all(actions).then((results) => {
-            logger.info(report);
-            logger.info('------------------------------------------------------------------------------------------');
             res.status(201); // set http status code for response
             res.json(report); // send response body
         })
         .catch(error => {
-            logger.error(error);
+            logger.error({ payload : error, processId : report.processId });
             res.status(400); // set http status code for response
             res.json(report); // send response body
         });
 
     } else {
-        logger.info(report);
         res.status(201); // set http status code for response
         res.json(report); // send response body
     }
@@ -83,13 +78,13 @@ export const remove = async (req: Request, res: Response) => {
 
     //   const self = this;
     const url: any = null;
-    const correlationId = uuidV4();
     const actions: any[] = [];
+    const report: IReport = new Report(req.body.id);
     // test originates outside docker and localhost is not part of dev_net
 
-    const { contentOwner, renderEnvironments } : any = await configService(req, res);
+    const { contentOwner, renderEnvironments }: any = await configService(req, res, report);
 
-    const report: IReport = new Report(req.body.id);
+
     const dataObject: DataObject  = new CustomContentModel(req.body, contentOwner, report);
 
     // get old url for path to directory
@@ -97,13 +92,13 @@ export const remove = async (req: Request, res: Response) => {
         query: {
             _id : dataObject._id
         }
-    }, contentOwner);
+    }, contentOwner, report);
 
     await mongoStoreController.remove(dataObject, contentOwner, report);
 
-    for (let envName of dataObject.renderEnvironments) {
+    for (const envName of dataObject.renderEnvironments) {
 
-        let renderEnv = renderEnvironments.find((env: RenderEnv) => env.RENDER_ENVIRONMENT === envName)
+        const renderEnv = renderEnvironments.find((env: RenderEnv) => env.RENDER_ENVIRONMENT === envName);
         await filesystem.deleteDirectory(oldObject, report);
         await queue.ripples(dataObject, contentOwner, renderEnv, report);
 
@@ -114,21 +109,21 @@ export const remove = async (req: Request, res: Response) => {
 
     actions.push(await renderer.renderQueue(report,renderEnvironments));
 
-
+    logger.info( { payload : JSON.stringify(report), processId : report.processId });
 
     if(actions.length > 0) {
         Promise.all(actions).then((results) => {
+
             res.status(201); // set http status code for response
             res.json(report); // send response body
         })
         .catch(error => {
-            logger.error(error);
+            logger.error({ payload : error, processId : report.processId });
             res.status(400); // set http status code for response
             res.json(report); // send response body
         });
 
     } else {
-
         res.status(201); // set http status code for response
         res.json(report); // send response body
     }
@@ -136,18 +131,20 @@ export const remove = async (req: Request, res: Response) => {
 
 export const preview = async (req: Request, res: Response) => {
 
+    const report: IReport = new Report(req.body.id);
+
     try {
-        const report: IReport = new Report(req.body.id);
-        const { contentOwner, renderEnvironments } : any = await configService(req, res);
+
+        const { contentOwner, renderEnvironments }: any = await configService(req, res, report);
         const dataObject: DataObject  = new CustomContentModel(req.body, contentOwner, report);
         // body = await this.documentService.getDocs(body);
-        const html = await template.render(dataObject.slug, dataObject.type, dataObject, dataObject.renderEnvironments[0]);
+        const html = await template.render(dataObject.slug, dataObject.type, dataObject, dataObject.renderEnvironments[0], report);
         res.status(200); // set http status code for response
         res.json({html: html}); // send response body
     }
 
     catch (error) {
-        logger.error("failed to provide preview for " + req.body.id);
+        logger.error( { payload : "failed to provide preview for " + req.body.id, processId : report.processId });
         res.status(error.statusCode || 500); // set http status code for response
         res.json({message: error.message});
     }

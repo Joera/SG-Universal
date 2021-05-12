@@ -13,6 +13,8 @@ export class SearchController {
 
         const searchObject = new CustomSearchModel(dataObject, contentOwner, report);
 
+    //    logger.debug( {payload: JSON.stringify(searchObject), processId: report.processId} );
+
         searchObject.searchSnippet = await search.createSnippet(searchObject, renderEnv, report);
         // if no template has been assigned in search.model .. the item will not be send to index
         if(searchObject.searchSnippet) {
@@ -23,7 +25,7 @@ export class SearchController {
 
     async removePost(dataObject: DataObject, contentOwner: ContentOwner, renderEnvironments: RenderEnv[], report: IReport) {
 
-        const renderEnvironment = renderEnvironments.find( (env) => env.RENDER_ENVIRONMENT )
+        const renderEnvironment = renderEnvironments.find( (env) => env.RENDER_ENVIRONMENT );
 
         const searchObject = new CustomSearchModel(dataObject, contentOwner, report);
         await search.purgeIndex(searchObject, renderEnvironment, report);

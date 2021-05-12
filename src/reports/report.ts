@@ -1,6 +1,9 @@
+import {v4 as uuidV4} from "uuid";
+
 export interface IReport {
 
     primaryId: string;
+    processId: string;
     date: Date;
     success: string[];
     warning: string[];
@@ -18,6 +21,7 @@ export interface IReport {
 export class Report {
 
     primaryId: string;
+    processId: string;
     date: Date;
     success: string[];
     warning: string[];
@@ -32,6 +36,7 @@ export class Report {
     constructor(id: string){
 
         this.primaryId = id;
+        this.processId = uuidV4();
         this.date = new Date;
         this.success = [];
         this.warning = [];

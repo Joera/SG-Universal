@@ -18,14 +18,14 @@ export class RippleService {
 
         const ripples: RippleObject[] = [];
 
-        for (let ripple of renderEnv.RIPPLES.filter( (r) => r.types.indexOf(dataObject.type) > -1)) {
+        for (const ripple of renderEnv.RIPPLES.filter( (r) => r.types.indexOf(dataObject.type) > -1)) {
 
                 if (!ripple.condition) { // or if condition is met  {
 
 
                     if (ripple.objects) {
 
-                        for (let object of ripple.objects) {
+                        for (const object of ripple.objects) {
 
                             ripples.push(
                                 {
@@ -35,15 +35,15 @@ export class RippleService {
                                     language: dataObject.language,
                                     renderEnvironments: [renderEnv.RENDER_ENVIRONMENT]
                                 }
-                            )
+                            );
                         }
                     }
 
                     if (ripple.query) {
 
                         let items = [];
-                        const options : any = {};
-                        options.query = parseQuery(ripple.query.query, dataObject)
+                        const options: any = {};
+                        options.query = parseQuery(ripple.query.query, dataObject);
                         options.query.renderEnvironments =  { "$in" : [renderEnv.RENDER_ENVIRONMENT]};
                         options.sort = ripple.query.sort;
                         options.limit = ripple.query.limit;
@@ -52,10 +52,10 @@ export class RippleService {
                             items = await this.store.find(options, contentOwner.MONGODB_DB);
                         }
                         catch(err) {
-                            logger.error('failed to query ripples');
+                            logger.error("failed to query ripples");
                         }
 
-                        for (let item of items) {
+                        for (const item of items) {
 
                             ripples.push(
                                 {
@@ -65,7 +65,7 @@ export class RippleService {
                                     language: item.language,
                                     renderEnvironments: [renderEnv.RENDER_ENVIRONMENT]
                                 }
-                            )
+                            );
                         }
                     }
                 }

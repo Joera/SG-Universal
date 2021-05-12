@@ -3,7 +3,7 @@ import mkdirp from "mkdirp";
 import rmrf from "rmrf";
 import fs from "fs";
 import { DIST_FOLDER } from "../util/config";
-import {IReport} from "../reports/report";
+import {IReport, Report} from "../reports/report";
 import { getPath } from "../html-queue/path.service";
 import {DataObject} from "content";
 
@@ -37,7 +37,8 @@ export class FileSystemConnector {
                         }
 
                         catch (error) {
-                            logger.error("failed to delete html");
+                            logger.info( { payload : "failed to delete html", processId : report.processId });
+
                         }
                     }
 
@@ -55,19 +56,19 @@ export class FileSystemConnector {
             return;
     }
 
-    async readFile(path: string) : Promise<Buffer> {
+    async readFile(path: string): Promise<Buffer> {
 
         return new Promise( async(resolve, reject) => {
 
             try {
-                const data = await fsPromises.readFile(path, 'binary');
+                const data = await fsPromises.readFile(path, "binary");
                 resolve(Buffer.from(data));
             }
             catch(err) {
-                logger.error('Error occured while reading file!', err);
-                reject()
+                logger.error("Error occured while reading file!", err);
+                reject();
             }
-        })
+        });
 
     }
 }

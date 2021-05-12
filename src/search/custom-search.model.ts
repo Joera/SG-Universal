@@ -10,13 +10,13 @@ export class CustomSearchModel extends SearchModel {
 
         super(body,report);
 
-        let model : any = contentOwner.CUSTOM_SEARCH_CONTENT.find( (m) => body.type === m.type);
+        const model: any = contentOwner.CUSTOM_SEARCH_CONTENT.find( (m) => body.type === m.type);
 
         if((model  !== undefined )) {
 
-            for(let prop of model.properties) {
+            for(const prop of model.properties) {
                 // @ts-ignore
-                this[prop.key] = body[prop.prop] || prop.alt;
+                this[prop.key] = (prop.value) ? prop.value : body[prop.prop] || prop.alt;
             }
         }
     }

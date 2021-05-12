@@ -9,23 +9,27 @@ export default class CMSConnector {
 
         let results: any[] = [];
 
-         function loop(urlBase: string, path: string, resolve: any, reject: any) {
+        const url = urlBase + path;
 
-           axios(urlBase + path).then( (response) => {
+         function loop(url: string, resolve: any, reject: any) {
+
+           axios(url).then( (response) => {
+
                results = results.concat(Object.values(response.data));
                if (response.data["_links"] && response.data["_links"]["next"]) {
-                    loop(urlBase, response.data["_links"]["next"][0]["href"], resolve, reject);
+                    loop(urlBase + response.data["_links"]["next"][0]["href"], resolve, reject);
                } else {
                    resolve(results.filter( r => r.title !== undefined));
                }
            }).catch (error => {
                 logger.error("failed to get posts from cms");
+                logger.debug(url);
                 reject();
            });
          }
 
         return new Promise((resolve, reject) => {
-            return loop(urlBase, path ,resolve, reject);
+            return loop(url,resolve, reject);
         });
     }
 
@@ -34,20 +38,20 @@ export default class CMSConnector {
         let apiSlug: string;
         const urlBase = test ? "http://localhost:8000" : contentOwner.WP_URL_DOCKER;
 
-        let query = "?";
+        // let query = "?";
 
         // if(renderEnv) { query += 'env=' + renderEnv + '&'; }
-        query += (limit) ?  "per_page=" + limit : "page=0";
+        let query = (limit) ?  "?per_page=" + limit : "";
 
         switch(type) {
 
-            case 'post':
-                apiSlug = 'posts';
+            case "post":
+                apiSlug = "posts";
 
                 break;
 
-            case 'page':
-                apiSlug = 'pages';
+            case "page":
+                apiSlug = "pages";
 
                 break;
 

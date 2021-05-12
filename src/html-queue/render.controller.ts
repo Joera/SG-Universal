@@ -9,6 +9,7 @@ import {DIST_FOLDER} from "../util/config";
 import {IReport} from "../reports/report";
 import {RenderEnv} from "config";
 import { DistConnector} from "../connectors/dist.connector";
+import {v4 as uuidV4} from "uuid";
 
 
 export class RenderController {
@@ -27,7 +28,7 @@ export class RenderController {
         this.dist = new DistConnector();
     }
 
-    async renderQueue(report: IReport, renderEnvironments : RenderEnv[]) {
+    async renderQueue(report: IReport, renderEnvironments: RenderEnv[]) {
 
         const resultArray: any[] = [];
         const chunkPromises = [];
@@ -42,9 +43,9 @@ export class RenderController {
             //resultArray = resultArray.concat(chunkResult);
         }
 
-        for (let renderEnv of renderEnvironments) {
-            let output = await this.dist.sync(renderEnv);
-            logger.debug(output);
+        for (const renderEnv of renderEnvironments) {
+            const output = await this.dist.sync(renderEnv);
+         //   logger.debug(output.data);
         }
         //
         //
@@ -54,16 +55,17 @@ export class RenderController {
         return;
     }
 
-    async _renderQueueItem(name: string, template: string, path: string, data: DataObject, renderEnvironment: RenderEnv) {
+    async _renderQueueItem(name: string, template: string, path: string, data: DataObject, renderEnvironment: RenderEnv, report: IReport) {
 
         let templateHtml: string;
 
         try {
-            templateHtml = await this.templateController.render(name, template, data, renderEnvironment);
+            templateHtml = await this.templateController.render(name, template, data, renderEnvironment,report);
       //      logger.debug('rendered template for ' + path);
         }
         catch (error) {
-            logger.error("failed to render template for " + path);
+
+            logger.error({ payload : "failed to render template for " + path, processId : report.processId });
             return false;
         }
 
@@ -75,10 +77,10 @@ export class RenderController {
 
                 // // dist copy voor alle files .. of s3cmd
                 // await this.dist.copy(path,renderEnvironment);
-                logger.info("wrote new html at " + path);
+                // logger.info("wrote new html at " + path);
                 return path;
             } catch (error) {
-                logger.error("failed to write html " + path);
+                logger.error({ payload : "failed to write html at" + path, processId : report.processId});
                 return false;
             }
         }
@@ -86,7 +88,7 @@ export class RenderController {
         return false;
     }
 
-    async _renderQueueChunk(chunkSize: number, chunkNumber: number, totalChunks: number, report: IReport, renderEnvironments : RenderEnv[]) {
+    async _renderQueueChunk(chunkSize: number, chunkNumber: number, totalChunks: number, report: IReport, renderEnvironments: RenderEnv[]) {
 
         const renderResults: any[] = [];
         const chunk = await this.queue.get({}, chunkSize); // get chunk from render queue
@@ -97,7 +99,7 @@ export class RenderController {
 
             renderEnv = renderEnvironments.find( (env) => env.RENDER_ENVIRONMENT === item.renderEnvironment);
 
-            const path = await this._renderQueueItem(item.name, item.template, item.path, item.data, renderEnv);
+            const path = await this._renderQueueItem(item.name, item.template, item.path, item.data, renderEnv, report);
             renderedPaths.push(path);
             if (path) { report.add("rendered", path); } else { report.add("error","failed to render " + path); }
         }

@@ -1,24 +1,24 @@
 import {DataObject} from "content";
 
 const isString = (prop: any)  => {
-    return (typeof prop  === 'string' || prop  instanceof String) ? true : false;
-}
+    return (typeof prop  === "string" || prop  instanceof String) ? true : false;
+};
 
 const isPositiveInteger = (n: any) => {
     return n >>> 0 === parseFloat(n);
-}
+};
 
-export const parseQuery =  (query: string, dataObject: DataObject) : any => {
+export const parseQuery =  (query: string, dataObject: DataObject): any => {
 
-    let queryObject: any = {};
+    const queryObject: any = {};
 
-    for (let q of query) {
+    for (const q of query) {
 
         if (isString(Object.values(q)[0])) {
 
             queryObject[Object.keys(q)[0]] = Object.values(q)[0];
 
-        } else if (typeof Object.values(q)[0] === 'object' || Object.values(q)[0] !== null) {
+        } else if (typeof Object.values(q)[0] === "object" || Object.values(q)[0] !== null) {
 
 
             let o: any = {};
@@ -57,4 +57,4 @@ export const parseQuery =  (query: string, dataObject: DataObject) : any => {
     }
 
     return queryObject;
-}
+};

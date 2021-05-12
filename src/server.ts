@@ -13,8 +13,9 @@ app.use(errorHandler());
  */
 const server = app.listen(app.get("port"), () => {
     logger.info(
-        APPLICATION_NAME + " is running at http://localhost:" + app.get("port") + " in " + ENV + " mode"
-    );
+        {
+            payload: APPLICATION_NAME + " is running at http://localhost:" + app.get("port") + " in " + ENV + " mode"
+        } );
 });
 
 export { server };

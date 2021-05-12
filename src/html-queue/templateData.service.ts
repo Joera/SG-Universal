@@ -1,12 +1,13 @@
 import {DataObject} from "content";
 import MongoStorePersistence  from "../store/mongostore.persistence";
-import { trimRelatedItems } from "../store/trim.service"
+import { trimRelatedItems } from "../store/trim.service";
 import logger from "../util/logger";
 import {RenderEnv} from "config";
 import {isString} from "util";
 import {CONFIG_FOLDER, TEMPLATE_FOLDER} from "../util/config";
 import { FileSystemConnector } from "../connectors/filesystem.connector";
 import {parseQuery} from "../store/query.service";
+import {IReport} from "../reports/report";
 
 
 export class TemplateDataService {
@@ -19,30 +20,39 @@ export class TemplateDataService {
         this.filesystem = new FileSystemConnector();
     }
 
-    async get(data: DataObject, renderEnv: RenderEnv, dbName: string, template: string) {
+    async get(data: DataObject, renderEnv: RenderEnv, dbName: string, template: string, report: IReport) {
 
         // for ripples ... always get one self with type and slug
-        // unless slug on rippleObject is set to false
-        let dataObject: DataObject = (data.slug) ? await this.getSelf(data.type, data.slug,data.language,dbName) : data;
 
-        let config : any = renderEnv.TEMPLATE_DATA.find( (t) => data.type === t.template);
+        let dataObject = (data.slug) ? await this.getSelf(data.type, data.slug, data.language, dbName, report) : data;
+
+
+        const config: any = renderEnv.TEMPLATE_DATA.find( (t) => data.type === t.template);
 
         if((config  !== undefined )) {
 
-            for(let prop of config.properties) {
+            for(const prop of config.properties) {
 
-                let items = await this.genericQuery(dbName, renderEnv, data, prop.query, prop.sort, prop.limit );
+                const items = await this.genericQuery(dbName, renderEnv, data, prop.query, prop.sort, prop.limit, report );
+
+                // if(prop.limit === 1) {
+                //     // logger.debug(items);
+                // }
 
                 if(prop.post && prop.post !== undefined) {
-                   try {
-                        let method: any = new (require(TEMPLATE_FOLDER + "/_custom/" + prop.post + ".js"));
+
+                  //  logger.debug( {payload: prop.post, processId: report.processId} );
+
+                    try {
+                        const method: any = new (require(TEMPLATE_FOLDER + renderEnv.RENDER_ENVIRONMENT + "/_custom/" + prop.post + ".js"));
                         const response  = method.init(items,dataObject);
+                        // logger.debug( {payload: JSON.stringify(response.items), processId: report.processId} );
                         if(response.items && response.items.length > -1 && response.dataObject) {
                             dataObject = response.dataObject;
                             dataObject[prop.key] = response.items;
                         }
                    } catch (err) {
-                       logger.error('failed to process custom script');
+                       logger.error({ payload : "failed to process custom script: " + prop.post, processId : report.processId });
                    }
 
                 } else {
@@ -51,10 +61,11 @@ export class TemplateDataService {
             }
         }
 
+
         return dataObject;
     }
 
-    async getSelf(type: string, slug: string, language: string, dbName: string) {
+    async getSelf(type: string, slug: string, language: string, dbName: string, report: IReport) {
 
         const options = {
             query: {
@@ -65,30 +76,35 @@ export class TemplateDataService {
         };
 
         try {
-            return await this.store.findOne(options, dbName);
+            const self = await this.store.findOne(options, dbName);
+            if (!self || self === null || self === undefined) {
+                logger.debug({ payload: "failed to get one self for " + slug, processId : report.processId });
+                logger.debug({ payload: options.query, processId : report.processId });
+            }
+            return self;
         }
         catch(error) {
-            logger.error("failed to get self");
+            logger.error({ payload: "failed to get self for " + slug, processId : report.processId });
             return {};
         }
     }
 
-
-
-    async genericQuery(dbName: string, renderEnv: RenderEnv, dataObject: DataObject, query : any , sort: any , limit: number) {
+    async genericQuery(dbName: string, renderEnv: RenderEnv, dataObject: DataObject, query: any , sort: any , limit: number, report: IReport) {
 
         try {
 
-            const options : any = {};
-            options.query = parseQuery(query, dataObject)
+            const options: any = {};
+            options.query = parseQuery(query, dataObject);
             options.query.renderEnvironments =  { "$in" : [renderEnv.RENDER_ENVIRONMENT]};
             options.sort = sort;
             options.limit = limit;
 
+            // logger.debug(options.query);
+
             return await (options.limit === 1) ? this.store.findOne(options, dbName) : this.store.find(options, dbName);
 
         } catch (err) {
-            logger.error(err);
+            logger.error({ payload: err, processId : report.processId});
             return [];
         }
     }

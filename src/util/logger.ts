@@ -1,39 +1,60 @@
-import winston from "winston";
-import DatadogWinston from "datadog-winston";
-import { APPLICATION_NAME, DATADOG_API_KEY} from "./config";
+import { createLogger, format, transports } from "winston";
+import ecsFormat from "@elastic/ecs-winston-format";
 
+const logFormat = format.printf(info => `${info.level} : ${JSON.stringify(info.message)}`);
 
-const options: winston.LoggerOptions = {
-    level: "error",
-    exitOnError: false,
-    format: winston.format.json(),
-    transports: [
-        new winston.transports.Console({
-            level: process.env.NODE_ENV === "production" ? "error" : "debug"
-        }),
-        new winston.transports.File({
-            filename: "debug.log",
-            level: "debug"
-        })
-    ]
+const levelFilter = (level: string): any => {
+    return format ((info: any, opts: any ): any => {
+        if(info.level !== level ) { return false; }
+        // info.message.payload = JSON.stringify(info.message.payload);
+        return info;
+    })();
 };
 
-const logger = winston.createLogger(options);
+const logger = createLogger({
+    level: "error",
+    exitOnError: false,
+    transports: [
+        new transports.Console({
+            level: "debug",
+            format: format.combine(
+                format.colorize(),
+                logFormat
+            )
+        }),
+        new transports.File({
+            filename: "./logs/error.json",
+            level: "error",
+            format: format.combine(
+                levelFilter("error"),
+                ecsFormat(),
+                format.json()
+            ),
+            handleExceptions: true
+        }),
+        new transports.File({
+            filename: "./logs/info.json",
+            level: "info",
+            format: format.combine(
+                levelFilter("info"),
+                ecsFormat(),
+                format.json()
+            ),
+            handleExceptions: true
+        }),
+        new transports.File({
+            filename: "./logs/debug.json",
+            level: "debug",
+            format: format.combine(
+                levelFilter("debug"),
+                ecsFormat(),
+                format.json()
+            ),
+            handleExceptions: true
+        }),
+    ]
+});
 
-// if (process.env.NODE_ENV !== "production") {
-//     logger.debug("Logging initialized at debug level");
-// }
-
-// logger.add(
-//     new DatadogWinston({
-//         apiKey: DATADOG_API_KEY,
-//         hostname: "http-intake.logs.datadoghq.com",
-//         service: APPLICATION_NAME,
-//         ddsource: "nodejs",
-//         ddtags: "foo:bar,boo:baz",
-//         intakeRegion: "eu"
-//     })
-// );
 
 
 export default logger;

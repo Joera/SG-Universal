@@ -12,8 +12,13 @@ export default class SearchService {
 
     async createSnippet(searchObject: DataObject, renderEnvironment: RenderEnv, report: IReport): Promise<string|boolean> {
 
+        logger.debug({ payload : searchObject});
+
         if (searchObject.template && searchObject.template !== "") {
-            return await templates.render("search-snippet",  searchObject.template, searchObject, renderEnvironment);
+
+
+
+            return await templates.render("search-snippet",  searchObject.template, searchObject, renderEnvironment, report);
         }  else {
             return false;
         }
@@ -26,14 +31,14 @@ export default class SearchService {
             try {
                 const algoliaResponse = await algolia.addPage(searchObject,renderEnv);
                 if(algoliaResponse) {
-                    logger.info("searchIndex updated for " + searchObject.slug);
+                    logger.info({ payload : "searchIndex updated for " + searchObject.slug, processId: report.processId });
                     report.add("searchIndex", searchObject.type + ": " + searchObject.slug);
                 } else {
                     report.add("error", "failed to update searchIndex for " + searchObject.slug);
                 }
             }
             catch(error) {
-                logger.error(error);
+                logger.error({ payload: error, processId: report.processId });
             }
         }
         return false;
@@ -44,14 +49,14 @@ export default class SearchService {
         try {
             const algoliaResponse = await algolia.deletePage(searchObject.objectID,renderEnv);
             if(algoliaResponse) {
-                logger.info(searchObject.slug + " is removed from searchIndex");
+                logger.info({ payload : searchObject.slug + " is removed from searchIndex", processId: report.processId });
                 report.add("removedFromIndex", searchObject.type + ": " + searchObject.slug);
             } else {
                 report.add("error", "failed to purge searchIndex for " + searchObject.slug);
             }
         }
         catch(error) {
-            logger.error(error);
+            logger.error({ payload: error, processId: report.processId });
         }
     }
 }

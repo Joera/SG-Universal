@@ -8,6 +8,7 @@ import moment from "moment"; // needed inside some custom helpers
 import { helpers } from "./handlebars-helpers";
 // import { customHelpers } from "../custom/handlebars-helpers-custom";
 import {RenderEnv} from "config";
+import {IReport} from "../reports/report";
 
 declare const customHelpers: any[];
 
@@ -18,7 +19,7 @@ export class TemplateController {
 
     templateService: any;
 
-    async render(name: string, templateName: string, dataObject: DataObject, renderEnv: RenderEnv) {
+    async render(name: string, templateName: string, dataObject: DataObject, renderEnv: RenderEnv, report: IReport) {
 
         if (dataObject === undefined) { return false; }
 
@@ -28,8 +29,8 @@ export class TemplateController {
 
             let source: any = false;
 
-            await this._registerHelpers();
-            await this._registerPartials();
+            await this._registerHelpers(renderEnv, report);
+            await this._registerPartials(renderEnv, report);
 
             const dirname: string = renderEnv.RENDER_ENVIRONMENT ? TEMPLATE_FOLDER  + renderEnv.RENDER_ENVIRONMENT : TEMPLATE_FOLDER;
             const extendedTemplateUrl = dirname + "/" + templateName + "-" + dataObject.slug + ".handlebars";
@@ -40,7 +41,7 @@ export class TemplateController {
                 if(fs.existsSync(dirname + "/" + templateName + ".handlebars")) {
                     source = await fsPromises.readFile(dirname + "/" + templateName + ".handlebars", "utf-8");
                 } else {
-                    logger.error("could not find template file for " + templateName + " in " + dirname );
+                    logger.error({ payload : "could not find template file for " + templateName + " in " + dirname, processId : report.processId} );
                 }
             }
 
@@ -58,17 +59,17 @@ export class TemplateController {
             return (!!html) ? html : false;
         }
         catch (error) { // error rendering template
-            logger.error("failed to create html with template " + templateName + " for " + dataObject.slug);
+            logger.error({ payload : "failed to create html with template " + templateName + " for " + dataObject.slug, processId : report.processId });
             return false;
         }
     }
 
-    async _registerHelpers() {
+    async _registerHelpers(renderEnv: RenderEnv, report: IReport) {
 
         // register all helpers
 
         let customHelper: any;
-        const dirname = TEMPLATE_FOLDER + "_helpers";
+        const dirname = TEMPLATE_FOLDER + renderEnv.RENDER_ENVIRONMENT + "/_helpers";
 
         if(helpers) {
             helpers.forEach((helper) => {
@@ -76,7 +77,7 @@ export class TemplateController {
                     handlebars.registerHelper(helper.name, helper.helper); // register helper
                 }
                 catch (error) {
-                    logger.error("failed to register helper");
+                    logger.error({ payload : "failed to register helper: " + helper.name, processId : report.processId });
                 }
             });
         }
@@ -89,14 +90,13 @@ export class TemplateController {
 
                 for (const filepath of filepaths) {
 
-                    let customHelper = new (require(filepath.replace(".js","")));
+                    const customHelper = new (require(filepath.replace(".js","")));
 
                     try {
                         handlebars.registerHelper(customHelper.name, customHelper.helper);
                     }
                     catch (error) {
-                        logger.error("failed to register custom helper");
-
+                        logger.error({ payload : "failed to register custom helper: " + customHelper.name, processId : report.processId });
                     }
                 }
 
@@ -105,10 +105,10 @@ export class TemplateController {
         });
     }
 
-    async _registerPartials() {
+    async _registerPartials(renderEnv: RenderEnv, report: IReport) {
 
         let source: any;
-        const dirname = TEMPLATE_FOLDER + "_partials";
+        const dirname = TEMPLATE_FOLDER + renderEnv.RENDER_ENVIRONMENT + "/_partials";
 
         return await new Promise( (resolve,reject) => {
 
@@ -128,8 +128,7 @@ export class TemplateController {
                         handlebars.registerPartial(partialName, source);
                     }
                     catch (error) {
-                        logger.error(error);
-
+                        logger.error({ payload : "failed to register partial: " + partialName, processId : report.processId });
                     }
                 }
 

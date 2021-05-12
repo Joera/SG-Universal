@@ -41,7 +41,7 @@ export class SearchModel {
             this.objectID = String(body._id || body.id);
             this.slug = body.slug;
             this.type = body.type;
-            this.renderEnvironments = body.render_environments;
+            this.renderEnvironments = body.renderEnvironments;
             this.url = body.url; // body.link
             this.status = body.status;
             this.title = body.title.rendered || body.title;
@@ -50,6 +50,7 @@ export class SearchModel {
             this.date = body.date;
             this.sortDate = body.sortDate || body.date;
             this.modified = body.modified;
+            this.mainImage = body.mainImage || body.main_image;
             this.template = false;
 
             this.searchSnippet = false;
@@ -100,7 +101,7 @@ export class SearchModel {
     }
 
     filterSections(sections: any[]) {
-        return Array.isArray(sections) ? sections.filter( (v: { type: string }) => { return v.type == "paragraph"; }) : [];
+        return Array.isArray(sections) ? sections.filter( (v: { type: string }) => { return v.type == "paragraph"; }).slice(0,2) : [];
     }
 
     trimContent(content: string) {

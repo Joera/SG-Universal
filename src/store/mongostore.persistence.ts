@@ -1,6 +1,7 @@
 import logger from "../util/logger";
 import { getCollection }  from "../connectors/mongo.connector";
 import {DataObject} from "content";
+import {IReport} from "../reports/report";
 
 
 /**
@@ -8,34 +9,30 @@ import {DataObject} from "content";
  */
 export default class MongoStorePersistence {
 
-    constructor() {
-
-    }
-
-    async find(options: any, dbName: string) {
+    async find(options: any, dbName: string, report: IReport) {
 
         if (typeof options.limit === "undefined") {
             options.limit = 0;
         }
 
-        const collection = await getCollection(dbName,"page");// get page collection
+        const collection = await getCollection(dbName,"page", report);// get page collection
         return await collection.find(options.query).sort(options.sort).limit(options.limit).toArray();  // execute find query
     }
 
 
-    async findOne(options: any, dbName: string) {
+    async findOne(options: any, dbName: string, report: IReport) {
 
-        const collection = await getCollection(dbName,"page");
+        const collection = await getCollection(dbName,"page", report);
         return await collection.findOne(options.query); // execute find query
     }
 
-    async save(data: DataObject, dbName: string) {
+    async save(data: DataObject, dbName: string, report: IReport) {
 
         let update: boolean;
         let result: boolean;
 
         try {
-            const collection = await getCollection(dbName, "page"); // get page collection
+            const collection = await getCollection(dbName, "page", report); // get page collection
             const exists = await collection.findOne({ _id: data._id});
 
             if (exists !== null) {
@@ -56,10 +53,10 @@ export default class MongoStorePersistence {
         }
     }
 
-    async remove(id: string, dbName: string) {
+    async remove(id: string, dbName: string, report: IReport) {
 
         try {
-            const collection = await getCollection(dbName,"page");
+            const collection = await getCollection(dbName,"page", report);
             await collection.remove({"_id": id});
             logger.info("removed item from mongo");
             return true;

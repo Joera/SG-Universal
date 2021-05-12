@@ -17,6 +17,7 @@ export class ContentModel {
     date: string;
     sortDate: string;
     modified: string;
+    contentOwner: string;
 
     // post
     author: any;
@@ -44,7 +45,7 @@ export class ContentModel {
             this.slug = body.slug;
             this.type = body.type;
             this.template = body.template || body.type;
-            this.renderEnvironments = body.renderEnvironments;
+            this.renderEnvironments = body.renderEnvironments || body["render_environments"];
             this.url = body.relativePath || body.link;
             this.status = body.status;
             this.title = body.title.rendered || body.title;
@@ -54,6 +55,7 @@ export class ContentModel {
             this.sortDate = body.sort_date || body.date;
             this.modified = body.modified;
             this.language = body.language;
+            this.contentOwner = body.contentOwner;
 
             switch (body.type) {
 

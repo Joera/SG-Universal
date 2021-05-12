@@ -4,27 +4,22 @@ import assert from "assert";
 import logger from "../util/logger";
 import {MONGODB_URI } from "../util/config";
 import {ContentOwner} from "config";
+import {IReport} from "../reports/report";
 
 // set database connection object
 const MongoClient = mongodb.MongoClient;
 
 // get connection to mongodb
-async function getMongoConnection(dbName: string) {
-
-        // const url = test ? MONGODB_URI_TEST : MONGODB_URI;
-
-        // logger.debug(dbName);
+async function getMongoConnection(dbName: string, report: IReport) {
 
         return new Promise( (resolve,reject) => {
-
-            // logger.debug(contentOwner);
 
             return MongoClient.connect(MONGODB_URI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             }, function(err, client) {
                 if(err) {
-                    logger.info("failed to connect to mongo db");
+                    logger.error({ payload : "failed to connect to" + MONGODB_URI, processId : report.processId});
                     reject();
                 } else {
                     const database = client.db(dbName);
@@ -34,12 +29,12 @@ async function getMongoConnection(dbName: string) {
         });
 }
 
-export function getCollection(dbName: string, collection: string) {
+export function getCollection(dbName: string, collection: string, report: IReport) {
 
-        return getMongoConnection(dbName).then((conn: any) => {
+        return getMongoConnection(dbName,report).then((conn: any) => {
             return conn.collection(collection);
         }).catch((err) => {
-            logger.debug('failed miserably');
+         //   logger.debug({ payload : "failed miserably", processId : report.processId});
         });
 
 }

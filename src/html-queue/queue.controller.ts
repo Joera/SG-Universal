@@ -30,11 +30,11 @@ export class QueueController {
         try {
 
             try {
-                templateData = await this.templateData.get(dataObject, renderEnv, contentOwner.MONGODB_DB, dataObject.template);
+                templateData = await this.templateData.get(dataObject, renderEnv, contentOwner.MONGODB_DB, dataObject.template, report);
            //     logger.debug('gathered templateData for ' + dataObject.slug);
             }
             catch (error) {
-                logger.error("failed to gather templateData for " + dataObject.slug);
+                logger.error({ payload : "failed to gather templateData for " + dataObject.slug, processId : report.processId});
                 return false;
             }
 
@@ -50,7 +50,7 @@ export class QueueController {
             for (const queueItem of queueItems) {
 
                 if (queueItem.path !== null && queueItem.template && queueItem.template !== null) {
-                    const queueResponse = await this.add(queueItem);
+                    const queueResponse = await this.add(queueItem, report);
                     report.add("queued",queueItem.template + ": " + queueItem.path);
                     queueResponses.push(queueResponse);
                 }
@@ -59,7 +59,7 @@ export class QueueController {
         }
 
         catch (error) {
-            logger.error("failed to enqueue primaries");
+            logger.error({ payload : "failed to enqueue primaries", processId : report.processId});
             return false;
         }
     }
@@ -74,7 +74,7 @@ export class QueueController {
 
             for (const cascade of cascades) {
 
-                const templateData = await this.templateData.get(cascade, renderEnv, contentOwner.MONGODB_DB, cascade.type);
+                const templateData = await this.templateData.get(cascade, renderEnv, contentOwner.MONGODB_DB, cascade.type, report);
             //    logger.debug('gathered templateData for ' + cascade.slug);
 
                 queueItems.push({
@@ -89,7 +89,7 @@ export class QueueController {
             for (const queueItem of queueItems) {
 
                 if (queueItem.path !== null && queueItem.template && queueItem.template !== null) {
-                    const queueResponse = await this.add(queueItem);
+                    const queueResponse = await this.add(queueItem, report);
                     report.add("queued","ripple " + queueItem.template + ": " + queueItem.path);
                     queueResponses.push(queueResponse);
                 }
@@ -98,17 +98,17 @@ export class QueueController {
         }
 
         catch (error) {
-            logger.error("failed to enqueue ripples");
+            logger.error({ payload : "failed to enqueue ripples", processId : report.processId});
             return false;
         }
     }
 
-    async bulk(queueItems: QueueItem[], contentOwner: ContentOwner) {
+    async bulk(queueItems: QueueItem[], contentOwner: ContentOwner, report: IReport) {
 
         const queueResponses: any[] = [];
 
         for (const queueItem of queueItems) {
-                const queueResponse = await this.add(queueItem);
+                const queueResponse = await this.add(queueItem, report);
                 queueResponses.push(queueResponse);
         }
 
@@ -116,10 +116,10 @@ export class QueueController {
     }
 
 
-    async add(queueItem: QueueItem) {
+    async add(queueItem: QueueItem, report: IReport) {
 
         let result;
-        const queue = await getCollection('universal', "queue"); // get page collection
+        const queue = await getCollection("universal", "queue", report); // get page collection
 
         const exists = await queue.findOne({ path: queueItem.path});
 
@@ -130,9 +130,9 @@ export class QueueController {
         return result;
     }
 
-    async get(query: MongoQuery, limit: number, test: boolean) {
+    async get(query: MongoQuery, limit: number, test: boolean, report: IReport) {
 
-        const queue = await getCollection('universal',"queue");
+        const queue = await getCollection("universal","queue", report);
         // get chunck
         const items = await queue.find(query).limit(limit).toArray();
         // remove items from queue
@@ -150,14 +150,14 @@ export class QueueController {
     }
 
 
-    async getCount(query: any, test: boolean) {
+    async getCount(query: any, test: boolean, report: IReport) {
 
-        const queue = await getCollection('universal', "queue");
+        const queue = await getCollection("universal", "queue", report);
         return queue.countDocuments(query);
     }
 
-    async clear(test: boolean) {
-        const queue = await getCollection('universal', "queue"); // get page collection
+    async clear(test: boolean, report: IReport) {
+        const queue = await getCollection("universal", "queue", report); // get page collection
         queue.remove({});
     }
 

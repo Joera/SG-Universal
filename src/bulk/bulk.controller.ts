@@ -10,6 +10,7 @@ import _ from "lodash";
 import {IReport, Report} from "../reports/report";
 import {configServiceForBulk} from "../util/config.service";
 import {RenderEnv} from "config";
+import {v4 as uuidV4} from "uuid";
 
 export default class BulkController {
 
@@ -30,6 +31,7 @@ export default class BulkController {
 
     async render(owner: string, env: string, type: string) {
 
+     //   const correlationId = uuidV4();
         // const actions: any[] = [];
         const { contentOwner, renderEnv } = await configServiceForBulk(owner,env);
 
@@ -40,9 +42,10 @@ export default class BulkController {
 
         try {
 
-            const pages = await this.mongoStore.find({query: query}, contentOwner.MONGODB_DB);
-
             const report: IReport = new Report("bulkrender");
+
+            const pages = await this.mongoStore.find({query: query}, contentOwner.MONGODB_DB, report);
+
             for (const page of pages) {
 
                 const report: IReport = new Report(page._id);
@@ -52,20 +55,23 @@ export default class BulkController {
 
              await this.renderer.renderQueue(report,[renderEnv]);
 
-            logger.info("Re-render completed. Rendered " + report.rendered.length + " pages");
+            logger.info( { payload : "Re-render completed. Rendered " + report.rendered.length + " pages", processId : report.processId });
 
-            if(report.error.length > 0) {
-                logger.debug(report.error);
-            }
+            // if(report.error.length > 0) {
+            //     logger.debug(report.error);
+            // }
         }
         catch(error) {
             logger.error("failed at bulkrender");
         }
     }
 
-    async search(type: string, renderEnv: string) {
+    async search(owner: string, env: string, type: string, ) {
 
-        const envs = [renderEnv];
+        const report: IReport = new Report("bulksearch");
+        const { contentOwner, renderEnv } = await configServiceForBulk(owner,env);
+
+        const envs = [renderEnv.RENDER_ENVIRONMENT];
 
         const query = type ? {
             "type": type,
@@ -74,17 +80,18 @@ export default class BulkController {
 
         try {
 
-            const pages = await this.mongoStore.find({query: query});
+            const pages = await this.mongoStore.find({query: query}, contentOwner.MONGODB_DB, report);
 
-            const report: IReport = new Report("bulksearch");
             for (const page of pages) {
                 const report: IReport = new Report(page._id);
-                await this.searchCtrl.updatePost(page,report);
+                await this.searchCtrl.updatePost(page, contentOwner, renderEnv, report);
             }
+
+            logger.debug({ payload: "bulksearch for " + pages.length + " " + type + "s"});
         }
 
         catch(error) {
-            logger.error("failed at bulksearch");
+            logger.error( { payload : "failed at bulksearch"});
         }
     }
 }
