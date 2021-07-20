@@ -40,18 +40,14 @@ export class RenderController {
 
         for (const index of chunks.keys()) {
             const chunkResult = await this._renderQueueChunk(chunkSize, (index + 1), numberOfChunks, report, renderEnvironments);
-            //resultArray = resultArray.concat(chunkResult);
         }
 
         for (const renderEnv of renderEnvironments) {
-            const output = await this.dist.sync(renderEnv);
-         //   logger.debug(output.data);
+
+            if (renderEnv.REMOTE_HOST) {
+                const output = await this.dist.sync(renderEnv);
+            }
         }
-        //
-        //
-        // for (let result of resultArray) {
-        //     report.add('rendered', result);
-        // }
         return;
     }
 
@@ -101,7 +97,7 @@ export class RenderController {
 
             const path = await this._renderQueueItem(item.name, item.template, item.path, item.data, renderEnv, report);
             renderedPaths.push(path);
-            if (path) { report.add("rendered", path); } else { report.add("error","failed to render " + path); }
+            if (path) { report.add("rendered", renderEnv["BASE_URL"] + "/" + path); } else { report.add("error","failed to render " + path); }
         }
 
         return renderResults;

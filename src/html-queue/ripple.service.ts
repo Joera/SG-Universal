@@ -22,7 +22,6 @@ export class RippleService {
 
                 if (!ripple.condition) { // or if condition is met  {
 
-
                     if (ripple.objects) {
 
                         for (const object of ripple.objects) {
@@ -44,10 +43,13 @@ export class RippleService {
                         let items = [];
                         const options: any = {};
                         options.query = parseQuery(ripple.query.query, dataObject);
+
                         options.query.renderEnvironments =  { "$in" : [renderEnv.RENDER_ENVIRONMENT]};
                         options.sort = ripple.query.sort;
                         options.limit = ripple.query.limit;
 
+                     //   logger.debug({ "payload" : options});
+                        
                         try {
                             items = await this.store.find(options, contentOwner.MONGODB_DB);
                         }

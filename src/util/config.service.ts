@@ -11,12 +11,12 @@ export const configService = async (req: Request, res: Response, report: IReport
     let contentOwner: ContentOwner = null;
     const renderEnvironments: any[] = [];
 
-    try {
 
+    try {
 
         if (req.body.contentOwner) {
 
-            const configFile: any = await filesystem.readFile(CONFIG_FOLDER + req.body.contentOwner + ".json");
+            const configFile: any = await filesystem.readFile(CONFIG_FOLDER + req.body.contentOwner + "/" + req.body.contentOwner + ".json");
             contentOwner = JSON.parse(configFile);
         } else {
             logger.error({ payload: "content owner config not found", processId : report.processId});
@@ -51,7 +51,7 @@ export const configServiceForSync = async (owner: string) => {
     try {
 
         if (owner) {
-            const configFile: any = await filesystem.readFile(CONFIG_FOLDER + owner + ".json");
+            const configFile: any = await filesystem.readFile(CONFIG_FOLDER + owner + "/" + owner + ".json");
             contentOwner = JSON.parse(configFile);
         }
 
@@ -71,7 +71,7 @@ export const configServiceForBulk = async (owner: string, env: string) => {
     try {
 
         if (owner && env) {
-            const ownerFile: any = await filesystem.readFile(CONFIG_FOLDER + owner + ".json");
+            const ownerFile: any = await filesystem.readFile(CONFIG_FOLDER + owner + "/" + owner + ".json");
             contentOwner = JSON.parse(ownerFile);
             const envFile: any = await filesystem.readFile(TEMPLATE_FOLDER + env + "/__" + env + ".json");
             renderEnv = JSON.parse(envFile);

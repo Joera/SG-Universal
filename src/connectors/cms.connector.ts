@@ -14,16 +14,16 @@ export default class CMSConnector {
          function loop(url: string, resolve: any, reject: any) {
 
            axios(url).then( (response) => {
-
                results = results.concat(Object.values(response.data));
+
                if (response.data["_links"] && response.data["_links"]["next"]) {
-                    loop(urlBase + response.data["_links"]["next"][0]["href"], resolve, reject);
+                    loop(response.data["_links"]["next"][0]["href"], resolve, reject);
                } else {
                    resolve(results.filter( r => r.title !== undefined));
                }
            }).catch (error => {
-                logger.error("failed to get posts from cms");
-                logger.debug(url);
+                logger.error({ payload : "failed to get posts from cms" });
+
                 reject();
            });
          }
@@ -41,7 +41,7 @@ export default class CMSConnector {
         // let query = "?";
 
         // if(renderEnv) { query += 'env=' + renderEnv + '&'; }
-        let query = (limit) ?  "?per_page=" + limit : "";
+        const query = (limit) ?  "?per_page=" + limit : "";
 
         switch(type) {
 

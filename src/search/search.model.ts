@@ -1,6 +1,7 @@
 import { Taxonomies } from "content";
 import {IReport} from "../reports/report";
 import logger from "../util/logger";
+import slugify from "slugify";
 
 export class SearchModel {
 
@@ -9,12 +10,13 @@ export class SearchModel {
     type: string;
     template: string | boolean;
     renderEnvironments: string[];
+    render_environments: string[];
     url: string;
     status: string;
     title: string;
     content: string;
     excerpt: string;
-    date: string;
+    date: string | number;
     sortDate: string;
     modified: string;
 
@@ -23,8 +25,14 @@ export class SearchModel {
     sections: any[];
     interaction: any;
     taxonomies: Taxonomies;
-    language: any[];
+    language: any;
     updates: any[];
+
+    postID: string;
+    replyCount: number;
+    isEditor: boolean;
+    comments: any[];
+
 
     catIds: string[];
     catSlugs: string[];
@@ -35,54 +43,79 @@ export class SearchModel {
 
     constructor(body: any, report: IReport){
 
-
         try {
 
-            this.objectID = String(body._id || body.id);
-            this.slug = body.slug;
-            this.type = body.type;
-            this.renderEnvironments = body.renderEnvironments;
-            this.url = body.url; // body.link
-            this.status = body.status;
-            this.title = body.title.rendered || body.title;
-            this.content = body.content ? this.trimContent(body.content.rendered || body.content) : "";
-            this.excerpt = body.excerpt ? body.excerpt.rendered || body.excerpt : "";
-            this.date = body.date;
-            this.sortDate = body.sortDate || body.date;
-            this.modified = body.modified;
-            this.mainImage = body.mainImage || body.main_image;
-            this.template = false;
 
+            this.type = body.type;
             this.searchSnippet = false;
+            this.objectID = String(body._id || body.id) || '';
 
             switch (body.type) {
 
                 case "post":
+                case "page":
+                case "vacature":
 
+
+                    this.slug = body.slug;
+                    this.url = body.url; // body.link
+                    this.status = body.status;
+                    this.title = body.title.rendered || body.title;
+                    this.content = body.content ? this.trimContent(body.content.rendered || body.content) : "";
+                    this.excerpt = body.excerpt ? body.excerpt.rendered || body.excerpt : "";
+                    this.date = new Date(body.date.replace("T", " ")).getTime();
+                    this.sortDate = body.sortDate || body.date;
+                    this.modified = body.modified;
+                    this.mainImage = body.mainImage || body.main_image;
+                    this.template = false;
                     this.sections = this.filterSections(body.sections);
                     this.taxonomies = body.taxonomies;
-                    this.language = body.language;
                     this.updates = body.updates || [];
                     this.template = "search-snippet";
                     this.author = body.author;
-
-                    this.mapTaxonomies(body.taxonomies);
-
-                    break;
-
-                case "page":
-
-                    this.sections = this.filterSections(body.sections);
                     this.language = body.language;
-                    this.taxonomies = body.taxonomies;
-                    this.template = "search-snippet";
+                    this.renderEnvironments = body.renderEnvironments;
+                    this.render_environments = body.renderEnvironments;
 
                     this.mapTaxonomies(body.taxonomies);
 
                     break;
 
-            }
+                case "comment":
 
+
+                    this.template = "comment-snippet";
+                    this.objectID = String(body.comment.id);
+                    this.date = new Date(body.comment.date.replace("T", " ")).getTime();
+                    this.title = body.comment.content.slice(0,120).replace(/<(?:.|\n)*?>/gm, "");
+                    this.slug = slugify(body.comment.content.slice(0,40).replace(/<(?:.|\n)*?>/gm, ""));
+                    this.content = body.comment.content.replace(/<(?:.|\n)*?>/gm, "");
+                    this.author = body.comment.name;
+                    this.isEditor = this.boolean(body.comment["is_editor"]);
+                    this.comments = body.thread.filter( (t: any) => { t.id != body.id; });
+                    this.replyCount = body.thread.filter( (t: any) => { t.id != body.id; }).length;
+                    this.postID = body._id;
+                    this.url = (body.link && body.post.link !== "") ? body.link + "#dialoog" : body.post.url + "#" + body.thread[0].id;
+                    this.language = body.post.language;
+                    this.renderEnvironments = body.post.renderEnvironments;
+                    this.render_environments = body.post.renderEnvironments;
+
+                    break;
+
+                case "document":
+
+                    this.template = "document-snippet";
+                    this.objectID = String(body.document.file_id);
+                    this.title = body.document.file_name;
+                    this.slug = slugify(body.document.file_name);
+                    this.date = body.post.date;
+                    this.url = body.document.file_cdn_url;
+                    this.renderEnvironments = body.post.renderEnvironments;
+                    this.render_environments = body.post.renderEnvironments;
+                    this.language  = body.post.language;
+
+                    break;
+            }
         }
 
         catch (error) {
@@ -106,5 +139,16 @@ export class SearchModel {
 
     trimContent(content: string) {
         return (content.length > 400) ? content.substring(0,399) : content;
+    }
+
+    boolean(value: any) {
+
+        if (value === true || value === false) {
+            return value;
+        } else if(value === 0 || value === "0") {
+            return false;
+        } else if (value === 1 || value === "1") {
+            return true;
+        }
     }
 }

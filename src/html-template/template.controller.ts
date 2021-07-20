@@ -21,11 +21,15 @@ export class TemplateController {
 
     async render(name: string, templateName: string, dataObject: DataObject, renderEnv: RenderEnv, report: IReport) {
 
+
+
         if (dataObject === undefined) { return false; }
 
         const html: string | boolean = "";
 
         try {
+
+
 
             let source: any = false;
 

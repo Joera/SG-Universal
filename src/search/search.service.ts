@@ -12,12 +12,7 @@ export default class SearchService {
 
     async createSnippet(searchObject: DataObject, renderEnvironment: RenderEnv, report: IReport): Promise<string|boolean> {
 
-        logger.debug({ payload : searchObject});
-
         if (searchObject.template && searchObject.template !== "") {
-
-
-
             return await templates.render("search-snippet",  searchObject.template, searchObject, renderEnvironment, report);
         }  else {
             return false;

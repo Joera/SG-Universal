@@ -1,4 +1,5 @@
 import {DataObject} from "content";
+import logger from "../util/logger";
 
 const isString = (prop: any)  => {
     return (typeof prop  === "string" || prop  instanceof String) ? true : false;
@@ -14,7 +15,7 @@ export const parseQuery =  (query: string, dataObject: DataObject): any => {
 
     for (const q of query) {
 
-        if (isString(Object.values(q)[0])) {
+        if (isString(Object.values(q)[0]) || isPositiveInteger(Object.values(q)[0])) {
 
             queryObject[Object.keys(q)[0]] = Object.values(q)[0];
 
@@ -49,6 +50,8 @@ export const parseQuery =  (query: string, dataObject: DataObject): any => {
             } else if (isString(Object.values(q)[0].property)) {
                 // @ts-ignore
                 o = dataObject[Object.values(q)[0].property];
+            } else {
+
             }
 
             queryObject[Object.keys(q)[0]] = o;
@@ -56,5 +59,7 @@ export const parseQuery =  (query: string, dataObject: DataObject): any => {
 
     }
 
+
+    // logger.debug({ "payload" : queryObject});
     return queryObject;
 };

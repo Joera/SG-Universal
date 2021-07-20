@@ -30,7 +30,7 @@ export const create = async (req: Request, res: Response) => {
     const actions: any[] = [];
     const report: IReport = new Report(req.body.id);
     const { contentOwner, renderEnvironments }: any = await configService(req, res, report);
-    const dataObject: DataObject  = new CustomContentModel(req.body, contentOwner, report);
+    const dataObject: DataObject = new CustomContentModel(req.body, contentOwner, report);
 
     await mongoStoreController.save(dataObject, contentOwner.MONGODB_DB, report);
 
@@ -43,12 +43,36 @@ export const create = async (req: Request, res: Response) => {
         await queue.primaries(dataObject, contentOwner, renderEnv, report);
         await queue.ripples(dataObject, contentOwner, renderEnv, report);
 
-        if (renderEnv.RENDER_TASKS.indexOf("datasets") > -1 && dataObject.sections)  {
-            actions.push(await datasets.save(dataObject,report));
-        }
-
         if (renderEnv.RENDER_TASKS.indexOf("searchposts") > -1)  {
             actions.push(await search.updatePost(dataObject, contentOwner, renderEnv, report));
+        }
+
+        if (renderEnv.RENDER_TASKS.indexOf("searchcomments") > -1 && dataObject.interaction && dataObject.interaction.nestedComments && dataObject.interaction.nestedComments.length > 0) {
+            for (const thread of dataObject.interaction.nestedComments) {
+                for (const comment of thread) {
+                    actions.push(await search.updatePost({
+                        type: "comment",
+                        comment: comment,
+                        thread: thread,
+                        post: dataObject
+                    }, contentOwner, renderEnv, report));
+                }
+            }
+        }
+
+        if (renderEnv.RENDER_TASKS.indexOf("searchdocuments") > -1 && dataObject.sections) {
+            for (const key of Object.keys(dataObject.sections)) {
+                const sectionKeys = Object.keys(dataObject.sections[key]);
+                if (sectionKeys.indexOf("documents") !== -1) {
+                    for (const document of dataObject.sections[key].documents) {
+                        actions.push(await search.updatePost({
+                            type: "document",
+                            document: document,
+                            post: dataObject
+                        }, contentOwner, renderEnv, report));
+                    }
+                }
+            }
         }
     }
 
@@ -76,35 +100,39 @@ export const create = async (req: Request, res: Response) => {
 
 export const remove = async (req: Request, res: Response) => {
 
-    //   const self = this;
     const url: any = null;
     const actions: any[] = [];
     const report: IReport = new Report(req.body.id);
-    // test originates outside docker and localhost is not part of dev_net
 
     const { contentOwner, renderEnvironments }: any = await configService(req, res, report);
 
+    const dataObject: DataObject  = new CustomContentModel(req.body, contentOwner,  report);
 
-    const dataObject: DataObject  = new CustomContentModel(req.body, contentOwner, report);
-
-    // get old url for path to directory
+    // // get old url for path to directory
     const oldObject = await mongoStorePersistence.findOne({
         query: {
             _id : dataObject._id
         }
-    }, contentOwner, report);
+    }, contentOwner.MONGODB_DB, report);
 
-    await mongoStoreController.remove(dataObject, contentOwner, report);
+    await mongoStoreController.remove(dataObject, contentOwner.MONGODB_DB, report);
 
     for (const envName of dataObject.renderEnvironments) {
 
-        const renderEnv = renderEnvironments.find((env: RenderEnv) => env.RENDER_ENVIRONMENT === envName);
-        await filesystem.deleteDirectory(oldObject, report);
-        await queue.ripples(dataObject, contentOwner, renderEnv, report);
+        try {
+            const renderEnv: RenderEnv = renderEnvironments.find((env: RenderEnv) => env.RENDER_ENVIRONMENT === envName);
 
-        if (renderEnv.RENDER_TASKS.indexOf("searchposts") > -1)  {
-            actions.push(await search.removePost(dataObject,contentOwner, renderEnv, report));
+            await filesystem.deleteDirectory(oldObject, renderEnv, report);
+            await queue.ripples(dataObject, contentOwner, renderEnv, report);
+
+            if (renderEnv.RENDER_TASKS.indexOf("searchposts") > -1) {
+                actions.push(await search.removePost(dataObject, contentOwner, [renderEnv], report));
+            }
         }
+        catch(error) {
+            logger.error({ payload : "could not match render environment config"});
+        }
+
     }
 
     actions.push(await renderer.renderQueue(report,renderEnvironments));
@@ -113,7 +141,6 @@ export const remove = async (req: Request, res: Response) => {
 
     if(actions.length > 0) {
         Promise.all(actions).then((results) => {
-
             res.status(201); // set http status code for response
             res.json(report); // send response body
         })
@@ -131,14 +158,23 @@ export const remove = async (req: Request, res: Response) => {
 
 export const preview = async (req: Request, res: Response) => {
 
+
+
     const report: IReport = new Report(req.body.id);
 
     try {
 
         const { contentOwner, renderEnvironments }: any = await configService(req, res, report);
         const dataObject: DataObject  = new CustomContentModel(req.body, contentOwner, report);
+        logger.debug({ payload : req.body.relativePath});
         // body = await this.documentService.getDocs(body);
-        const html = await template.render(dataObject.slug, dataObject.type, dataObject, dataObject.renderEnvironments[0], report);
+        // logger.debug({ payload : renderEnvironments });
+        let html : any = await template.render(dataObject.slug, dataObject.type, dataObject, renderEnvironments[0], report);
+
+
+        html  = (html) ? html.replace(/href=".\//g,'href="' + renderEnvironments[0].BASE_URL + '/' + dataObject.url) : '';
+        html  = (html) ? html.replace(/src=".\//g,'src="' + renderEnvironments[0].BASE_URL + '/' + dataObject.url) : '';
+
         res.status(200); // set http status code for response
         res.json({html: html}); // send response body
     }

@@ -6,7 +6,7 @@ import {CustomContentModel} from "../store/custom-content.model";
 import logger from "../util/logger";
 import _ from "lodash";
 import {IReport, Report} from "../reports/report";
-import { configServiceForSync } from "../util/config.service";
+import {configServiceForSync} from "../util/config.service";
 import {ContentOwner} from "config";
 
 export default class SyncController {

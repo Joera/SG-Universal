@@ -8,18 +8,25 @@ import { TemplateDataService} from "./templateData.service";
 import { RippleService } from "./ripple.service";
 import { IReport } from "../reports/report";
 import {ContentOwner, RenderEnv } from "config";
+import {DatasetController} from "../datasets/dataset.controller";
 
 export class QueueController {
 
     rippleService: any;
     templateData: any;
+    datasets: any;
 
     constructor() {
         this.rippleService = new RippleService();
         this.templateData = new TemplateDataService();
+        this.datasets = new DatasetController();
     }
 
     async primaries(dataObject: DataObject, contentOwner: ContentOwner, renderEnv: RenderEnv, report: IReport) {
+
+        if (renderEnv.RENDER_TASKS.indexOf("datasets") > -1)  {
+            await this.datasets.save(dataObject,renderEnv, report, contentOwner);
+        }
 
         if (renderEnv.RENDER_TYPES.indexOf(dataObject.type) < 0) { return; }
 
@@ -70,9 +77,13 @@ export class QueueController {
         const queueItems: QueueItem[] = [];
         const cascades: RippleObject[] = await this.rippleService.get(dataObject,renderEnv,contentOwner);
 
+
+
         try {
 
             for (const cascade of cascades) {
+
+
 
                 const templateData = await this.templateData.get(cascade, renderEnv, contentOwner.MONGODB_DB, cascade.type, report);
             //    logger.debug('gathered templateData for ' + cascade.slug);
@@ -84,6 +95,10 @@ export class QueueController {
                     path: cascade.path,
                     data: templateData
                 });
+
+                if (renderEnv.RENDER_TASKS.indexOf("datasets") > -1)  {
+                    await this.datasets.save(templateData,renderEnv, report, contentOwner);
+                }
             }
 
             for (const queueItem of queueItems) {

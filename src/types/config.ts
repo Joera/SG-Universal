@@ -5,6 +5,7 @@ export interface ContentOwner {
     WP_URL_DOCKER : string,
     WP_URL_BROWSER : string,
     WP_API_PATH : string,
+    CUSTOM_SCRIPTS_FOLDER : string,
     TEMPLATE_NAME_KEY : string,
     CUSTOM_CONTENT: any[],
     CUSTOM_SEARCH_CONTENT: any[]
@@ -24,5 +25,6 @@ export interface RenderEnv {
     ALGOLIA_API_KEY: string,
     TEMPLATE_DATA: any [],
     CUSTOM_PATHS: any[],
-    RIPPLES: any[]
+    RIPPLES: any[],
+    DATASETS: any[]
 }

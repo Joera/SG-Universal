@@ -42,6 +42,7 @@ export default class MongoStorePersistence {
                 update = false;
                 result = await collection.insertOne(data); // execute save
             }
+
             return { result, update };
         }
 
@@ -57,12 +58,12 @@ export default class MongoStorePersistence {
 
         try {
             const collection = await getCollection(dbName,"page", report);
-            await collection.remove({"_id": id});
-            logger.info("removed item from mongo");
+            await collection.deleteOne({"_id": id});
+            logger.info({ payload : "removed item from mongo"});
             return true;
         }
         catch (error) {
-            logger.error("failed to remove item from mongo");
+            logger.error({ payload : "failed to remove item from mongo"});
             return false;
         }
     }

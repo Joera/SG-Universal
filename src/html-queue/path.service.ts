@@ -12,6 +12,7 @@ export function getPath(dataObject: any, renderEnv: RenderEnv)  {
              path = customPath.path;
          }
 
-       return path;
+
+         return path;
 
 }

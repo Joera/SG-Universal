@@ -6,6 +6,7 @@ import { DIST_FOLDER } from "../util/config";
 import {IReport, Report} from "../reports/report";
 import { getPath } from "../html-queue/path.service";
 import {DataObject} from "content";
+import {RenderEnv} from "config";
 
 const fsPromises = fs.promises;
 
@@ -20,18 +21,16 @@ export class FileSystemConnector {
             return;
     }
 
-    async deleteDirectory(dataObject: DataObject, report: IReport) {
-
-                for (const renderEnv of dataObject.renderEnvironments) {
+    async deleteDirectory(dataObject: DataObject, renderEnv: RenderEnv, report: IReport) {
 
                     const path = getPath(dataObject, renderEnv);
 
                     if (path && path !== null && path !== "") {
 
                         try {
-                            const files = fsPromises.readdir(DIST_FOLDER  + path);
+                            const files = fsPromises.readdir(DIST_FOLDER  + renderEnv.RENDER_ENVIRONMENT + "/" + path);
                             if(files) {
-                                const result: any = await rmrf(DIST_FOLDER  + path);
+                                const result: any = await rmrf(DIST_FOLDER  + renderEnv.RENDER_ENVIRONMENT + "/" + path);
                                 report.add("deleted",path);
                             }
                         }
@@ -42,7 +41,6 @@ export class FileSystemConnector {
                         }
                     }
 
-                }
 
                 return;
     }

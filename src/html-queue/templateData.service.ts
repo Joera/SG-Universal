@@ -20,34 +20,33 @@ export class TemplateDataService {
         this.filesystem = new FileSystemConnector();
     }
 
+    checkSlug(config: any, slug : string) {
+
+        return (config.slug && config.slug !== slug) ? false : true;
+    }
+
     async get(data: DataObject, renderEnv: RenderEnv, dbName: string, template: string, report: IReport) {
 
         // for ripples ... always get one self with type and slug
 
-        let dataObject = (data.slug) ? await this.getSelf(data.type, data.slug, data.language, dbName, report) : data;
-
+        let dataObject = (data.slug) ? await this.getSelf(data.type, data.slug, data.language, dbName, renderEnv, report) : data;
 
         const config: any = renderEnv.TEMPLATE_DATA.find( (t) => data.type === t.template);
 
-        if((config  !== undefined )) {
+        if((config  !== undefined ) && this.checkSlug(config,data.slug)) {
 
             for(const prop of config.properties) {
 
-                const items = await this.genericQuery(dbName, renderEnv, data, prop.query, prop.sort, prop.limit, report );
-
-                // if(prop.limit === 1) {
-                //     // logger.debug(items);
-                // }
+                const items = await this.genericQuery(dbName, renderEnv, dataObject, prop.query, prop.sort, prop.limit, report );
 
                 if(prop.post && prop.post !== undefined) {
-
-                  //  logger.debug( {payload: prop.post, processId: report.processId} );
 
                     try {
                         const method: any = new (require(TEMPLATE_FOLDER + renderEnv.RENDER_ENVIRONMENT + "/_custom/" + prop.post + ".js"));
                         const response  = method.init(items,dataObject);
-                        // logger.debug( {payload: JSON.stringify(response.items), processId: report.processId} );
-                        if(response.items && response.items.length > -1 && response.dataObject) {
+                    //   logger.debug({ payload : prop.key});
+                    //    logger.debug( {payload: response.items, processId: report.processId} );
+                        if(response.items && (response.items.length > -1 || Object.keys(response.items).length > -1 ) && response.dataObject) {
                             dataObject = response.dataObject;
                             dataObject[prop.key] = response.items;
                         }
@@ -56,6 +55,8 @@ export class TemplateDataService {
                    }
 
                 } else {
+
+
                     dataObject[prop.key] = items;
                 }
             }
@@ -65,21 +66,23 @@ export class TemplateDataService {
         return dataObject;
     }
 
-    async getSelf(type: string, slug: string, language: string, dbName: string, report: IReport) {
+    async getSelf(type: string, slug: string, language: string, dbName: string, renderEnv : RenderEnv, report: IReport) {
+
+        // slug is not home
 
         const options = {
             query: {
                 type: type,
                 slug: slug,
-                language: language
+                language: language,
+                renderEnvironments:  { "$in" : [renderEnv.RENDER_ENVIRONMENT]}
             }
         };
 
         try {
             const self = await this.store.findOne(options, dbName);
             if (!self || self === null || self === undefined) {
-                logger.debug({ payload: "failed to get one self for " + slug, processId : report.processId });
-                logger.debug({ payload: options.query, processId : report.processId });
+                logger.error({ payload: "failed to get one self for " + slug, processId : report.processId });
             }
             return self;
         }
@@ -98,8 +101,6 @@ export class TemplateDataService {
             options.query.renderEnvironments =  { "$in" : [renderEnv.RENDER_ENVIRONMENT]};
             options.sort = sort;
             options.limit = limit;
-
-            // logger.debug(options.query);
 
             return await (options.limit === 1) ? this.store.findOne(options, dbName) : this.store.find(options, dbName);
 

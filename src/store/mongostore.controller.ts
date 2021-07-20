@@ -28,5 +28,5 @@ export const remove = async (dataObject: DataObject, dbName: string, report: IRe
     const result = await mongoStore.remove(dataObject._id, dbName, report);
     result ? report.add("success","removed item from mongo") : report.add("error","failed to remove item from mongo");
 
-    return report;
+    return;
 };

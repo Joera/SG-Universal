@@ -10,8 +10,6 @@ export default class AlgoliaConnector {
 
     async addPage(data: DataObject, renderEnv: RenderEnv) {
 
-        logger.debug({ payload: renderEnv.ALGOLIA_INDEX_NAME_PREFIX });
-
         const client = algoliasearch(renderEnv.ALGOLIA_APP_ID, renderEnv.ALGOLIA_API_KEY);
         const index = client.initIndex(renderEnv.ALGOLIA_INDEX_NAME_PREFIX);
         return (await index.saveObjects([data])) ? true : false;
