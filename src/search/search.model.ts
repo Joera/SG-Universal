@@ -134,10 +134,20 @@ export class SearchModel {
     }
 
     filterSections(sections: any[]) {
-        return Array.isArray(sections) ? sections.filter( (v: { type: string }) => { return v.type == "paragraph"; }).slice(0,2) : [];
+        let fliteredSections =  Array.isArray(sections) ? sections.filter( (v: { type: string }) => { return v.type == "paragraph"; }).slice(0,2) : [];
+
+        for (let s of fliteredSections) {
+            s.text = (s.text.length > 200) ? s.text.substring(0,200) : s.text;
+        }
+
+        return fliteredSections;
     }
 
     trimContent(content: string) {
+        return (content.length > 400) ? content.substring(0,399) : content;
+    }
+
+    trimExcerpt(content: string) {
         return (content.length > 400) ? content.substring(0,399) : content;
     }
 

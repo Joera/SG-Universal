@@ -29,8 +29,6 @@ export class TemplateController {
 
         try {
 
-
-
             let source: any = false;
 
             await this._registerHelpers(renderEnv, report);

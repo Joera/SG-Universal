@@ -7,6 +7,7 @@ export class ContentModel {
     _id: string;
     slug: string;
     type: string;
+    depth: number;
     template: string;
     renderEnvironments: string[];
     url: string;
@@ -54,6 +55,8 @@ export class ContentModel {
             this.modified = body.modified;
             this.language = body.language;
             this.contentOwner = body.contentOwner;
+
+            this.depth = (parseInt(body.parent) > 0) ? 1 : 0;
 
             switch (body.type) {
 

@@ -58,7 +58,7 @@ export default class BulkController {
                     await this.datasets.save(page,renderEnv, report, contentOwner);
                 }
             }
-
+           //
             await this.renderer.renderQueue(report,[renderEnv]);
 
             logger.info( { payload : "Re-render completed. Rendered " + report.rendered.length + " pages", processId : report.processId });
