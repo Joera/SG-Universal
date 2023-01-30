@@ -134,13 +134,13 @@ export class SearchModel {
     }
 
     filterSections(sections: any[]) {
-        let fliteredSections =  Array.isArray(sections) ? sections.filter( (v: { type: string }) => { return v.type == "paragraph"; }).slice(0,2) : [];
+        let filteredSections =  Array.isArray(sections) ? sections.filter( (v: { type: string }) => { return v.type == "paragraph"; }).slice(0,2) : [];
 
-        for (let s of fliteredSections) {
+        for (let s of filteredSections) {
             s.text = (s.text.length > 200) ? s.text.substring(0,200) : s.text;
         }
 
-        return fliteredSections;
+        return filteredSections;
     }
 
     trimContent(content: string) {
